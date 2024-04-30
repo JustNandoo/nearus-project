@@ -13,13 +13,11 @@ export default {
         "blue-secondary": "#2171E3",
         "light-blue": "#A7E0FF",
         "light-black": "#0A0101"
-
+      },
+      fontFamily: {
+        'sans': ['Montserrat', 'sans-serif']
       }
-    },
-    fontFamily: {
-      'sans': ['Montserrat', 'sans-serif']
     }
   },
   plugins: [],
 }
-
