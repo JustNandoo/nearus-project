@@ -39,21 +39,23 @@
             <input type="checkbox" class="w-[22px] h-[22px] border-2 border-blue-600" v-model="rememberMe"/>
             <div class="text-black text-lg font-bold font-sans">Remember me</div>
           </div>
-          <div class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans">Forgot Password</div>
+          <a href="/reset-password" class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans hover:text-blue-500 hover:underline">Forgot Password</a>
           <div class="w-[202px] h-[54px] left-[369px] top-[617px] absolute">
             <router-link to="/register">
       <div class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300" style="border-width: 4px;"></div>
       <div class="left-[64px] top-[13px] absolute text-black text-lg font-bold font-sans hover:text-sky-600">Sign Up</div>
     </router-link>
           </div>
-          <button class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105" id="btn-login" @click="login"> 
-    <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow"></div>
-    <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></div>
-    <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Login</div>
-    <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
-        <i class="fas fa-chevron-right text-white"></i>
-    </div>
-</button>
+          <router-link to="/home">
+    <button class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105" id="btn-login" @click="login"> 
+        <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow"></div>
+        <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></div>
+        <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Login</div>
+        <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+            <i class="fas fa-chevron-right text-white"></i>
+        </div>
+    </button>
+  </router-link>
 
 
         </div>

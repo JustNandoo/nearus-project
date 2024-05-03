@@ -48,6 +48,7 @@
       <div class="left-[73px] top-[13px] absolute text-black text-lg font-bold font-sans hover:text-sky-600">Login</div>
     </router-link>
             </div>
+            <router-link to="/home">
             <button class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105" id="btn-signUp" @click="signUp"> 
     <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow"></div>
     <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></div>
@@ -56,6 +57,7 @@
         <i class="fas fa-chevron-right text-white"></i>
     </div>
 </button>
+</router-link>
           </div>
         </div>
       </div>
