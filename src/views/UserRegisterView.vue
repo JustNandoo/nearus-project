@@ -48,14 +48,14 @@
     <div class="left-[73px] top-[13px] absolute text-black text-lg font-bold font-sans hover:text-sky-600">Login</div>
   </router-link>
           </div>
-          <div class="w-[266px] h-[54px] left-0 top-[730px] absolute" id="btn-signup"> 
-            <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow" @click="sign"></div>
-            <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></div>
-            <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Sign Up</div>
-            <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
-              <i class="fas fa-chevron-right text-white"></i>
-            </div>
-          </div>
+          <button class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105" id="btn-signUp" @click="signUp"> 
+    <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow"></div>
+    <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></div>
+    <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
+    <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+        <i class="fas fa-chevron-right text-white"></i>
+    </div>
+</button>
         </div>
       </div>
     </div>
