@@ -43,7 +43,7 @@
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Email Anda" />
           </div>
-          <<div class="w-[571px] h-[90px] left-0 top-[500px] absolute" id="NomorTeleponInput">
+          <div class="w-[571px] h-[90px] left-0 top-[500px] absolute" id="NomorTeleponInput">
             <label for="nomorteleponInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusNomorTeleponInput">Nomor Telepon</label>

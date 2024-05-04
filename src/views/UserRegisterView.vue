@@ -28,7 +28,7 @@
             <div
               class="w-[600px] left-0 top-[117px] absolute text-black text-[34px] font-bold font-sans leading-[41.48px] tracking-wide">
               Selamat Datang, Silahkan Daftar untuk lanjut </div>
-            <div class="w-[571px] h-[90px] left-0 top-[250px] absolute" id="EmailNput">
+            <div class="w-[571px] h-[90px] left-0 top-[220px] absolute" id="EmailNput">
               <label for="emailInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
                 @click="focusEmailInput">Alamat Email</label>
@@ -36,7 +36,7 @@
                 class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
                 placeholder="Masukkan Email Anda" />
             </div>
-            <div class="w-[571px] h-[90px] left-0 top-[390px] absolute" id="NamaInput">
+            <div class="w-[571px] h-[90px] left-0 top-[350px] absolute" id="NamaInput">
               <label for="nameInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
                 @click="focusNameInput">Nama Lengkap</label>
@@ -44,7 +44,15 @@
                 class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
                 placeholder="Masukkan Nama Anda" />
             </div>
-            <div class="w-[571px] h-[90px] left-0 top-[530px] absolute" id="PasswordInput">
+            <div class="w-[571px] h-[90px] left-0 top-[480px] absolute" id="NomorTeleponInput">
+            <label for="nomorteleponInput"
+              class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
+              @click="focusNomorTeleponInput">Nomor Telepon</label>
+            <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"
+              class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
+              placeholder="Masukkan Nomor Telepon Anda" />
+        </div>
+            <div class="w-[571px] h-[90px] left-0 top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
                 Sandi</label>
@@ -56,10 +64,6 @@
                 <i v-if="passwordVisible" class="fas fa-eye text-lg" style="margin-top: 40px;"></i>
                 <i v-else class="fas fa-eye-slash text-lg" style="margin-top: 40px;"></i>
               </button>
-            </div>
-            <div class="h-[22px] left-0 top-[660px] absolute justify-center items-start gap-4 inline-flex">
-              <input type="checkbox" class="w-[22px] h-[22px] border-2 border-blue-600" v-model="rememberMe" />
-              <div class="text-black text-lg font-bold font-sans">Remember me</div>
             </div>
             <div class="w-[202px] h-[54px] left-[369px] top-[730px] absolute">
               <router-link to="/login">
