@@ -74,7 +74,7 @@
         </div>
         <router-link to="/home">
           <button
-            class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+            class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
             id="btn-signUp" @click="signUp">
             <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
             </div>
