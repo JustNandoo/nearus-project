@@ -25,7 +25,7 @@
             <div class="w-4 h-4 left-[118px] top-[1px] absolute"></div>
             <div class="w-2 h-[8.17px] left-[137px] top-[5.87px] absolute bg-sky-600 rounded-full"></div>
           </div>
-          <div class="w-[707px] left-[1px] top-[81px] absolute text-black text-[34px] font-bold font-montserrat leading-[41.48px] tracking-wide">Silahkan Masukkan Email anda untuk Reset Password</div>
+          <div class="w-[707px] left-[1px] top-[81px] absolute text-black text-[34px] font-bold font-montserrat leading-[41.48px] tracking-wide">Silahkan Masukkan Email anda untuk Reset Password Anda</div>
           <div class="w-[571px] h-[161px] left-0 top-[203px] absolute">
             <div class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-montserrat leading-normal">Alamat email</div>
             <div class="w-[520px] left-[1px] top-[120px] absolute text-neutral-500/opacity-50 text-[15px] font-regular font-montserrat leading-[18.30px]">*silahkan masukkan email anda lalu check inbox di dalam email anda  dan lakukan prosedur reset password sesuai yang kami berikan di dalam inbox email anda</div>
@@ -78,10 +78,10 @@ export default {
       try {
         const response = await axios.post(`${API_URL}/reset-password`, { email: this.email });
         alert(response.data.message);
-        // Handle success message or redirect as needed
+     
       } catch (error) {
         alert(error.response.data.message);
-        // Handle error message as needed
+        
       }
     }
   }
