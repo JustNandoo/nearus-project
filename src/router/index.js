@@ -35,7 +35,17 @@ const router = createRouter({
       name: 'mitra-register',
       component: () => import('../views/MitraRegisterView.vue')
     },
-    
+    {
+      path: '/logtest',
+      name: 'testview',
+      component: () => import('../views/testview.vue')
+    },
+    {
+      path: '/verify-email/:token',
+      name: 'emails.verify',
+      component: () => import('../views/emailverification.vue'),
+      props: true,
+    },
 
   ]
 })

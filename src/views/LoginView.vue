@@ -69,15 +69,15 @@
             <button type="submit"
               class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105"
               id="btn-login">
-              <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
-              </div>
-              <div
+              <span class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
+              </span>
+              <span
                 class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white">
-              </div>
-              <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Login</div>
-              <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+              </span>
+              <span class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Login</span>
+              <span class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
                 <i class="fas fa-chevron-right text-white"></i>
-              </div>
+              </span>
             </button>
           </form>
         </div>
@@ -119,7 +119,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.post(`${API_URL}/masuk`, {
+        await axios.post(`${API_URL}/masuk`, {
           email: this.email,
           password: this.password
         });
