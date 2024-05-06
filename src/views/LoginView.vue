@@ -89,6 +89,7 @@
 <script>
 import axios from 'axios';
 import { API_URL } from '@/constants';
+import CarouselCard from '@/components/CarouselCard.vue';
 
 export default {
   data() {
