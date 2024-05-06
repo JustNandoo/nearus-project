@@ -20,7 +20,7 @@
         </div>
         <div class="w-[571px] h-[817px] left-[68px] top-[25px] absolute">
           <div class="w-[172px] h-[49px] left-0 top-[36px] absolute">
-            <div class="left-0 top-0 absolute text-sky-600 text-[40px] font-bold font-sans">NEARuS</div>
+            <img class="left-0 top-0 absolute" :src="imageLogo" />
             <div class="w-4 h-4 left-[118px] top-[1px] absolute"></div>
             <div class="w-2 h-[8.17px] left-[137px] top-[5.87px] absolute bg-sky-600 rounded-full"></div>
           </div>
@@ -76,6 +76,7 @@ export default {
       imagePath: '../src/assets/images/bg-loginPage.png',
       imagePengguna: '../src/assets/images/pengguna.png',
       imageKemitraan: '../src/assets/images/kemitraan.png',
+      imageLogo:'../src/assets/images/nearus.png',
     };
   },
 };
