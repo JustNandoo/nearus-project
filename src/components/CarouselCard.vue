@@ -47,7 +47,7 @@
             content: 'Content Slide 3',
             image: require('@/assets/images/bg-loginPage.png'),
           },
-        ],
+        ],git
         currentSlide: 0,
       };
     },
