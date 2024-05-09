@@ -38,12 +38,24 @@ const router = createRouter({
     {
       path: '/logtest',
       name: 'testview',
-      component: () => import('../views/testview.vue')
+      component: () => import('../views/verifEmail.vue')
     },
     {
       path: '/verify-email/:token',
       name: 'emails.verify',
       component: () => import('../views/emailverification.vue'),
+      props: true,
+    },
+    {
+      path: '/verification',
+      name: 'verification',
+      component: () => import('../views/verifEmail.vue'),
+      props: true,
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: () => import('../views/resetPassView.vue'),
       props: true,
     },
 
