@@ -38,7 +38,7 @@ const router = createRouter({
     {
       path: '/logtest',
       name: 'testview',
-      component: () => import('../views/testview.vue')
+      component: () => import('../views/verifEmail.vue')
     },
     {
       path: '/verify-email/:token/:email',
@@ -46,11 +46,20 @@ const router = createRouter({
       component: () => import('../views/emailverification.vue'),
       props: true,
     },
-    // {
-    //   path: '/resend-verification/:email',
-    //   name: 'emails.resendVerification',
-    //   component: ResendVerificationComponent,
-    // },
+
+    {
+      path: '/verification',
+      name: 'verification',
+      component: () => import('../views/verifEmail.vue'),
+      props: true,
+    },
+    {
+      path: '/reset',
+      name: 'reset',
+      component: () => import('../views/resetPassView.vue'),
+      props: true,
+    },
+
   ]
 })
 

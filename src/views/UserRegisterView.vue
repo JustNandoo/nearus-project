@@ -52,6 +52,14 @@
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Nomor Telepon Anda" />
         </div>
+
+<!--              <label for="nomorteleponInput"-->
+<!--                class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"-->
+<!--                @click="focusNomorTeleponInput">Nomor Telepon</label>-->
+<!--              <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"-->
+<!--                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"-->
+<!--                placeholder="Masukkan Nomor Telepon Anda" />-->
+            </div>
             <div class="w-[571px] h-[90px] left-0 top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
@@ -74,7 +82,7 @@
                   Login</div>
               </router-link>
             </div>
-            
+
               <button
                 class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
                 id="btn-signUp" @click="registerUser">
@@ -86,20 +94,35 @@
                 </div>
               </button>
       
+
+
+            <button
+              class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+              id="btn-signUp" @click="registerUser">
+              <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
+              </div>
+              <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
+              <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+                <i class="fas fa-chevron-right text-white"></i>
+              </div>
+            </button>
+
           </div>
         </div>
       </div>
     </div>
-  </div>
+
 </template>
 
 <script>
 import axios from "axios";
 import { API_URL } from '@/constants.js';
+
 export default {
   data() {
     return {
       imagePath: '../src/assets/images/bg-loginPage.png',
+      imageLogo: '../src/assets/images/nearus.png',
       rememberMe: false,
       passwordVisible: false
     };
@@ -148,9 +171,25 @@ export default {
               alert(error.response.data.message.join('\n'));
             } else {
               alert('Terjadi kesalahan. Mohon coba lagi.');
+            }})
+        .then(response => {
+          if (response.data.success) {
+            alert('Pendaftaran berhasil!');
+            const verificationToken = response.data.token;
+            this.$router.push({ name: 'emails.verify', params: { token: verificationToken } });
+          } else {
+            if (response.data.errorCode === 'EMAIL_ALREADY_EXISTS') {
+              alert('Email sudah digunakan akun lain. Silakan gunakan email lain.');
+            } else {
+              alert('Pendaftaran gagal. Mohon coba lagi.');
             }
-          });
-    },
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Terjadi kesalahan. Mohon coba lagi.');
+        });
+            },
     login() {
       console.log('Login clicked');
     }

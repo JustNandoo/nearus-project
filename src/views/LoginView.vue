@@ -69,11 +69,10 @@
             <button type="submit"
               class="w-[266px] h-[54px] left-0 top-[617px] absolute transition duration-300 ease-in-out transform hover:scale-105"
               id="btn-login">
-              <span class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
-              </span>
               <span
-                class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white">
-              </span>
+                class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow"></span>
+              <span
+                class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></span>
               <span class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Login</span>
               <span class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
                 <i class="fas fa-chevron-right text-white"></i>
@@ -83,23 +82,32 @@
         </div>
       </div>
     </div>
+    <NotifBerhasilLogin v-if="berhasilLogin" />
+    <NotifGagalLogin v-if="gagalLogin" />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import { API_URL } from '@/constants';
-import CarouselCard from '@/components/CarouselCard.vue';
+import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
+import NotifGagalLogin from '@/components/NotifGagalLogin.vue';
 
 export default {
+  components: {
+    NotifBerhasilLogin,
+    NotifGagalLogin
+  },
   data() {
     return {
       imagePath: '../src/assets/images/bg-loginPage.png',
-      imageLogo:'../src/assets/images/nearus.png',
+      imageLogo: '../src/assets/images/nearus.png',
       rememberMe: false,
       passwordVisible: false,
       email: '',
-      password: ''
+      password: '',
+      berhasilLogin: false,
+      gagalLogin: false
     };
   },
   methods: {
@@ -117,7 +125,10 @@ export default {
     },
     async handleSubmit() {
       if (!this.email || !this.password) {
-        alert('Email dan kata sandi harus diisi.');
+        this.gagalLogin = true;
+        setTimeout(() => {
+          this.gagalLogin = false;
+        }, 5000);
         return;
       }
       try {
@@ -129,8 +140,16 @@ export default {
 
         alert('Login berhasil');
         this.$router.push('/home');
+        this.berhasilLogin = true;
+        setTimeout(() => {
+          this.berhasilLogin = false;
+          this.$router.push('/home');
+        }, 1000);
       } catch (error) {
-        alert('Login gagal. Periksa kembali email dan kata sandi Anda.');
+        this.gagalLogin = true;
+        setTimeout(() => {
+          this.gagalLogin = false;
+        }, 5000);
       }
     }
   }
@@ -148,3 +167,4 @@ export default {
   background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
 }
 </style>
+x
