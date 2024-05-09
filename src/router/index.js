@@ -41,11 +41,12 @@ const router = createRouter({
       component: () => import('../views/verifEmail.vue')
     },
     {
-      path: '/verify-email/:token',
+      path: '/verify-email/:token/:email',
       name: 'emails.verify',
       component: () => import('../views/emailverification.vue'),
       props: true,
     },
+
     {
       path: '/verification',
       name: 'verification',

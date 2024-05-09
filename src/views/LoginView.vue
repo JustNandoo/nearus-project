@@ -134,8 +134,12 @@ export default {
       try {
         await axios.post(`${API_URL}/masuk`, {
           email: this.email,
-          password: this.password
+          password: this.password,
+          remember: this.rememberMe
         });
+
+        alert('Login berhasil');
+        this.$router.push('/home');
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
