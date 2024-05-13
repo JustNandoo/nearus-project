@@ -47,7 +47,7 @@
             content: 'Content Slide 3',
             image: require('@/assets/images/bg-loginPage.png'),
           },
-        ],git
+        ],
         currentSlide: 0,
       };
     },
@@ -73,14 +73,3 @@
     },
   };
   </script>
-  
-  <style>
-  .carousel__container {
-    height: 100%;
-  }
-  
-  h2, p {
-    font-family: 'Montserrat', sans-serif;
-  }
-  </style>
-  
