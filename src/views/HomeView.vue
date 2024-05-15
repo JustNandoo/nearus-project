@@ -1,5 +1,9 @@
 <template>
-  <div class="top-0 left-0 m-0 p-0 box-borderr">
+  <div class="bg-white p-0 m-0">
+    <CarouselHome/>
+    <div class="main ml-20 mt-10">
+      <h1 class="font-bold text-2xl">Kos Terpopuler</h1>
+    </div>
   </div>
 </template>
 
