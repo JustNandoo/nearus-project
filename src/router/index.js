@@ -36,8 +36,8 @@ const router = createRouter({
       component: () => import('../views/MitraRegisterView.vue')
     },
     {
-      path: '/logtest',
-      name: 'testview',
+      path: '/verif',
+      name: 'verif',
       component: () => import('../views/verifEmail.vue')
     },
     {
