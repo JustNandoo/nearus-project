@@ -15,7 +15,8 @@ export default {
         "light-black": "#0A0101"
       },
       fontFamily: {
-        'sans': ['Montserrat', 'sans-serif']
+        'sans': ['sans-serif'],
+        'montserrat': ['Montserrat']
       }
     }
   },
