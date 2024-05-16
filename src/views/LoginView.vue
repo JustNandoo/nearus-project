@@ -138,7 +138,6 @@ export default {
           remember: this.rememberMe
         });
 
-        alert('Login berhasil');
         this.$router.push('/home');
         this.berhasilLogin = true;
         setTimeout(() => {

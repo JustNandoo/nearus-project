@@ -60,7 +60,7 @@
 <!--                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"-->
 <!--                placeholder="Masukkan Nomor Telepon Anda" />-->
             </div>
-            <div class="w-[571px] h-[90px] left-0 top-[610px] absolute" id="PasswordInput">
+            <div class="w-[571px] h-[90px] left-[70px] top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
                 Sandi</label>
@@ -73,7 +73,7 @@
                 <i v-else class="fas fa-eye-slash text-lg" style="margin-top: 40px;"></i>
               </button>
             </div>
-            <div class="w-[202px] h-[54px] left-[369px] top-[730px] absolute">
+            <div class="w-[202px] h-[54px] left-[440px] top-[730px] absolute">
               <router-link to="/login">
                 <div
                   class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300"
@@ -84,7 +84,7 @@
             </div>
 
               <button
-                class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+                class="w-[266px] h-[54px] left-[70px] top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
                 id="btn-signUp" @click="registerUser">
                 <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
                 </div>
@@ -93,20 +93,6 @@
                   <i class="fas fa-chevron-right text-white"></i>
                 </div>
               </button>
-      
-
-
-            <button
-              class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
-              id="btn-signUp" @click="registerUser">
-              <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
-              </div>
-              <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
-              <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
-                <i class="fas fa-chevron-right text-white"></i>
-              </div>
-            </button>
-
           </div>
         </div>
       </div>
