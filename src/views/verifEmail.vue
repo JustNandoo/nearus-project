@@ -35,11 +35,13 @@
 </template>
 
 <script>
+import imageLogo from '../assets/images/nearus.png'
+import imageMail from '../assets/images/icon-mail.png'
 export default {
   data() {
     return {
-      imageLogo: require('../src/assets/images/nearus.png'),
-      imageMail: require('../src/assets/images/icon-mail.png'),
+      imageLogo: imageLogo,
+      imageMail: imageMail,
     };
   },
 };
