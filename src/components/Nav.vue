@@ -20,7 +20,7 @@
       </div>
       <div class="flex items-center justify-between gap-2 mr-48">
         <div class="rounded-full h-12 w-12 flex items-center justify-center">
-          <img :src=data.profilepicture alt="Profile Picture" class="rounded-full h-10 w-10">
+          <img :src=data.profilepicture alt="Profile Picture" class="object-cover rounded-full h-10 w-10">
         </div>
         <p class="text-xl font-medium text-white" :class="{'text-change':data.scrolled}">Halo, Calvin Aprilio Hariyanto</p>
       </div>
