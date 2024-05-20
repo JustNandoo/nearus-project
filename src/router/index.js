@@ -47,6 +47,23 @@ const router = createRouter({
       props: true,
     },
 
+    {
+      path: '/profile',
+      name: 'profilescreen',
+      component: () => import('../views/Profile/ProfileScreen.vue')
+    },
+
+    {
+      path: '/privatedata',
+      name: 'privatedata',
+      component: () => import ('../views/Profile/PrivateData.vue')
+    },
+
+    {
+      path: '/passworddata',
+      name: 'passworddata',
+      component: () => import ('../views/Profile/ProfilePassword.vue')
+    }
   ]
 })
 
