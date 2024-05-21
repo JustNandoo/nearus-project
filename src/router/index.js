@@ -67,4 +67,11 @@ const router = createRouter({
   ]
 })
 
+
+router.beforeEach((to, from, next) => {
+  if (from.name == "login" && localStorage.getItem("token")) to.name = "home"
+
+  next();
+});
+
 export default router
