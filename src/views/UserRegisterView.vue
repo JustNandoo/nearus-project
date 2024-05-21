@@ -45,22 +45,14 @@
                 placeholder="Masukkan Nama Anda" />
             </div>
             <div class="w-[571px] h-[90px] left-0 top-[480px] absolute" id="NomorTeleponInput">
-            <label for="nomorteleponInput"
-              class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
-              @click="focusNomorTeleponInput">Nomor Telepon</label>
-            <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"
-              class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
-              placeholder="Masukkan Nomor Telepon Anda" />
-        </div>
-
-<!--              <label for="nomorteleponInput"-->
-<!--                class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"-->
-<!--                @click="focusNomorTeleponInput">Nomor Telepon</label>-->
-<!--              <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"-->
-<!--                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"-->
-<!--                placeholder="Masukkan Nomor Telepon Anda" />-->
+              <label for="nomorteleponInput"
+                class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
+                @click="focusNomorTeleponInput">Nomor Telepon</label>
+              <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"
+                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
+                placeholder="Masukkan Nomor Telepon Anda" />
             </div>
-            <div class="w-[571px] h-[90px] left-[70px] top-[610px] absolute" id="PasswordInput">
+            <div class="w-[571px] h-[90px] left-[0px] top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
                 Sandi</label>
@@ -73,7 +65,7 @@
                 <i v-else class="fas fa-eye-slash text-lg" style="margin-top: 40px;"></i>
               </button>
             </div>
-            <div class="w-[202px] h-[54px] left-[440px] top-[730px] absolute">
+            <div class="w-[202px] h-[54px] left-[370px] top-[735px] absolute">
               <router-link to="/login">
                 <div
                   class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300"
@@ -82,35 +74,50 @@
                   Login</div>
               </router-link>
             </div>
-
-              <button
-                class="w-[266px] h-[54px] left-[70px] top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
-                id="btn-signUp" @click="registerUser">
-                <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
-                </div>
-                <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
-                <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
-                  <i class="fas fa-chevron-right text-white"></i>
-                </div>
-              </button>
+            <button
+              class="w-[266px] h-[54px] left-[0px] top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+              id="btn-signUp" @click="registerUser">
+              <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
+              </div>
+              <span
+                class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white"></span>
+              <span class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">Register</span>
+              <span class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+                <i class="fas fa-chevron-right text-white"></i>
+              </span>
+            </button>
           </div>
         </div>
       </div>
+      <transition name="fade" mode="out-in">
+        <RegistrasiBerhasil v-if="showRegistrasiBerhasil" />
+      </transition>
+      <transition name="fade" mode="out-in">
+        <RegistrasiGagal v-if="showRegistrasiGagal" />
+      </transition>
     </div>
-
+  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { API_URL } from '@/constants.js';
+import RegistrasiBerhasil from "@/components/RegistrasiBerhasil.vue"; 
+import RegistrasiGagal from "@/components/RegistrasiGagal.vue";
 
 export default {
+  components: {
+    RegistrasiBerhasil,
+    RegistrasiGagal
+  },
   data() {
     return {
       imagePath: '../src/assets/images/bg-loginPage.png',
       imageLogo: '../src/assets/images/nearus.png',
       rememberMe: false,
-      passwordVisible: false
+      passwordVisible: false,
+      showRegistrasiBerhasil: false,
+      showRegistrasiGagal: false
     };
   },
   methods: {
@@ -129,7 +136,10 @@ export default {
       const email = this.$refs.emailInput.value;
 
       if (!email) {
-        alert('Please enter your email.');
+        this.showRegistrasiGagal = true;
+        setTimeout(() => {
+          this.showRegistrasiGagal = false;
+        }, 3000);
         return;
       }
 
@@ -142,47 +152,44 @@ export default {
       };
 
       axios.post(`${API_URL}/daftaruser`, userData)
-          .then(response => {
-            if (response.data.success) {
-              alert('Pendaftaran berhasil!');
-              const verificationToken = response.data.token;
-              this.$router.push({ name: 'emails.verify', params: { token: verificationToken, email: email } });
-            } else {
-              alert(response.data.message.join('\n'));
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            if (error.response && error.response.data && error.response.data.message) {
-              alert(error.response.data.message.join('\n'));
-            } else {
-              alert('Terjadi kesalahan. Mohon coba lagi.');
-            }})
         .then(response => {
           if (response.data.success) {
-            alert('Pendaftaran berhasil!');
+            this.showRegistrasiBerhasil = true;
+            this.showRegistrasiGagal = false;
+            setTimeout(() => {
+              this.showRegistrasiBerhasil = false;
+            }, 3000);
             const verificationToken = response.data.token;
-            this.$router.push({ name: 'emails.verify', params: { token: verificationToken } });
+            this.$router.push({ name: 'emails.verify', params: { token: verificationToken, email: email } });
           } else {
-            if (response.data.errorCode === 'EMAIL_ALREADY_EXISTS') {
-              alert('Email sudah digunakan akun lain. Silakan gunakan email lain.');
-            } else {
-              alert('Pendaftaran gagal. Mohon coba lagi.');
-            }
+            this.showRegistrasiBerhasil = false;
+            this.showRegistrasiGagal = true;
+            setTimeout(() => {
+              this.showRegistrasiGagal = false;
+            }, 3000);
+            alert(response.data.message.join('\n'));
           }
         })
         .catch(error => {
           console.error('Error:', error);
-          alert('Terjadi kesalahan. Mohon coba lagi.');
+          this.showRegistrasiBerhasil = false;
+          this.showRegistrasiGagal = true;
+          setTimeout(() => {
+            this.showRegistrasiGagal = false;
+          }, 3000);
+          if (error.response && error.response.data && error.response.data.message) {
+            alert(error.response.data.message.join('\n'));
+          } else {
+            alert('Terjadi kesalahan. Mohon coba lagi.');
+          }
         });
-            },
+    },
     login() {
       console.log('Login clicked');
     }
   }
 };
 </script>
-
 
 <style scoped>
 .full-screen-bg {
@@ -193,5 +200,11 @@ export default {
   height: 100%;
   z-index: -1;
   background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
