@@ -45,7 +45,6 @@ import profilePicture from '../assets/images/tesimg1.jpeg'; // Updated to use im
 <style scoped>
 .profile-card {
   position: absolute;
-  top: 4rem; /* Adjust as needed */
   right: 0;
   z-index: 1100;
 }
