@@ -71,6 +71,7 @@
 
 <script>
 export default {
+  
   data() {
     return {
       imagePath: '../src/assets/images/bg-loginPage.png',
