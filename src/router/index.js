@@ -63,6 +63,11 @@ const router = createRouter({
       path: '/passworddata',
       name: 'passworddata',
       component: () => import ('../views/Profile/ProfilePassword.vue')
+    },
+    {
+      path: '/detail-kost',
+      name: 'detail-kost',
+      component: () => import ('../views/DetailPageView.vue')
     }
   ]
 })
