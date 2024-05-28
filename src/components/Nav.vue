@@ -1,3 +1,4 @@
+// nav.vue
 <template>
   <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]"
           :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
@@ -13,7 +14,7 @@
         </ul>
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">
-        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="$emit('toggle-profile-card')">
+        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
           <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">Halo, Calvin Aprilio Hariyanto</p>
         </div>
@@ -31,6 +32,11 @@ const scrolled = ref(false);
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
+};
+
+const toggleProfileCard = () => {
+  const event = new Event('toggle-profile-card');
+  window.dispatchEvent(event);
 };
 
 onMounted(() => {
