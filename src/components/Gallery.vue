@@ -1,10 +1,11 @@
 <template>
   <div>
-    <h1>INI DETAIL PAGE</h1>
+    <img :src="" alt="">
   </div>
 </template>
 
 <script setup>
+import image1 from ''
 
 </script>
 
