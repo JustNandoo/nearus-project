@@ -1,6 +1,7 @@
+// HomeView.vue
 <template>
   <div class="bg-white p-0 m-0 relative">
-    <Nav @toggle-profile-card="toggleProfileCard" />
+    <Nav />
     <CarouselHome />
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
@@ -29,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import Nav from "@/components/Nav.vue";
 import CarouselHome from "@/components/CarouselHome.vue";
 import ProductCard from "@/components/ProductCard.vue";
@@ -42,6 +43,14 @@ const showProfileCard = ref(false);
 const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
+
+onMounted(() => {
+  window.addEventListener('toggle-profile-card', toggleProfileCard);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('toggle-profile-card', toggleProfileCard);
+});
 </script>
 
 <style>
