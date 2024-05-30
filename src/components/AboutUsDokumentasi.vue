@@ -6,7 +6,7 @@
            <img class="w-[259px] h-[238px] left-[335px] top-0 absolute" :src="imageTailwind" />
            <img class="w-[259px] h-[238px] left-[670px] top-0 absolute" :src="imagePHP" />
            <img class="w-[259px] h-[238px] left-[1005px] top-0 absolute" :src="imageLaravel" />
-           <img class="w-[259px] h-[238px] left-[1340px] top-0 absolute" :src="imageVite    " />
+           <img class="w-[259px] h-[238px] left-[1340px] top-0 absolute" :src="imageVite" />
        </div>
    </div>
    </template>

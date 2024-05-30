@@ -15,7 +15,7 @@ import AboutUsCard from "@/components/AboutUsCard.vue";
 import CardProductAboutUs from "@/components/CardProductAboutUs.vue";
 import AboutUsText from "@/components/AboutUsText.vue";
 import TeamCard from "@/components/TeamCard.vue";
-import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue"; // Impor komponen AboutUsDokumentasi
+import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue"; 
 import Footer from "@/components/Footer.vue";
 
 export default {
