@@ -36,12 +36,12 @@ const router = createRouter({
       component: () => import('../views/MitraRegisterView.vue')
     },
     {
-      path: '/logtest',
-      name: 'testview',
-      component: () => import('../views/testview.vue')
+      path: '/verif',
+      name: 'verif',
+      component: () => import('../views/verifEmail.vue')
     },
     {
-      path: '/verify-email/:token',
+      path: '/verify-email/:token/:email',
       name: 'emails.verify',
       component: () => import('../views/emailverification.vue'),
       props: true,
@@ -68,6 +68,11 @@ const router = createRouter({
       path: '/detailpage',
       name: 'detailpage',
       component: () => import ('../views/Detail/DetailView.vue')
+    },
+    {
+      path: '/addkost',
+      name: 'addkost',
+      component: () => import ('../views/Owner/AddKost.vue')
     }
   ]
 })
