@@ -68,11 +68,6 @@ const router = createRouter({
       path: '/detailpage',
       name: 'detailpage',
       component: () => import ('../views/Detail/DetailView.vue')
-    },
-    {
-      path: '/addkost',
-      name: 'addkost',
-      component: () => import ('../views/Owner/AddKost.vue')
     }
   ]
 })
