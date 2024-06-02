@@ -63,13 +63,8 @@ const router = createRouter({
       path: '/passworddata',
       name: 'passworddata',
       component: () => import ('../views/Profile/ProfilePassword.vue')
-    },
-    {
-      path: '/detailpage',
-      name: 'detailpage',
-      component: () => import ('../views/Detail/DetailView.vue')
-    }
   ]
 })
+
 
 export default router

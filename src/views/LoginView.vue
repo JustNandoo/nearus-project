@@ -132,11 +132,13 @@ export default {
         return;
       }
       try {
-        await axios.post(`${API_URL}/masuk`, {
+       const  response = await axios.post(`${API_URL}/masuk`, {
           email: this.email,
           password: this.password,
           remember: this.rememberMe
         });
+
+        console.log(response)
 
         this.$router.push('/home');
         this.berhasilLogin = true;

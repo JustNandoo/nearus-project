@@ -1,62 +1,56 @@
+// nav.vue
 <template>
   <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]"
-          :class="{'bg-white': data.scrolled, 'shadow-lg' : data.scrolled}">
+          :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-[92%] mx-auto mr-32">
       <div class="ml-60">
-        <img class="w-32" :src=data.logo alt="logo">
+        <router-link to="/home">
+          <img class="w-32 cursor-pointer" :src="logo" alt="logo">
+        </router-link>
       </div>
       <div class="mr-96">
-        <ul class="flex items-center gap-10 text-xl font-medium text-white" :class="{'text-change':data.scrolled}">
-          <li>
-            <a class="" href="#">Sewa</a>
-          </li>
-          <li>
-            <a class="" href="#">NearusFinance</a>
-          </li>
-          <li>
-            <a class="" href="#">About Us</a>
-          </li>
+        <ul class="flex items-center gap-10 text-xl font-medium text-white" :class="{'text-change': scrolled}">
+          <li><router-link to="/home">Sewa</router-link></li>
+          <li><a href="#">NearusFinance</a></li>
+          <li><router-link to="/AboutUs">About Us</router-link></li>
         </ul>
       </div>
-      <div class="flex items-center justify-between gap-2 mr-48">
-        <div class="rounded-full h-12 w-12 flex items-center justify-center">
-          <img :src=data.profilepicture alt="Profile Picture" class="rounded-full h-10 w-10">
+      <div class="flex items-center justify-between gap-2 mr-48 relative">
+        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
+          <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
+          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">Halo, Calvin Aprilio Hariyanto</p>
         </div>
-        <p class="text-xl font-medium text-white" :class="{'text-change':data.scrolled}">Halo, Calvin Aprilio Hariyanto</p>
       </div>
     </nav>
   </header>
 </template>
 
 <script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import logo from '../assets/images/nearus.png';
+import profilePicture from '../assets/images/tesimg1.jpeg';
 
-
-import {onBeforeMount, onMounted, reactive} from "vue";
-
-const data = reactive({
-  scrolled: false,
-  logo: '../src/assets/images/nearus.png',
-  profilepicture: '../src/assets/images/tesimg1.jpeg',
-})
-
-
+const scrolled = ref(false);
 
 const handleScroll = () => {
-  data.scrolled = window.scrollY > 0;
-}
+  scrolled.value = window.scrollY > 0;
+};
+
+const toggleProfileCard = () => {
+  const event = new Event('toggle-profile-card');
+  window.dispatchEvent(event);
+};
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
-})
+});
 
-onBeforeMount(() => {
+onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
-})
-
-
+});
 </script>
 
-<style>
+<style scoped>
 .header {
   z-index: 1000;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, margin-top 0.3s ease;
@@ -73,5 +67,4 @@ onBeforeMount(() => {
 .shadow-lg {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 </style>
