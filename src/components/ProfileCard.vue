@@ -31,7 +31,7 @@
           <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />
           <p class="text-[22px] font-medium">Syarat dan Ketentuan</p>
         </div>
-        <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-full rounded-lg mt-7 text-white text-[22px] font-medium">
+        <button @click="logout" class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-full rounded-lg mt-7 text-white text-[22px] font-medium">
           <font-awesome-icon :icon="faRightFromBracket" class="text-white w-8 h-8"/>
           Keluar
         </button>
@@ -42,11 +42,20 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { faHouseUser, faGear, faHeadset, faCircleQuestion, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import profilePicture from '../assets/images/tesimg1.jpeg';
+import { useStore } from 'vuex';
 
 const isVisible = ref(false);
+const router = useRouter();
+const store = useStore();
+
+const logout = () => {
+  store.dispatch('logout'); // Memanggil action 'logout' dari Vuex
+  router.push('/login'); // Mengarahkan pengguna ke halaman login setelah logout
+};
 
 setTimeout(() => {
   isVisible.value = true;

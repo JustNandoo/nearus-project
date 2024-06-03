@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
@@ -111,6 +112,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['login']),
     focusEmailInput() {
       this.$refs.emailInput.focus();
     },
@@ -132,15 +134,16 @@ export default {
         return;
       }
       try {
-       const  response = await axios.post(`${API_URL}/masuk`, {
+        const response = await axios.post(`${API_URL}/masuk`, {
           email: this.email,
           password: this.password,
           remember: this.rememberMe
         });
 
-        console.log(response)
+        // Assuming the response contains user data in response.data
+        const user = response.data;
+        this.login(user);
 
-        this.$router.push('/home');
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
