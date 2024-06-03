@@ -4,21 +4,35 @@ import { API_URL } from '@/constants';
 
 export default createStore({
   state: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: JSON.parse(localStorage.getItem('local')) || null,
+    token: localStorage.getItem('token') || null,
   },
   mutations: {
     setUser(state, user) {
-      state.user = user.data;
-      localStorage.setItem('user', JSON.stringify(user));
+      console.log('Setting user:', user); // Keep console log here
+      state.user = user;
+      localStorage.setItem('local', JSON.stringify(user));
+    },
+    setToken(state, token) {
+      state.token = token;
+      localStorage.setItem('token', token);
     },
     clearUser(state) {
+      console.log('Clearing user data'); // Optional: log clearing user data
       state.user = null;
-      localStorage.removeItem('user');
+      state.token = null;
+      localStorage.removeItem('local');
+      localStorage.removeItem('token');
     },
     loadUserFromStorage(state) {
-      const user = localStorage.getItem('user');
+      const user = localStorage.getItem('local');
+      const token = localStorage.getItem('token');
       if (user) {
         state.user = JSON.parse(user);
+        console.log('Loaded user from storage:', state.user); // Log loaded user
+      }
+      if (token) {
+        state.token = token;
       }
     },
   },
@@ -27,10 +41,15 @@ export default createStore({
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
-        console.log('User data:', user);
-        commit('setUser', user);
+        console.log('User data:', user); // Log the user data from response
+        commit('setUser', user.data);
+        commit('setToken', user.token);
       } catch (error) {
-        console.error('Login failed:', error);
+        if (error.response) {
+          console.error('Login failed:', error.response.data);
+        } else {
+          console.error('Login failed:', error.message);
+        }
         throw error;
       }
     },

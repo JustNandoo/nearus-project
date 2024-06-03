@@ -6,7 +6,7 @@
       </svg>
       <span class="sr-only">Info</span>
       <div class="flex-grow truncate">
-        <span class="font-semibold text-lg text-blue-800">Login Berhasil</span> Login anda berhasil selamat datang kembali
+        <span class="font-semibold text-lg text-white-800">Login Berhasil</span> Login anda berhasil selamat datang kembali
       </div>
     </div>
   </div>

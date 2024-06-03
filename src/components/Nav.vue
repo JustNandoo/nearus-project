@@ -33,7 +33,7 @@ import logo from '../assets/images/nearus.png';
 import profilePicture from '../assets/images/tesimg1.jpeg';
 
 const store = useStore();
-const user = computed(() => store.state.user);
+const user = computed(() => store.getters.getUser);
 const scrolled = ref(false);
 
 const handleScroll = () => {
@@ -46,6 +46,7 @@ const toggleProfileCard = () => {
 };
 
 onMounted(() => {
+  store.dispatch('initializeStore');
   window.addEventListener('scroll', handleScroll);
 });
 
