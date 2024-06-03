@@ -68,7 +68,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -82,7 +82,7 @@ onMounted(async () => {
   try {
     const response = await axios.get('https://nearus.id/api/user');
     const data = response.data;
-    const userData = data.find((user: any) => user.ownerId === 7);
+    const userData = data.find(user => user.ownerId === 7);
     if (userData) {
       user.value = {
         name: userData.name || 'Data kosong',
@@ -95,20 +95,21 @@ onMounted(async () => {
   }
 });
 
-const updateProfilePic = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
+const updateProfilePic = (event) => {
+  const file = event.target.files?.[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {
-      const imgElement = document.getElementById('profile-pic') as HTMLImageElement;
+      const imgElement = document.getElementById('profile-pic');
       if (imgElement && e.target) {
-        imgElement.src = (e.target.result as string);
+        imgElement.src = e.target.result;
       }
     };
     reader.readAsDataURL(file);
   }
 };
 </script>
+
 
 <style scoped>
 /* Add any specific styles if needed */

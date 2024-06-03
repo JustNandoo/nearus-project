@@ -1,42 +1,11 @@
 <template>
   <div class="flex flex-col bg-white">
-    <header class="flex justify-center items-center px-16 py-9 w-full text-white bg-sky-600 max-md:px-5 max-md:max-w-full">
-      <div class="flex gap-5 justify-between w-full max-w-[1364px] max-md:flex-wrap max-md:max-w-full">
-        <div class="flex gap-5 my-auto text-2xl font-medium max-md:flex-wrap max-md:max-w-full">
-          <div class="grow text-3xl font-bold">NEARuS</div>
-          <nav>Sewa</nav>
-          <nav class="flex-auto">NearusFinance</nav>
-          <nav class="flex-auto">About Us</nav>
-        </div>
-        <div class="flex gap-4 text-base">
-          <img loading="lazy" src="../src/assets/images/profile-pic.png" />
-          <div class="flex-auto my-auto">Halo, User</div>
-        </div>
-      </div>
-    </header>
+    <Nav />
     <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <h1 class="self-stretch text-3xl font-bold text-black max-md:max-w-full">Pengaturan</h1>
       <section class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <aside class="flex flex-col w-[36%] max-md:ml-0 max-md:w-full">
-            <div class="flex flex-col pt-1 pb-6 text-xl text-black rounded-xl border border-solid border-black border-opacity-60 max-md:mt-10">
-                <router-link
-                    to="/profile"
-                    class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5">
-                    Ubah Data Profil
-                    </router-link>
-                    <router-link
-                    to="/privatedata"
-                    class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5">
-                    Data pribadi 
-                    </router-link>
-                    <router-link
-                    to="/passworddata"
-                    class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5">
-                    Ubah Kata sandi
-                    </router-link>
-            </div>
-          </aside>
+          <SelectionProfile />
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <div class="flex flex-col grow mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
               <h2 class="text-3xl font-semibold max-md:max-w-full">Data Pribadi</h2>
@@ -120,11 +89,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script>
+import Nav from '@/components/Nav.vue';
+import SelectionProfile from '@/components/SelectionProfile.vue';
 
-export default defineComponent({
-  name: 'NearusSettings'
-});
+export default {
+  components: {
+    Nav,
+    SelectionProfile,
+  },
+};
 </script>
-
