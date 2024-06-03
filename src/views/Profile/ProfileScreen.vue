@@ -74,7 +74,7 @@ import axios from 'axios';
 
 const user = ref({
   name: 'Data kosong',
-  email: 'Data kosong', 
+  email: 'Data kosong',
   phone: 'Data kosong'
 });
 
