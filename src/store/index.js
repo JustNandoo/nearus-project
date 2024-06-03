@@ -1,12 +1,14 @@
 import { createStore } from 'vuex';
+import axios from 'axios';
+import { API_URL } from '@/constants';
 
 export default createStore({
   state: {
-    user: null
+    user: JSON.parse(localStorage.getItem('user')) || null,
   },
   mutations: {
     setUser(state, user) {
-      state.user = user;
+      state.user = user.data;
       localStorage.setItem('user', JSON.stringify(user));
     },
     clearUser(state) {
@@ -18,22 +20,29 @@ export default createStore({
       if (user) {
         state.user = JSON.parse(user);
       }
-    }
+    },
   },
   actions: {
-    login({ commit }, user) {
-      commit('setUser', user);
+    async login({ commit }, { email, password }) {
+      try {
+        const response = await axios.post(`${API_URL}/masuk`, { email, password });
+        const user = response.data;
+        console.log('User data:', user);
+        commit('setUser', user);
+      } catch (error) {
+        console.error('Login failed:', error);
+        throw error;
+      }
     },
     logout({ commit }) {
       commit('clearUser');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
-    }
+    },
   },
   getters: {
     isLoggedIn: state => !!state.user,
-    getUser: state => state.user
-  }
+    getUser: state => state.user,
+  },
 });
-

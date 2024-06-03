@@ -86,7 +86,8 @@
     <NotifGagalLogin v-if="gagalLogin" />
   </div>
 </template>
-
+imagePath: '../src/assets/images/bg-loginPage.png',
+imageLogo: '../src/assets/images/nearus.png',
 <script>
 import { mapActions } from 'vuex';
 import axios from 'axios';
@@ -136,6 +137,7 @@ export default {
           this.$router.push('/home');
         }, 1000);
       } catch (error) {
+        console.error('Login failed:', error.response ? error.response.data : error.message);
         this.gagalLogin = true;
         setTimeout(() => {
           this.gagalLogin = false;
@@ -145,6 +147,7 @@ export default {
   },
 };
 </script>
+
 
 
 <style scoped>
