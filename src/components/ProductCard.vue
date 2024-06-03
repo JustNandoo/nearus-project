@@ -29,18 +29,23 @@ onMounted(async () => {
   try {
     const response = await axios.get('https://nearus.id/api/product');
     const data = response.data;
-    product.value = {
-      image: data[0].image,
-      productname: data[0].productname,
-      location: data[0].location,
-      category: data[0].category,
-      price: 'Rp.1.300.000'
-    };
+    if (data && data.length > 0) {
+      product.value = {
+        image: data[0].image,
+        productname: data[0].productname,
+        location: data[0].location,
+        category: data[0].category,
+        price: 'Rp.1.300.000'
+      };
+    } else {
+      console.error('Error fetching product data: No data received from API');
+    }
   } catch (error) {
     console.error('Error fetching product data:', error);
   }
 });
 </script>
+
 
 <style scoped>
 </style>
