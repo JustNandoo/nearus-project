@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isLoggedIn" class="bg-white p-0 m-0 relative">
+  <div class="bg-white p-0 m-0 relative">
     <Nav />
     <CarouselHome />
     <div class="main ml-20 mt-20">
@@ -26,16 +26,10 @@
     <ProfileCard v-if="showProfileCard" class="profile-card"/>
     <FooterComponent/>
   </div>
-  <div v-else>
-    <!-- Redirecting to login page or show loading spinner/message -->
-    <router-link to="/login">Please login to view this page</router-link>
-  </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import Nav from "@/components/Nav.vue";
 import CarouselHome from "@/components/CarouselHome.vue";
@@ -45,14 +39,6 @@ import ProfileCard from "@/components/ProfileCard.vue";
 import FooterComponent from "@/components/Footer.vue";
 
 const showProfileCard = ref(false);
-const store = useStore();
-const router = useRouter();
-
-const isLoggedIn = computed(() => store.getters.isLoggedIn);
-
-const toggleProfileCard = () => {
-  showProfileCard.value = !showProfileCard.value;
-};
 
 onMounted(() => {
   window.addEventListener('toggle-profile-card', toggleProfileCard);
@@ -62,11 +48,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 
-onMounted(() => {
-  if (!isLoggedIn.value) {
-    router.push('/login'); // Redirect to login page if user is not logged in
-  }
-});
+const toggleProfileCard = () => {
+  showProfileCard.value = !showProfileCard.value;
+};
 </script>
 
 <style>
