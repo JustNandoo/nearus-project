@@ -94,19 +94,13 @@ onUnmounted(() => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Transition classes */
-.slide-enter-active, .slide-leave-active {
-  transition: all 0.3s ease;
-}
 
 .slide-enter-from, .slide-leave-to {
   opacity: 0;
-  //transform: translateX(100%);
 }
 
 .slide-enter-to, .slide-leave-from {
   opacity: 1;
-  transform: translateX(0%);
 }
 </style>
 

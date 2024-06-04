@@ -1,6 +1,6 @@
 <template>
-  <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000] shadow-lg"
-          :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
+  <header class="header bg-white font-montserrat fixed w-full bg- h-20 pt-3 pb-3 items-center z-[1000] shadow-lg"
+          :class="{'bg-blue-primary': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-[92%] mx-auto mr-32">
       <div class="ml-60">
         <img class="w-32" :src="scrolled ? scrolledLogo : logo" alt="logo">
@@ -54,7 +54,7 @@ onBeforeUnmount(() => {
   transition: background-color 0.3s ease, box-shadow 0.3s ease, margin-top 0.3s ease;
 }
 
-.bg-white {
+.bg-blue-primary {
   background-color: #008DDA;
 }
 

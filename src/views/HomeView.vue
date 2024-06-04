@@ -65,13 +65,13 @@ onBeforeUnmount(() => {
 }
 
 .bg-blue-primary {
-  background-color: #007bff; /* Adjust to your primary blue color */
+  background-color: #007bff; 
 }
 
 .profile-card {
   position: absolute;
-  top: 5rem; /* Adjust as needed */
-  right: 2rem; /* Adjust as needed */
+  top: 5rem; 
+  right: 2rem; 
   z-index: 1100;
 }
 </style>

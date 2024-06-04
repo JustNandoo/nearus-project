@@ -3,13 +3,15 @@
           :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-[92%] mx-auto mr-32">
       <div class="ml-60">
-        <img class="w-32" :src="logo" alt="logo">
+        <router-link to="/home">
+          <img class="w-32 cursor-pointer" :src="logo" alt="logo">
+        </router-link>
       </div>
       <div class="mr-96">
         <ul class="flex items-center gap-10 text-xl font-medium text-white" :class="{'text-change': scrolled}">
-          <li><a href="#">Sewa</a></li>
+          <li><router-link to="/home">Sewa</router-link></li>
           <li><a href="#">NearusFinance</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><router-link to="/AboutUs">About Us</router-link></li>
         </ul>
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">

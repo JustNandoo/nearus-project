@@ -30,7 +30,7 @@ onMounted(async () => {
     const response = await axios.get('https://nearus.id/api/product');
     const data = response.data;
     product.value = {
-      image: data[0].image,
+      // image: data[0].image,
       productname: data[0].productname,
       location: data[0].location,
       category: data[0].category,
