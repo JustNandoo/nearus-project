@@ -1,20 +1,7 @@
 <template>
   <div class="flex flex-col pb-14 bg-white">
-    <header class="flex justify-center items-center px-16 py-9 w-full text-white bg-sky-600 max-md:px-5 max-md:max-w-full">
-      <nav class="flex gap-5 justify-between w-full max-w-[1364px] max-md:flex-wrap max-md:max-w-full">
-        <div class="flex gap-5 my-auto text-2xl font-medium max-md:flex-wrap max-md:max-w-full">
-          <h1 class="grow text-3xl font-bold">NEARuS</h1>
-          <a href="#" class="block">Sewa</a>
-          <a href="#" class="flex-auto">NearusFinance</a>
-          <a href="#" class="flex-auto">About Us</a>
-        </div>
-        <div class="flex gap-4 text-base">
-          <img loading="lazy" src="../src/assets/images/profile-pic.png" class="w-10 h-10 rounded-full"/>
-          <p class="flex-auto my-auto">Halo, User</p>
-        </div>
-      </nav>
-    </header>
-    <main class="flex flex-col self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
+    <Nav />
+    <main class="flex flex-col self-center px-5 mt-16 max-w-full w-[1208px] max-md:mt-10"> <!-- Changed mt-12 to mt-16 -->
       <h2 class="text-3xl font-bold text-black max-md:max-w-full">Pengaturan</h2>
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -66,46 +53,62 @@
       </section>
     </main>
   </div>
+  <FooterComponent />
 </template>
 
-<script setup lang="ts">
+<script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import Nav from '@/components/Nav.vue';
+import FooterComponent from "@/components/Footer.vue";
 
-const user = ref({
-  name: 'Data kosong',
-  email: 'Data kosong',
-  phone: 'Data kosong'
-});
+export default {
+  components: {
+    Nav,
+    FooterComponent
+  },
+  setup() {
+    const user = ref({
+      name: 'Data kosong',
+      email: 'Data kosong',
+      phone: 'Data kosong'
+    });
 
-onMounted(async () => {
-  try {
-    const response = await axios.get('https://nearus.id/api/user');
-    const data = response.data;
-    const userData = data.find((user: any) => user.ownerId === 7);
-    if (userData) {
-      user.value = {
-        name: userData.name || 'Data kosong',
-        email: userData.email || 'Data kosong',
-        phone: userData.phonenumber || 'Data kosong'
-      };
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-  }
-});
+    onMounted(async () => {
+      try {
+        const response = await axios.get('https://nearus.id/api/user');
+        const data = response.data;
+        const userData = data.find(user => user.ownerId === 8);
+        if (userData) {
+          user.value = {
+            name: userData.name || 'Data kosong',
+            email: userData.email || 'Data kosong',
+            phone: userData.phonenumber || 'Data kosong'
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    });
 
-const updateProfilePic = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const imgElement = document.getElementById('profile-pic') as HTMLImageElement;
-      if (imgElement && e.target) {
-        imgElement.src = (e.target.result as string);
+    const updateProfilePic = (event) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imgElement = document.getElementById('profile-pic');
+          if (imgElement instanceof HTMLImageElement) {
+            imgElement.src = e.target.result;
+          }
+        };
+        reader.readAsDataURL(file);
       }
     };
-    reader.readAsDataURL(file);
+
+    return {
+      user,
+      updateProfilePic
+    };
   }
 };
 </script>
