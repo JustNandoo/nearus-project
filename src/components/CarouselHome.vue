@@ -99,8 +99,11 @@ onUnmounted(() => {
   opacity: 0;
 }
 
+
 .slide-enter-to, .slide-leave-from {
   opacity: 1;
 }
+
+
 </style>
 

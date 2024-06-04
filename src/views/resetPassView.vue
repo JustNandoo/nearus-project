@@ -2,7 +2,7 @@
     <div class="full-screen-bg flex items-center justify-center h-screen">
       <div class="w-[1147px] h-[803px] relative">
         <div
-          class="w-[1147px] h-[650px] left-0 top-0 absolute bg-white rounded-[15px] shadow shadow-inner border border-blue-600" />
+          class="w-[1147px] h-[650px] left-0 top-0 absolute bg-white rounded-[15px] shadow-inner border border-blue-600" />
         <div class="w-[1038px] h-[0px] left-[55px] top-[112px] absolute border-4 border-blue-400"></div>
         <div class="w-[172px] h-[49px] left-[55px] top-[47px] absolute">
           <img class="left-0 top-0 absolute" :src="imageLogo" />
@@ -45,7 +45,7 @@
         this.password = '';
         this.confirmPassword = '';
       } else {
-        // Kata sandi dan konfirmasi kata sandi cocok
+
       }
     },
   },

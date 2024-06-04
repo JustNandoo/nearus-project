@@ -1,6 +1,6 @@
 <template>
   <div class="mt-10 product-card h-full w-[400px]" v-if="product">
-    <img class="w-full h-[220px] rounded-lg object-cover" :src="product.image" alt="Product Image">
+    <img class="w-full h-[220px] rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
     <div class="flex mt-4 gap-4 text-[20px] items-center">
       <font-awesome-icon class="text-black w-6 h-6" :icon="faChild" />
       <p class="font-normal text-[16px]">{{ product.category }}</p>
@@ -28,14 +28,21 @@ const product = ref(null);
 onMounted(async () => {
   try {
     const response = await axios.get('https://nearus.id/api/product');
-    const data = response.data;
-    product.value = {
-      // image: data[0].image,
-      productname: data[0].productname,
-      location: data[0].location,
-      category: data[0].category,
-      price: 'Rp.1.300.000'
-    };
+    console.log('API Response:', response);
+
+    const data = response.data.data;
+
+    if (data && data.length > 0) {
+      product.value = {
+        image: data[0].image,
+        productname: data[0].productname,
+        location: data[0].location,
+        category: data[0].category,
+        price: 'Rp.1.300.000'
+      };
+    } else {
+      console.error('Error fetching product data: No data received from API');
+    }
   } catch (error) {
     console.error('Error fetching product data:', error);
   }

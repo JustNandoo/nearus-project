@@ -1,8 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-
-
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -65,20 +61,15 @@ const router = createRouter({
       component: () => import ('../views/Profile/ProfilePassword.vue')
     },
     {
-      path: '/detail-kost',
-      name: 'detail-kost',
-      component: () => import ('../views/DetailPageView.vue')
-    },
-    {
       path: '/AboutUs',
       name: 'AboutUs',
       component: () => import ('../views/AboutUsView.vue')
     },
     {
-      path: '/testing',
-      name: 'testing',
-      component: () => import ('../views/testing.vue')
+      path: '/',
+      redirect: '/home'
     }
+
   ]
 })
 

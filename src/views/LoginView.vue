@@ -86,8 +86,10 @@
     <NotifGagalLogin v-if="gagalLogin" />
   </div>
 </template>
-
+imagePath: '../src/assets/images/bg-loginPage.png',
+imageLogo: '../src/assets/images/nearus.png',
 <script>
+import { mapActions } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
@@ -96,32 +98,24 @@ import NotifGagalLogin from '@/components/NotifGagalLogin.vue';
 export default {
   components: {
     NotifBerhasilLogin,
-    NotifGagalLogin
+    NotifGagalLogin,
   },
   data() {
     return {
-      imagePath: '../src/assets/images/bg-loginPage.png',
-      imageLogo: '../src/assets/images/nearus.png',
-      rememberMe: false,
-      passwordVisible: false,
       email: '',
       password: '',
+      rememberMe: false,
+      passwordVisible: false,
       berhasilLogin: false,
-      gagalLogin: false
+      gagalLogin: false,
+      imagePath: '../src/assets/images/bg-loginPage.png',
+      imageLogo: '../src/assets/images/nearus.png',
     };
   },
   methods: {
-    focusEmailInput() {
-      this.$refs.emailInput.focus();
-    },
+    ...mapActions(['login']),
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
-      const passwordInput = this.$refs.passwordInput;
-      if (this.passwordVisible) {
-        passwordInput.type = 'text';
-      } else {
-        passwordInput.type = 'password';
-      }
     },
     async handleSubmit() {
       if (!this.email || !this.password) {
@@ -132,30 +126,29 @@ export default {
         return;
       }
       try {
-       const  response = await axios.post(`${API_URL}/masuk`, {
+        await this.login({
           email: this.email,
           password: this.password,
-          remember: this.rememberMe
+          remember: this.rememberMe,
         });
-
-        console.log(response)
-
-        this.$router.push('/home');
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
           this.$router.push('/home');
         }, 1000);
       } catch (error) {
+        console.error('Login failed:', error.response ? error.response.data : error.message);
         this.gagalLogin = true;
         setTimeout(() => {
           this.gagalLogin = false;
         }, 5000);
       }
-    }
-  }
+    },
+  },
 };
 </script>
+
+
 
 <style scoped>
 .full-screen-bg {
@@ -168,4 +161,3 @@ export default {
   background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
 }
 </style>
-x
