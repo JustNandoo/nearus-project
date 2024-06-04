@@ -15,7 +15,16 @@
         </ul>
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">
-        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
+        <!-- Tombol Login -->
+        <router-link v-if="!user" to="/login" class="text-xl font-medium text-white">
+          <button class="bg-blue-primary hover:bg-blue-700 text-white py-2 px-4 rounded">Login</button>
+        </router-link>
+        <!-- Tombol Register -->
+        <router-link v-if="!user" to="/register" class="text-xl font-medium text-white">
+          <button class="border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded">Register</button>
+        </router-link>
+        <!-- Tombol Profile -->
+        <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
           <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">
             Halo, {{ user ? user.name : 'Guest' }}
@@ -29,12 +38,14 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import logo from '../assets/images/nearus.png';
 import profilePicture from '../assets/images/tesimg1.jpeg';
 
 const store = useStore();
 const user = computed(() => store.getters.getUser);
 const scrolled = ref(false);
+const router = useRouter();
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
