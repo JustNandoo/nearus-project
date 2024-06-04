@@ -5,7 +5,7 @@
         <img class="mt-5 ml-1 w-[100px] h-[100px] object-cover rounded-full" :src="profilePicture" alt="Profile Picture">
         <div class="mt-5 mr-4">
           <h1 class="mb-4 font-bold text-[23px]" id="nama">{{ user.name }}</h1>
-          <p>EdiHariyanto1910@gmail.com</p>
+          <p>{{ user.email }}</p>
         </div>
       </div>
       <div>
@@ -52,7 +52,11 @@ const isVisible = ref(false);
 const router = useRouter();
 const store = useStore();
 
-const user = computed(() => store.state.user);
+const user = computed(() => {
+  const userData = store.getters.getUser;
+  console.log('User data in ProfileCard:', userData); 
+  return userData;
+});
 
 const logout = () => {
   store.dispatch('logout');
@@ -63,6 +67,7 @@ setTimeout(() => {
   isVisible.value = true;
 }, 100);
 </script>
+
 
 <style scoped>
 .profile-card {
