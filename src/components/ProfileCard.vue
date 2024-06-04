@@ -1,12 +1,12 @@
 <template>
   <transition name="slide-appear">
     <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[670px] px-5 z-[10000]">
-      <div class="flex items-center justify-between border-b-[1px] border-black pb-4">
-        <img class="mt-5 ml-1 w-[100px] h-[100px] object-cover rounded-full" :src="profilePicture" alt="Profile Picture">
-        <div class="mt-5 mr-4">
+      <div class="flex items-start justify-between border-b-[1px] border-black pb-4">
+        <div class="mt-8         ml-8px text-left">
           <h1 class="mb-4 font-bold text-[23px]" id="nama">{{ user.name }}</h1>
           <p>{{ user.email }}</p>
         </div>
+        <img class="mt-5 ml-1 w-[100px] h-[100px] object-cover rounded-full" :src="profilePicture" alt="Profile Picture">
       </div>
       <div>
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
