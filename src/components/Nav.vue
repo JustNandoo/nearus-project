@@ -17,11 +17,11 @@
       <div class="flex items-center justify-between gap-2 mr-48 relative">
         <!-- Tombol Login -->
         <router-link v-if="!user" to="/login" class="text-xl font-medium text-white">
-          <button class="bg-blue-primary hover:bg-blue-700 text-white py-2 px-4 rounded">Login</button>
+          <button class="rounded-button bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">Login</button>
         </router-link>
         <!-- Tombol Register -->
         <router-link v-if="!user" to="/register" class="text-xl font-medium text-white">
-          <button class="border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded">Register</button>
+          <button class="rounded-button border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded transition duration-300">Register</button>
         </router-link>
         <!-- Tombol Profile -->
         <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
@@ -82,5 +82,14 @@ onBeforeUnmount(() => {
 
 .shadow-lg {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-button {
+  border-radius: 20px; /* Sesuaikan nilai sesuai keinginan Anda */
+}
+
+.rounded-button:hover {
+  /* Jika Anda ingin efek hover tetap konsisten, tambahkan properti border-radius pada hover juga */
+  border-radius: 20px;
 }
 </style>
