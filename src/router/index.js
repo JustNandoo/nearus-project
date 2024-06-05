@@ -1,29 +1,77 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Test from '../views/test.vue'
-
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/home',
       name: 'home',
-      component: HomeView
+      component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue')
     },
     {
-      path: '/test',
-      name: 'test',
+      path: '/reset-password',
+      component: () => import('../views/resetpass.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/RegisterView.vue')
+    },
+    {
+      path: '/user-register',
+      name: 'user-register',
+      component: () => import('../views/UserRegisterView.vue')
+    },
+    {
+      path: '/mitra-register',
+      name: 'mitra-register',
+      component: () => import('../views/MitraRegisterView.vue')
+    },
+    {
+      path: '/verif',
+      name: 'verif',
+      component: () => import('../views/verifEmail.vue')
+    },
+    {
+      path: '/verify-email/:token/:email',
+      name: 'emails.verify',
+      component: () => import('../views/emailverification.vue'),
+      props: true,
+    },
 
-      component: Test
+    {
+      path: '/profile',
+      name: 'profilescreen',
+      component: () => import('../views/Profile/ProfileScreen.vue')
+    },
+
+    {
+      path: '/privatedata',
+      name: 'privatedata',
+      component: () => import ('../views/Profile/PrivateData.vue')
+    },
+
+    {
+      path: '/passworddata',
+      name: 'passworddata',
+      component: () => import ('../views/Profile/ProfilePassword.vue')
+    },
+    {
+      path: '/AboutUs',
+      name: 'AboutUs',
+      component: () => import ('../views/AboutUsView.vue')
+    },
+    {
+      path: '/',
+      redirect: '/home'
     }
 
   ]
 })
+
 
 export default router
