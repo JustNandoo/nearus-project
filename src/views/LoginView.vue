@@ -52,7 +52,7 @@
             </div>
             <div class="h-[22px] left-0 top-[550px] absolute justify-center items-start gap-4 inline-flex">
               <input type="checkbox" class="w-[22px] h-[22px] border-2 border-blue-600" v-model="rememberMe" />
-              <div class="text-black text-lg font-bold font-sans">Remember Me</div>
+              <div class="text-black text-lg font-bold font-sans">Remember me</div>
             </div>
             <a href="/reset-password"
               class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans hover:text-blue-500 hover:underline">Forgot
