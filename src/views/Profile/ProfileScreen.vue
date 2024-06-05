@@ -11,7 +11,7 @@
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
               <div class="w-[100px] h-[100px] relative">
-                <img id="profile-pic" loading="lazy" :src="imageProfileDefault" alt="Profile Picture" class="w-full h-full object-cover rounded-full">
+                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault" alt="Profile Picture" class="w-full h-full object-cover rounded-full">
                 <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
                   <i class="fas fa-pencil-alt text-white"></i>
                   <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
@@ -58,82 +58,66 @@ export default {
   },
   setup() {
     const store = useStore();
+    const user = computed(() => JSON.parse(localStorage.getItem('userData')) || store.getters.getUser);
 
-    const user = computed(() => {
-      // Cek apakah data pengguna sudah disimpan di local storage
-      const userData = JSON.parse(localStorage.getItem('userData'));
-      return userData || store.getters.getUser;
-    });
-
-    // Simpan data pengguna ke local storage setelah komponen dimuat
     onMounted(() => {
-      localStorage.setItem('userData', JSON.stringify(user.value));
+      if (!localStorage.getItem('userData')) {
+        localStorage.setItem('userData', JSON.stringify(user.value));
+      }
     });
 
-    const updateProfilePic = (event) => {
+    const updateProfilePic = async (event) => {
       const file = event.target.files?.[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imageDataUrl = e.target.result;
-          sendImageToServer(imageDataUrl);
-        };
-        reader.readAsDataURL(file);
+        const formData = new FormData();
+        formData.append('photoprofile', file);
+
+        try {
+          const response = await fetch('https://nearus.id/api/profile/update', {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${store.state.token}`,
+            },
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to upload profile picture');
+          }
+
+          const data = await response.json();
+          document.getElementById('profile-pic').src = URL.createObjectURL(file);
+          console.log('Profile picture uploaded successfully:', data);
+        } catch (error) {
+          console.error('Error uploading profile picture:', error);
+        }
       }
     };
 
-    const sendImageToServer = (imageDataUrl) => {
-      fetch('https://nearus.id/api/profile/update', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${store.state.token}`,
-        },
-        body: JSON.stringify({ photoprofile: imageDataUrl }),
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to upload profile picture');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const imgElement = document.getElementById('profile-pic');
-        if (imgElement) {
-          imgElement.src = imageDataUrl;
-        }
-        console.log('Profile picture uploaded successfully:', data);
-      })
-      .catch(error => {
-        console.error('Error uploading profile picture:', error);
-      });
-    };
+    const updateUserData = async () => {
+      try {
+        const response = await fetch('https://nearus.id/api/profile/update', {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${store.state.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: user.value.name,
+            phonenumber: user.value.phonenumber,
+          }),
+        });
 
-    const updateUserData = () => {
-      fetch('https://nearus.id/api/profile/update', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${store.state.token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: user.value.name,
-          phonenumber: user.value.phonenumber,
-        }),
-      })
-      .then(response => {
         if (!response.ok) {
           throw new Error('Failed to update user data');
         }
-        return response.json();
-      })
-      .then(data => {
+
+        const data = await response.json();
         console.log('User data updated successfully:', data);
-        // Simpan data pengguna ke local storage setelah diperbarui
         localStorage.setItem('userData', JSON.stringify(user.value));
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error updating user data:', error);
-      });
+      }
     };
 
     return {
@@ -150,9 +134,7 @@ export default {
   object-fit: cover;
   border-radius: 50%;
   width: 100px;
-  /* Set width */
   height: 100px;
-  /* Set height */
 }
 
 .label-field {
