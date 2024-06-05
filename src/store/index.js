@@ -10,7 +10,7 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      console.log('Setting user:', user); // Log untuk debugging
+      console.log('Setting user:', user);
       state.user = user;
       localStorage.setItem('local', JSON.stringify(user));
     },
@@ -19,7 +19,7 @@ export default createStore({
       localStorage.setItem('token', token);
     },
     clearUser(state) {
-      console.log('Clearing user data'); // Log untuk debugging
+      console.log('Clearing user data');
       state.user = null;
       state.token = null;
       localStorage.removeItem('local');
@@ -30,7 +30,7 @@ export default createStore({
       const token = localStorage.getItem('token');
       if (user) {
         state.user = JSON.parse(user);
-        console.log('Loaded user from storage:', state.user); // Log untuk debugging
+        console.log('Loaded user from storage:', state.user);
       }
       if (token) {
         state.token = token;
@@ -42,8 +42,8 @@ export default createStore({
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
-        console.log('User data:', user); // Log data pengguna dari response
-        commit('setUser', user.data); // Pastikan struktur data pengguna benar
+        console.log('User data:', user);
+        commit('setUser', user.data);
         commit('setToken', user.token);
       } catch (error) {
         if (error.response) {
@@ -64,8 +64,16 @@ export default createStore({
   getters: {
     isLoggedIn: state => !!state.user,
     getUser: state => {
-      console.log('Getter getUser:', state.user); // Log untuk debugging
+      console.log('Getter getUser:', state.user);
       return state.user;
+    },
+    // Getter baru untuk mengambil nomor telepon
+    getPhoneNumber: state => {
+      // Jika pengguna ada dan nomor telepon ada dalam struktur data pengguna, kembalikan nomor telepon
+      if (state.user && state.user.phoneNumber) {
+        return state.user.phoneNumber.toString(); // Mengonversi nomor telepon ke string
+      }
+      return null; // Jika tidak ada nomor telepon tersedia, kembalikan null
     },
   },
 });

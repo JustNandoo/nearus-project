@@ -2,10 +2,11 @@
   <div class="flex flex-col bg-white">
     <Nav />
     <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
-      <h1 class="self-stretch text-3xl font-bold text-black max-md:max-w-full">Pengaturan</h1>
       <section class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <SelectionProfile />
+          <div class="w-[344px] h-[264px] relative">
+            <SelectionCard/>
+          </div>
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <div class="flex flex-col grow mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
               <h2 class="text-3xl font-semibold max-md:max-w-full">Data Pribadi</h2>
@@ -90,13 +91,17 @@
 </template>
 
 <script>
-import Nav from '@/components/Nav.vue';
-import SelectionProfile from '@/components/SelectionProfile.vue';
+import Nav from "@/components/Nav.vue";
+import SelectionCard from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
+    SelectionCard,
     Nav,
-    SelectionProfile,
   },
+}
+const logout = () => {
+  store.dispatch('logout');
+  router.push('/login');
 };
 </script>
