@@ -9,30 +9,29 @@
           </div>
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
-            <div
-              class="flex flex-col items-center justify-center mt-11 ml-4 w-[100px] h-[100px] max-md:mt-10 max-md:ml-2.5 relative">
-              <img id="profile-pic" loading="lazy" :src="imageProfileDefault" alt="Profile Picture"
-                class="w-full h-full object-cover rounded-full">
-              <label for="upload-profile-pic"
-                class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
-                <i class="fas fa-pencil-alt text-white"></i>
-                <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
-              </label>
+            <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
+              <div class="w-[100px] h-[100px] relative">
+                <img id="profile-pic" loading="lazy" :src="imageProfileDefault" alt="Profile Picture" class="w-full h-full object-cover rounded-full">
+                <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
+                  <i class="fas fa-pencil-alt text-white"></i>
+                  <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
+                </label>
+              </div>
             </div>
             <form class="mt-11 max-md:mt-10 max-md:max-w-full" @submit.prevent="updateUserData">
-              <label for="fullName" class="sr-only">Nama Lengkap Sesuai KTP</label>
-              <input type="text" id="fullName" v-model="user.name"
-                class="px-4 py-5 mt-6 text-xl font-medium text-black rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-              <label for="phoneNumber" class="sr-only">Nomor Telepon</label>
-              <input type="text" id="phoneNumber" v-model="user.phonenumber"
-                class="px-4 py-6 mt-6 text-xl font-medium text-black whitespace-nowrap rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-              <label for="emailAddress" class="sr-only">Email</label>
-              <p id="emailAddress"
-                class="px-4 py-5 mt-7 text-xl font-medium text-black whitespace-nowrap rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-                {{ user.email }}</p>
-              <button type="submit"
-                class="px-16 py-5 mt-16 text-2xl font-semibold text-white bg-sky-600 rounded-xl max-md:px-5 max-md:mt-10 max-md:max-w-full">Ubah
-                Data</button>
+              <div class="flex flex-col mb-6">
+                <label for="fullName" class="text-xl font-medium text-black">Username </label>
+                <input type="text" id="fullName" v-model="user.name" class="input-field">
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="phoneNumber" class="text-xl font-medium text-black">Nomor Telepon</label>
+                <input type="text" id="phoneNumber" v-model="user.phonenumber" class="input-field">
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="emailAddress" class="text-xl font-medium text-black">Email ( tidak dapat diubah )</label>
+                <p id="emailAddress" class="input-field">{{ user.email }}</p>
+              </div>
+              <button type="submit" class="button">Ubah Data</button>
             </form>
           </section>
         </div>
@@ -144,9 +143,6 @@ export default {
     };
   },
 };
-
-
-   
 </script>
 
 <style scoped>
@@ -159,15 +155,15 @@ export default {
   /* Set height */
 }
 
-label[for="upload-profile-pic"] {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  /* Set width */
-  height: 32px;
-  /* Set height */
-  padding: 0;
-  /* Ensure no padding to keep it circular */
+.label-field {
+  @apply text-xl font-medium text-black;
+}
+
+.input-field {
+  @apply px-4 py-5 mt-3 rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full;
+}
+
+.button {
+  @apply px-16 py-5 mt-6 text-2xl font-semibold text-white bg-sky-600 rounded-xl max-md:px-5 max-md:mt-10 max-md:max-w-full;
 }
 </style>
