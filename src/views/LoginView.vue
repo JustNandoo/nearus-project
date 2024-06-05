@@ -93,7 +93,7 @@ import { API_URL } from '@/constants';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
 import NotifGagalLogin from '@/components/NotifGagalLogin.vue';
 import logo from '../assets/images/nearus.png';
-import background from '../src/assets/images/bg-loginPage.png';
+import background from '../assets/images/bg-loginPage.png';
 
 export default {
   components: {
