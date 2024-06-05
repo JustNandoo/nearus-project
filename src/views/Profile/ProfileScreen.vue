@@ -11,7 +11,7 @@
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
             <div
               class="flex flex-col items-end px-16 pt-20 pb-2 mt-11 ml-4 w-56 max-w-full rounded-full aspect-square max-md:pl-5 max-md:mt-10 max-md:ml-2.5 relative">
-              <img id="profile-pic" loading="lazy" src="../src/assets/images/profile-pic.png" alt="Profile Picture"
+              <img id="profile-pic" loading="lazy" :src="imageProfileDefault" alt="Profile Picture"
                 class="w-full h-full object-cover rounded-full" />
               <label for="upload-profile-pic"
                 class="absolute bottom-4 right-4 bg-sky-600 rounded-full p-2 cursor-pointer">
@@ -56,6 +56,12 @@ export default {
   components: {
     Nav,
     SelectionCard,
+  },
+
+  data(){
+    return{
+      imageProfileDefault: '../src/assets/images/profile-pic.png',
+    };
   },
   setup() {
     const store = useStore();
