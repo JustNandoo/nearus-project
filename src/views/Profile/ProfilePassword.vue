@@ -56,6 +56,7 @@
         </button>
       </section>
     </main>
+    <Footer />
   </div>
 </template>
 
@@ -63,11 +64,13 @@
 import { useStore } from 'vuex';
 import NavFixed from "@/components/NavFixed.vue";
 import SelectionCard from '@/components/SelectionProfile.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
   components: {
     SelectionCard,
     NavFixed,
+    Footer
   },
   setup() {
     const store = useStore();

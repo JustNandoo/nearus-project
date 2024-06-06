@@ -1,4 +1,3 @@
-//private data
 <template>
   <div class="flex flex-col bg-white">
     <NavFixed />
@@ -77,15 +76,19 @@
 </template>
 
 <script>
-import NavFixed from "@/components/NavFixed.vue";
-import Footer from "@/components/Footer.vue";
-import SelectionCard from '@/components/SelectionProfile.vue';
-import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
+import axios from 'axios';
 import { API_URL } from '@/constants';
 import NavFixed from "@/components/NavFixed.vue";
+import SelectionCard from '@/components/SelectionProfile.vue';
+import Footer from '@/components/Footer.vue';
 
 export default {
+  components: {
+    NavFixed,
+    SelectionCard,
+    Footer
+  },
   computed: {
     ...mapState(['user', 'token'])
   },
@@ -102,6 +105,7 @@ export default {
 
           // Check if the response data is an array
           if (Array.isArray(response.data)) {
+            // Assume the first object in the array contains
             // Assume the first object in the array contains the user data
             const userData = response.data[0];
 
@@ -119,7 +123,6 @@ export default {
                 nomorTelepon: String(userData["Kontak Darurat"]["Nomor Telepon"] || '')
               };
             } else {
-             
               console.error('User data structure is invalid:', userData);
             }
           } else {
@@ -157,8 +160,22 @@ export default {
   async mounted() {
     await this.initializeStore();
     await this.fetchData();
+  },
+  data() {
+    return {
+      dataPribadi: {
+        jenisKelamin: '',
+        tanggalLahir: '',
+        alamatRumah: ''
+      },
+      kontakDarurat: {
+        namaLengkap: '',
+        status: '',
+        nomorTelepon: ''
+      }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
