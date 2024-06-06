@@ -1,4 +1,5 @@
 <template>
+  <router-link to="/detail-kost">
   <div class="mt-10 product-card h-full w-[400px]" v-if="product">
     <img class="w-full h-[220px] rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
     <div class="flex mt-4 gap-4 text-[20px] items-center">
@@ -15,6 +16,7 @@
       <h1 class="font-normal text-[15px]">Mulai dari <span class="font-bold">{{ product.price }}</span>/Bulan</h1>
     </div>
   </div>
+</router-link>
 </template>
 
 <script setup>
