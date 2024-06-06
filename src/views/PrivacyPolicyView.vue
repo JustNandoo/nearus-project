@@ -7,7 +7,7 @@
           <h1 class="text-black text-5xl font-bold font-montserrat capitalize leading-tight">Syarat & Ketentuan</h1>
           <p class="text-black/80 text-lg font-medium font-montserrat tracking-tight">Mohon Dibaca dan Dicermati Supaya Tidak Ada Kesalahpahaman :D</p>
         </div>
-        
+  
         <!-- Syarat & Ketentuan Penyewa Kost -->
         <div class="w-full bg-white shadow border border-black rounded-lg mb-10 p-10">
           <h2 class="text-black text-3xl font-semibold font-montserrat mb-6">Syarat & Ketentuan Penyewa Kost</h2>
@@ -63,34 +63,61 @@
             <p>Pemilik kost berhak untuk mengecek jumlah penghuni di kamar kost secara berkala untuk memastikan kepatuhan terhadap ketentuan yang berlaku.</p>
   
             <p><strong>7. Privasi dan Keamanan</strong><br>Pemilik kost harus menjaga privasi penyewa dan tidak boleh masuk ke kamar penyewa tanpa izin kecuali dalam keadaan darurat yang memerlukan tindakan segera.</p>
-            <p>Pemilik kost harus menyediakan fasilitas keamanan yang memadai, seperti kunci yang aman dan, jika memungkinkan, sistem keamanan tambahan seperti CCTV atau penjaga.</p>
-  
-            <p><strong>8. Pengakhiran Sewa</strong><br>Pemilik kost harus memberikan pemberitahuan minimal 30 hari sebelum mengakhiri perjanjian sewa, kecuali dalam kasus pelanggaran serius oleh penyewa yang memerlukan tindakan segera.</p>
-            <p>Pada saat pengakhiran sewa, pemilik kost harus memberikan alasan yang jelas dan memastikan bahwa proses pengakhiran dilakukan secara adil dan sesuai dengan peraturan yang berlaku.</p>
-          </div>
+    
+                <p><strong>8. Privasi dan Keamanan</strong><br>Pemilik kost harus menjaga privasi penyewa dan tidak boleh masuk ke kamar penyewa tanpa izin kecuali dalam keadaan darurat yang memerlukan tindakan segera.</p>
+          <p>Pemilik kost harus menyediakan fasilitas keamanan yang memadai, seperti kunci yang aman dan, jika memungkinkan, sistem keamanan tambahan seperti CCTV atau penjaga.</p>
+
+          <p><strong>9. Pengakhiran Sewa</strong><br>Pemilik kost harus memberikan pemberitahuan minimal 30 hari sebelum mengakhiri perjanjian sewa, kecuali dalam kasus pelanggaran serius oleh penyewa yang memerlukan tindakan segera.</p>
+          <p>Pada saat pengakhiran sewa, pemilik kost harus memberikan alasan yang jelas dan memastikan bahwa proses pengakhiran dilakukan secara adil dan sesuai dengan peraturan yang berlaku.</p>
         </div>
       </div>
     </div>
-  
-      <Footer/>
-  </template>
-  
-  
 
+    <!-- Profile Card -->
+    <ProfileCard v-if="showProfileCard" />
+  </div>
+</template>
 
-  <script>
-  import NavFixed from '@/components/NavFixed.vue';
-  import Footer from '@/components/Footer.vue'; 
-  
-  export default {
-    name: 'TermsAndConditions',
-    components: {
-      NavFixed,
-      Footer
-    },
-  };
-  </script>
-   
+<script>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import NavFixed from '@/components/NavFixed.vue';
+import Footer from '@/components/Footer.vue';
+import ProfileCard from '@/components/ProfileCard.vue';
+
+export default {
+  name: 'TermsAndConditions',
+  components: {
+    NavFixed,
+    Footer,
+    ProfileCard
+  },
+  setup() {
+    const showProfileCard = ref(false);
+
+    const toggleProfileCard = () => {
+      showProfileCard.value = !showProfileCard.value;
+    };
+
+    const handleToggleProfileCard = () => {
+      toggleProfileCard();
+    };
+
+    onMounted(() => {
+      window.addEventListener('toggle-profile-card', handleToggleProfileCard);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('toggle-profile-card', handleToggleProfileCard);
+    });
+
+    return {
+      showProfileCard,
+    };
+  },
+};
+</script>
 
 <style>
+/* Add your styles here */
 </style>
+  
