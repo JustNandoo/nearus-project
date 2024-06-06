@@ -5,10 +5,17 @@
     <main class="flex flex-col self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
+<<<<<<< HEAD
           <div class="w-[344px] h-[264px] relative">
             <SelectionCard />
           </div>
 
+=======
+      
+          <div class="w-[344px] h-[264px] relative">
+            <SelectionCard />
+          </div>
+>>>>>>> 0cbebcd670968d9730a3204b9711c37a804304eb
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
