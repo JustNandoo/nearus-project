@@ -1,29 +1,32 @@
 <template>
   <div class="flex">
     <sidebar/>
-    <div class="container mx-auto p-4">
-      <div class="table-container border border-gray-200 rounded-lg shadow-md max-h-80 overflow-y-auto">
-        <table class="min-w-full bg-white">
-          <thead>
-          <tr>
-            <th class="py-2 px-4 border-b text-left">Name</th>
-            <th class="py-2 px-4 border-b text-left">Age</th>
-            <th class="py-2 px-4 border-b text-left">Email</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="item in paginatedData" :key="item.id">
-            <td class="py-2 px-4 border-b">{{ item.name }}</td>
-            <td class="py-2 px-4 border-b">{{ item.age }}</td>
-            <td class="py-2 px-4 border-b">{{ item.email }}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="flex justify-between items-center mt-4">
-        <button @click="prevPage" :disabled="currentPage === 1" class="bg-blue-500 text-white px-4 py-2 rounded">Previous</button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+    <div class="flex flex-col mt-10">
+      <h1 class="text-black text-[20px] ml-14">Data Kamar</h1>
+      <div class="container p-4 w-screen mx-8">
+        <div class="table-container border border-gray-200 rounded-lg shadow-md max-h-80 overflow-y-auto">
+          <table class="min-w-full bg-white">
+            <thead>
+            <tr>
+              <th class="py-2 px-4 border-b text-left">Name</th>
+              <th class="py-2 px-4 border-b text-left">Age</th>
+              <th class="py-2 px-4 border-b text-left">Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="item in paginatedData" :key="item.id">
+              <td class="py-2 px-4 border-b">{{ item.name }}</td>
+              <td class="py-2 px-4 border-b">{{ item.age }}</td>
+              <td class="py-2 px-4 border-b">{{ item.email }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="flex justify-between items-center mt-4">
+          <button @click="prevPage" :disabled="currentPage === 1" class="bg-blue-500 text-white px-4 py-2 rounded">Previous</button>
+          <span>{{ currentPage }} / {{ totalPages }}</span>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+        </div>
       </div>
     </div>
   </div>

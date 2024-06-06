@@ -33,8 +33,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const zoom = ref(20);
-const center = ref([0,0]);
-const markerPosition = ref([0,0]);
+const center = ref([-6.753497631360662, 110.84273609891292]);
+const markerPosition = ref([-6.753497631360662, 110.84273609891292]);
 const tileLayerUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
@@ -46,7 +46,7 @@ onMounted(async () => {
     console.log('API Response:', response);
     const data = response.data.data;
 
-    if (data && data.length > 0 && data[10].linklocation) {
+    if (data && data.length > 0 && data[0].linklocation) {
       product.value = {
         linklocation: data[10].linklocation,
       };
