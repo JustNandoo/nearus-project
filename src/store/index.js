@@ -10,7 +10,6 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      console.log('Setting user:', user); // Log untuk debugging
       state.user = user;
       localStorage.setItem('local', JSON.stringify(user));
     },
@@ -19,7 +18,6 @@ export default createStore({
       localStorage.setItem('token', token);
     },
     clearUser(state) {
-      console.log('Clearing user data'); // Log untuk debugging
       state.user = null;
       state.token = null;
       localStorage.removeItem('local');
@@ -30,7 +28,6 @@ export default createStore({
       const token = localStorage.getItem('token');
       if (user) {
         state.user = JSON.parse(user);
-        console.log('Loaded user from storage:', state.user); // Log untuk debugging
       }
       if (token) {
         state.token = token;
@@ -42,15 +39,24 @@ export default createStore({
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
-        console.log('User data:', user); // Log data pengguna dari response
-        commit('setUser', user.data); // Pastikan struktur data pengguna benar
+        commit('setUser', user.data);
         commit('setToken', user.token);
       } catch (error) {
-        if (error.response) {
-          console.error('Login failed:', error.response.data);
-        } else {
-          console.error('Login failed:', error.message);
-        }
+        console.error('Login failed:', error);
+        throw error;
+      }
+    },
+    async updateUserProfile({ commit, state }, updatedProfileData) {
+      try {
+        const response = await axios.put(`${API_URL}/profile/update`, updatedProfileData, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        const updatedUser = response.data;
+        commit('setUser', updatedUser);
+      } catch (error) {
+        console.error('Error updating user profile:', error);
         throw error;
       }
     },
@@ -63,9 +69,12 @@ export default createStore({
   },
   getters: {
     isLoggedIn: state => !!state.user,
-    getUser: state => {
-      console.log('Getter getUser:', state.user); // Log untuk debugging
-      return state.user;
+    getUser: state => state.user,
+    getPhoneNumber: state => {
+      if (state.user && state.user.phoneNumber) {
+        return state.user.phoneNumber.toString();
+      }
+      return null;
     },
   },
 });
