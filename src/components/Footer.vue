@@ -23,7 +23,7 @@
       <div class="flex-1">
         <p class="text-gray-100 text-[18px] mb-2">Ikuti Kami</p>
         <div class="flex gap-5 items-center">
-          <a href="https://www.instagram.com" target="_blank">
+          <a href="https://www.instagram.com/rzq_19_?igsh=MXgzazQyNXJtcHl1NQ==" target="_blank">
             <div
                 class="border-2 border-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-colors duration-300 hover:bg-white"
                 @mouseenter="hoveringInstagram = true"
@@ -41,7 +41,7 @@
               <img :src="hoveringTwitter ? logotwit2 : logotwit" class="w-5 h-5" alt="Twitter Logo">
             </div>
           </a>
-          <a href="https://www.facebook.com" target="_blank">
+          <a href="https://www.facebook.com/danish.rizqy.1?mibextid=ZbWKwL" target="_blank">
             <div
                 class="border-2 border-white rounded-full w-10 h-10 flex items-center justify-center cursor-pointer transition-colors duration-300 hover:bg-white"
                 @mouseenter="hoveringFacebook = true"

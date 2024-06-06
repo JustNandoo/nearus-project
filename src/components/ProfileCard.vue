@@ -71,9 +71,9 @@ setTimeout(() => {
 
 <style scoped>
 .profile-card {
-  position: absolute;
+  position: fixed;
   top: 6rem;
-  right: 15rem; 
+  right: 15rem;
   z-index: 1100;
 }
 

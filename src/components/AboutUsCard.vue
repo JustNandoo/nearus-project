@@ -1,5 +1,7 @@
 <template>
+
     <NavFixed />
+
     <div>
       <div className="w-[1920px] h-[731px] relative">
         <div className="w-[1920px] h-[731px] left-0 top-0 absolute bg-sky-600 shadow" />
@@ -20,17 +22,19 @@
   
   <script>
 
-  import imageLaptop from '../assets/images/laptop.png';
-  import imageMedali from '../assets/images/medali.png';
-  import imageOrang from '../assets/images/orang.png';
-  import imagePenthouse from '../assets/images/penthouse.png';
-  import imageRating from '../assets/images/rating.png';
+  import NavFixed from "@/components/NavFixed.vue";
+  import ProfileCard from "@/components/ProfileCard.vue";
+  import Nav from "@/components/Nav.vue";
+
 import NavFixed from './NavFixed.vue';
+
 
   
   export default {
     components: {
+
       NavFixed,
+      ProfileCard,
     },
     data() {
       return {

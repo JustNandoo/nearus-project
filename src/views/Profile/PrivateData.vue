@@ -1,3 +1,4 @@
+//private data
 <template>
   <div class="flex flex-col bg-white">
     <NavFixed />
@@ -30,6 +31,13 @@
                 <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah"
                   placeholder="Alamat Rumah" class="input" required />
               </div>
+              <input
+                  type="text"
+                  name="alamatRumah"
+                  id="alamatRumah"
+                  placeholder="Alamat Rumah"
+                  class="justify-center items-start px-6 py-7 mt-12 rounded-xl border border-solid border-black border-opacity-60 max-md:px-5 max-md:mt-10 max-md:max-w-full"
+              />
               <h2 class="mt-16 text-3xl font-semibold max-md:mt-10 max-md:max-w-full">Kontak Darurat</h2>
             </div>
           </section>
@@ -78,25 +86,6 @@ import { API_URL } from '@/constants';
 import NavFixed from "@/components/NavFixed.vue";
 
 export default {
-  components: {
-    SelectionCard,
-    NavFixed,
-    Footer
-  },
-  data() {
-    return {
-      dataPribadi: {
-        jenisKelamin: '',
-        tanggalLahir: '',
-        alamatRumah: ''
-      },
-      kontakDarurat: {
-        namaLengkap: '',
-        status: '',
-        nomorTelepon: ''
-      }
-    };
-  },
   computed: {
     ...mapState(['user', 'token'])
   },
