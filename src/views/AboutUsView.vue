@@ -4,7 +4,8 @@
     <CardProductAboutUs />
     <AboutUsText />
     <TeamCard class="mb-80"/>
-    <AboutUsDokumentasi /> 
+    <AboutUsDokumentasi />
+    <ProfileCard v-if="showProfileCard" class="profile-card"/>
     <div class="w-[1777px] text-sky-600 text-4xl font-bold font-['Montserrat'] mt-40">"NeaRuS: Temukan Kost Terbaik, Nyaman, dan Terjangkau untuk Kehidupan yang Lebih Baik!"</div> <!-- Menambahkan margin-top -->
     <Footer  /> 
   </div>
@@ -17,9 +18,11 @@ import AboutUsText from "@/components/AboutUsText.vue";
 import TeamCard from "@/components/TeamCard.vue";
 import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue"; 
 import Footer from "@/components/Footer.vue";
+import ProfileCard from "@/components/ProfileCard.vue";
 
 export default {
   components: {
+    ProfileCard,
     AboutUsCard,
     CardProductAboutUs,
     AboutUsText,

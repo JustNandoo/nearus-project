@@ -1,3 +1,4 @@
+//profile screen
 <template>
   <div class="flex flex-col pb-14 bg-white">
     <NavFixed />
@@ -7,6 +8,7 @@
           <div class="w-[344px] h-[264px] relative">
             <SelectionCard />
           </div>
+
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
