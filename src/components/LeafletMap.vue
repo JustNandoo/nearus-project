@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { LMap, LTileLayer, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -33,8 +33,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const zoom = ref(20);
-const center = ref([0, 0]);  // Default center, will be updated by API
-const markerPosition = ref([0, 0]);  // Default position, will be updated by API
+const center = ref([0,0]);
+const markerPosition = ref([0,0]);
 const tileLayerUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
@@ -46,17 +46,21 @@ onMounted(async () => {
     console.log('API Response:', response);
     const data = response.data.data;
 
-    if (data && data.length > 0) {
+    if (data && data.length > 0 && data[10].linklocation) {
       product.value = {
-        linklocation: data[11].linklocation,
+        linklocation: data[10].linklocation,
       };
-
-      // Update center and marker position
       const [lat, lng] = product.value.linklocation.split(',').map(Number);
-      center.value = [lat, lng];
-      markerPosition.value = [lat, lng];
+      console.log(lat);
+      console.log(lng);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        center.value = [lat, lng];
+        markerPosition.value = [lat, lng];
+      } else {
+        console.error('Invalid coordinates:', product.value.linklocation);
+      }
     } else {
-      console.error('Error fetching product data: no data response');
+      console.error('Error fetching product data: no data response or missing linklocation');
     }
   } catch (error) {
     console.error('Error fetching product data:', error);

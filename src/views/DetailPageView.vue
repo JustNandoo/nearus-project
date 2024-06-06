@@ -39,32 +39,35 @@
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
         <h1 class="font-bold text-[28px]">Lokasi</h1>
-        <div class="flex gap-8">
-          <LeafletMap />
-          <div class="container mx-auto py-8">
+        <div class="flex gap-8 justify-be">
+          <div class="w-1/2">
+            <LeafletMap />
+          </div>
+          <div class="w-1/2 container mx-auto py-8">
             <div v-for="item in items" :key="item.id" class="flex items-center justify-between py-5">
-             <div class="flex items-center gap-5">
-               <div class="flex-shrink-0">
-                 <img :src="icon1" alt="icon" class="w-10 h-10 object-cover">
-               </div>
-               <div class="flex-1 text-center">
-                 <h2 class="text-[15px] text-black">{{ item.title }}</h2>
-               </div>
-             </div>
-              <div class="flex-shrink-0 text-right">
-                <p class="text-[15px] text-black">{{ item.text }}</p>
+              <div class="flex items-center gap-5">
+                <div class="flex-shrink-0">
+                  <img :src="item.icon" alt="icon" class="w-8 h-8 object-cover">
+                </div>
+                <div class="flex-1">
+                  <h2 class="text-[18px] text-black">{{ item.title }}</h2>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <p class="text-[18px] text-black">{{ item.text }}</p>
               </div>
             </div>
           </div>
         </div>
+
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <ProductDetail/>
+
         </div>
       </div>
     </div>
-    <Footer/>
+    <Footer />
   </div>
 </template>
 
@@ -94,29 +97,35 @@ import ProductDetail from "@/components/ProductDetail.vue";
 const items = ref([
   {
     id: 1,
-    icon: 'icon1',
-    title: 'Title 1',
-    text: 'Text 1',
+    icon: icon1,
+    title: 'SMK RADEN UMAR SAID KUDUS',
+    text: '0.85 KM',
   },
   {
     id: 2,
-    icon: 'icon2',
-    title: 'Title 2',
-    text: 'Text 2',
+    icon: icon2,
+    title: 'Tempat Makan MakRU',
+    text: '0.70 KM',
   },
   {
     id: 3,
-    icon: 'icon3',
-    title: 'Title 3',
-    text: 'Text 3',
+    icon: icon3,
+    title: 'Toko Lima',
+    text: '1.25 KM',
   },
   {
     id: 4,
-    icon: 'icon4',
-    title: 'Title 4',
-    text: 'Text 4',
+    icon: icon4,
+    title: 'Laundry Reftalia',
+    text: '0.25 KM',
   },
 ]);
+
+console.log('Icon 1:', icon1);
+console.log('Icon 2:', icon2);
+console.log('Icon 3:', icon3);
+console.log('Icon 4:', icon4);
+console.log('Items:', items.value);
 
 onMounted(async () => {
   try {
@@ -126,10 +135,10 @@ onMounted(async () => {
 
     if (data && data.length > 0) {
       product.value = {
-        productname: data[11].productname,
-        location: data[11].location,
-        category: data[11].category,
-        price: data[11].price
+        productname: data[10].productname,
+        location: data[10].location,
+        category: data[10].category,
+        price: data[10].price
       };
     } else {
       console.error('Error fetching product data: no data response');
@@ -149,4 +158,19 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  margin-left: 9rem; /* Adjust as needed */
+  padding-top: 8rem; /* Adjust as needed */
+}
+.error {
+  color: red;
+}
+.gallery {
+  width: 100%;
+}
+img {
+  object-fit: cover;
+  border-radius: 0.75rem; /* Adjust as needed */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
+}
 </style>
