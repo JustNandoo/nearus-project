@@ -27,10 +27,12 @@
           <font-awesome-icon class="text-black w-8 h-8" :icon="faHeadset" />
           <p class="text-[22px] font-medium">Customer Service</p>
         </div>
+        <router-link to="/PrivacyPolicy">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />
           <p class="text-[22px] font-medium">Syarat dan Ketentuan</p>
         </div>
+      </router-link>
         <button @click="logout" class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-full rounded-lg mt-7 text-white text-[22px] font-medium">
           <font-awesome-icon :icon="faRightFromBracket" class="text-white w-8 h-8"/>
           Keluar
