@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col pb-14 bg-white">
-    <Nav />
+    <NavFixed />
     <main class="flex flex-col self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -39,33 +39,67 @@
     </main>
   </div>
 </template>
-
 <script>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import Nav from '@/components/Nav.vue';
+import NavFixed from '@/components/NavFixed.vue';
 import SelectionCard from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
-    Nav,
+    NavFixed,
     SelectionCard,
-  },
-  data() {
-    return {
-      imageProfileDefault: '../src/assets/images/profile-pic.png',
-    };
   },
   setup() {
     const store = useStore();
-    const user = computed(() => JSON.parse(localStorage.getItem('userData')) || store.getters.getUser);
+    const user = ref({
+      name: '',
+      phonenumber: '',
+      email: '',
+      photoprofile: '',
+    });
 
-    onMounted(() => {
-      if (!localStorage.getItem('userData')) {
+    const imageProfileDefault = 'path/to/default/image.jpg';
+
+    // Fungsi untuk mengambil data pengguna dari API
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('https://nearus.id/api/profile', {
+          headers: {
+            'Authorization': `Bearer ${store.state.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const data = await response.json();
+        user.value = {
+          name: data.name,
+          phonenumber: data.phonenumber,
+          email: data.email,
+          photoprofile: data.photoprofile,
+        };
+
+        // Simpan data pengguna ke local storage
         localStorage.setItem('userData', JSON.stringify(user.value));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    // Saat komponen dimuat, ambil data pengguna dari API atau local storage
+    onMounted(() => {
+      const storedUser = localStorage.getItem('userData');
+      if (storedUser) {
+        user.value = JSON.parse(storedUser);
+      } else {
+        fetchUserData();
       }
     });
 
+    // Fungsi untuk mengunggah foto profil baru
     const updateProfilePic = async (event) => {
       const file = event.target.files?.[0];
       if (file) {
@@ -74,7 +108,7 @@ export default {
 
         try {
           const response = await fetch('https://nearus.id/api/profile/update', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
               'Authorization': `Bearer ${store.state.token}`,
             },
@@ -87,6 +121,12 @@ export default {
 
           const data = await response.json();
           document.getElementById('profile-pic').src = URL.createObjectURL(file);
+
+          // Simpan URL foto profil baru ke local storage
+          const updatedUser = { ...user.value, photoprofile: data.photoprofile };
+          localStorage.setItem('userData', JSON.stringify(updatedUser));
+          user.value.photoprofile = data.photoprofile;
+
           console.log('Profile picture uploaded successfully:', data);
         } catch (error) {
           console.error('Error uploading profile picture:', error);
@@ -94,10 +134,11 @@ export default {
       }
     };
 
+    // Fungsi untuk memperbarui data pengguna
     const updateUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile/update', {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Authorization': `Bearer ${store.state.token}`,
             'Content-Type': 'application/json',
@@ -113,8 +154,11 @@ export default {
         }
 
         const data = await response.json();
-        console.log('User data updated successfully:', data);
+
+        // Simpan data pengguna baru ke local storage
         localStorage.setItem('userData', JSON.stringify(user.value));
+
+        console.log('User data updated successfully:', data);
       } catch (error) {
         console.error('Error updating user data:', error);
       }
@@ -122,13 +166,13 @@ export default {
 
     return {
       user,
+      imageProfileDefault,
       updateProfilePic,
       updateUserData,
     };
   },
 };
 </script>
-
 <style scoped>
 #profile-pic {
   object-fit: cover;

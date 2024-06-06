@@ -1,5 +1,5 @@
 <template>
-    <Nav />
+    <NavFixed />
     <div>
       <div className="w-[1920px] h-[731px] relative">
         <div className="w-[1920px] h-[731px] left-0 top-0 absolute bg-sky-600 shadow" />
@@ -19,17 +19,18 @@
   </template>
   
   <script>
-  import Nav from '@/components/Nav.vue';
+
   import imageLaptop from '../assets/images/laptop.png';
   import imageMedali from '../assets/images/medali.png';
   import imageOrang from '../assets/images/orang.png';
   import imagePenthouse from '../assets/images/penthouse.png';
   import imageRating from '../assets/images/rating.png';
+import NavFixed from './NavFixed.vue';
 
   
   export default {
     components: {
-      Nav,
+      NavFixed,
     },
     data() {
       return {

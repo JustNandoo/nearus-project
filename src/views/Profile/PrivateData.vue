@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col bg-white">
-    <Nav />
+    <NavFixed />
     <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -69,17 +69,18 @@
 </template>
 
 <script>
-import Nav from "@/components/Nav.vue";
+import NavFixed from "@/components/NavFixed.vue";
 import Footer from "@/components/Footer.vue";
 import SelectionCard from '@/components/SelectionProfile.vue';
 import axios from 'axios';
 import { mapActions, mapState } from 'vuex';
 import { API_URL } from '@/constants';
+import NavFixed from "@/components/NavFixed.vue";
 
 export default {
   components: {
     SelectionCard,
-    Nav,
+    NavFixed,
     Footer
   },
   data() {

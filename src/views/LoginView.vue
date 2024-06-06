@@ -86,6 +86,7 @@
     <NotifGagalLogin v-if="gagalLogin" />
   </div>
 </template>
+
 <script>
 import { mapActions } from 'vuex';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
@@ -106,7 +107,8 @@ export default {
       passwordVisible: false,
       berhasilLogin: false,
       gagalLogin: false,
-     
+      logo,
+      background
     };
   },
   methods: {
@@ -144,8 +146,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .full-screen-bg {

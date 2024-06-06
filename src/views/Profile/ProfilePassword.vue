@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col pb-14 bg-white">
-    <Nav />
+    <NavFixed />
     <main class="flex flex-col self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -61,13 +61,13 @@
 
 <script>
 import { useStore } from 'vuex';
-import Nav from "@/components/Nav.vue";
+import NavFixed from "@/components/NavFixed.vue";
 import SelectionCard from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
     SelectionCard,
-    Nav,
+    NavFixed,
   },
   setup() {
     const store = useStore();
