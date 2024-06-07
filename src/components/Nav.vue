@@ -14,15 +14,15 @@
         </ul>
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">
-        <!-- Tombol Login -->
+
         <router-link v-if="!user" to="/login" class="text-xl font-medium text-white">
           <button class="rounded-button bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">Login</button>
         </router-link>
-        <!-- Tombol Register -->
+
         <router-link v-if="!user" to="/register" class="text-xl font-medium text-white">
           <button class="rounded-button border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded transition duration-300">Register</button>
         </router-link>
-        <!-- Tombol Profile -->
+
         <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
           <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">
