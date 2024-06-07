@@ -130,6 +130,7 @@ export default {
       }
     };
 
+
     const updateUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile/update', {

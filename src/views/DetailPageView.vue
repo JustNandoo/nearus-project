@@ -62,11 +62,12 @@
 
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
-          <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
+          <h1 class="font-bold text-[28px] mb-10">kamar</h1>
 
         </div>
       </div>
     </div>
+    <div id="disqus_thread"></div>
     <Footer />
   </div>
 </template>
@@ -127,6 +128,13 @@ console.log('Icon 3:', icon3);
 console.log('Icon 4:', icon4);
 console.log('Items:', items.value);
 
+(function() { 
+    var d = document, s = d.createElement('script');
+    s.src = 'https://nearus.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+
 onMounted(async () => {
   try {
     const response = await axios.get('https://nearus.id/api/product');
@@ -172,5 +180,11 @@ img {
   object-fit: cover;
   border-radius: 0.75rem; /* Adjust as needed */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
+}
+
+/* Custom styles for Disqus comments */
+#disqus_thread {
+  max-width: 800px; /* Adjust maximum width as needed */
+  margin: 0 auto; /* Center the comments */
 }
 </style>
