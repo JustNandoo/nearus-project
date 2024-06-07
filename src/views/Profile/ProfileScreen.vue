@@ -1,4 +1,3 @@
-//profile screen
 <template>
   <div class="flex flex-col pb-14 bg-white">
     <NavFixed />
@@ -12,8 +11,10 @@
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
               <div class="w-[100px] h-[100px] relative">
-                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault" alt="Profile Picture" class="w-full h-full object-cover rounded-full">
-                <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
+                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault"
+                  alt="Profile Picture" class="w-full h-full object-cover rounded-full">
+                <label for="upload-profile-pic"
+                  class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
                   <i class="fas fa-pencil-alt text-white"></i>
                   <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
                 </label>
@@ -38,7 +39,6 @@
         </div>
       </section>
     </main>
-    <FooterComponent />
   </div>
 </template>
 <script>
@@ -62,8 +62,6 @@ export default {
     });
 
     const imageProfileDefault = 'path/to/default/image.jpg';
-
-    // Fungsi untuk mengambil data pengguna dari API
     const fetchUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile', {
@@ -83,15 +81,12 @@ export default {
           email: data.email,
           photoprofile: data.photoprofile,
         };
-
-        // Simpan data pengguna ke local storage
         localStorage.setItem('userData', JSON.stringify(user.value));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
-    // Saat komponen dimuat, ambil data pengguna dari API atau local storage
     onMounted(() => {
       const storedUser = localStorage.getItem('userData');
       if (storedUser) {
@@ -101,7 +96,6 @@ export default {
       }
     });
 
-    // Fungsi untuk mengunggah foto profil baru
     const updateProfilePic = async (event) => {
       const file = event.target.files?.[0];
       if (file) {
@@ -124,7 +118,7 @@ export default {
           const data = await response.json();
           document.getElementById('profile-pic').src = URL.createObjectURL(file);
 
-          // Simpan URL foto profil baru ke local storage
+
           const updatedUser = { ...user.value, photoprofile: data.photoprofile };
           localStorage.setItem('userData', JSON.stringify(updatedUser));
           user.value.photoprofile = data.photoprofile;
@@ -136,7 +130,6 @@ export default {
       }
     };
 
-    // Fungsi untuk memperbarui data pengguna
     const updateUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile/update', {
@@ -157,7 +150,6 @@ export default {
 
         const data = await response.json();
 
-        // Simpan data pengguna baru ke local storage
         localStorage.setItem('userData', JSON.stringify(user.value));
 
         console.log('User data updated successfully:', data);

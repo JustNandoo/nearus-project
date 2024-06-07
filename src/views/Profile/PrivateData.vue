@@ -5,7 +5,7 @@
       <section class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
           <div class="w-[344px] h-[264px] relative">
-            <SelectionCard />
+            <!-- SelectionCard -->
           </div>
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <div class="flex flex-col grow mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
@@ -30,73 +30,28 @@
                 <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah"
                   placeholder="Alamat Rumah" class="input" required />
               </div>
-              <input
-                  type="text"
-                  name="alamatRumah"
-                  id="alamatRumah"
-                  placeholder="Alamat Rumah"
-                  class="justify-center items-start px-6 py-7 mt-12 rounded-xl border border-solid border-black border-opacity-60 max-md:px-5 max-md:mt-10 max-md:max-w-full"
-              />
-              <h2 class="mt-16 text-3xl font-semibold max-md:mt-10 max-md:max-w-full">Kontak Darurat</h2>
             </div>
           </section>
         </div>
       </section>
       <form @submit.prevent="saveData" class="mt-16 max-w-full w-[711px] max-md:mt-10">
-        <div class="input-field">
-          <label for="namaPanjang" class="sr-only">Nama Panjang</label>
-          <input type="text" id="namaPanjang" v-model="kontakDarurat.namaLengkap" class="input"
-            placeholder="Nama Panjang" required />
-        </div>
-        <div
-          class="flex gap-5 justify-between items-center input-field mt-11 max-w-full w-[711px] max-md:flex-wrap max-md:mt-10">
-          <div class="my-auto">Status</div>
-          <input type="text" name="status" id="status" v-model="kontakDarurat.status" class="input" placeholder="Status"
-            required />
-        </div>
-        <div class="flex gap-5 mt-11 max-w-full w-[711px] max-md:flex-wrap max-md:mt-10">
-          <div
-            class="shrink-0 border border-solid aspect-[1.67] border-black border-opacity-60 w-[122px] flex items-center justify-center">
-            +62
-          </div>
-          <div class="input-field flex-auto">
-            <label for="nomorTelepon" class="sr-only">Nomor Telepon</label>
-            <input type="tel" name="nomorTelepon" id="nomorTelepon" v-model="kontakDarurat.nomorTelepon"
-              placeholder="Nomor Telepon" class="input" required />
-          </div>
-        </div>
-        <button type="submit"
-          class="justify-center items-center px-16 py-4 mt-16 max-w-full text-2xl font-semibold text-white whitespace-nowrap bg-sky-600 rounded-xl w-[711px] max-md:px-5 max-md:mt-10">
-          Simpan
-        </button>
+        <!-- Form Kontak Darurat -->
       </form>
     </main>
     <Footer />
   </div>
-  <FooterComponent/>
 </template>
 
-<script>
-import Nav from '@/components/Nav.vue';
-import FooterComponent from "@/components/Footer.vue";
-export default {
-  components: {
-    Nav,
-    FooterComponent
-  },
-}
 <script>
 import { mapActions, mapState } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
 import NavFixed from "@/components/NavFixed.vue";
-import SelectionCard from '@/components/SelectionProfile.vue';
 import Footer from '@/components/Footer.vue';
 
 export default {
   components: {
     NavFixed,
-    SelectionCard,
     Footer
   },
   computed: {
@@ -113,46 +68,18 @@ export default {
             },
           });
 
-          // Check if the response data is an array
-          if (Array.isArray(response.data)) {
-            // Assume the first object in the array contains
-            // Assume the first object in the array contains the user data
-            const userData = response.data[0];
-
-            // Check if the user data object exists and has the expected structure
-            if (userData && userData["Data Pribadi"] && userData["Kontak Darurat"]) {
-              this.dataPribadi = {
-                jenisKelamin: String(userData["Data Pribadi"]["Jenis Kelamin"] || ''),
-                tanggalLahir: String(userData["Data Pribadi"]["Tanggal Lahir"] || ''),
-                alamatRumah: String(userData["Data Pribadi"]["Alamat Rumah"] || '')
-              };
-
-              this.kontakDarurat = {
-                namaLengkap: String(userData["Kontak Darurat"]["Nama Lengkap"] || ''),
-                status: String(userData["Kontak Darurat"]["Status"] || ''),
-                nomorTelepon: String(userData["Kontak Darurat"]["Nomor Telepon"] || '')
-              };
-            } else {
-              console.error('User data structure is invalid:', userData);
-            }
-          } else {
-            console.error('Invalid response data format:', response.data);
+          if (response && response.data) {
+            // Simpan data dari response ke dataPribadi dan kontakDarurat
           }
         } catch (error) {
           console.error('Failed to fetch user data:', error);
         }
       }
     },
-
     async saveData() {
-      // Ensure all data is converted to string and follows the API format
+      // Simpan data yang akan dikirim ke server
       const payload = {
-        "jenis_kelamin": String(this.dataPribadi.jenisKelamin),
-        "tanggal_lahir": String(this.dataPribadi.tanggalLahir),
-        "alamat_rumah": String(this.dataPribadi.alamatRumah),
-        "urgent_fullname": String(this.kontakDarurat.namaLengkap),
-        "urgent_status": String(this.kontakDarurat.status),
-        "urgent_phonenumber": String(this.kontakDarurat.nomorTelepon)
+        // Data yang akan disimpan
       };
 
       try {
@@ -161,6 +88,7 @@ export default {
             Authorization: `Bearer ${this.token}`,
           },
         });
+
         console.log('Data updated successfully:', response.data);
       } catch (error) {
         console.error('Error updating data:', error.response ? error.response.data : error.message);
