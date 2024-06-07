@@ -1,40 +1,38 @@
+//profile screen
 <template>
   <div class="flex flex-col pb-14 bg-white">
-    <Nav />
-    <main class="flex flex-col self-center px-5 mt-16 max-w-full w-[1208px] max-md:mt-10"> 
-      <h2 class="text-3xl font-bold text-black max-md:max-w-full">Pengaturan</h2>
+    <NavFixed />
+    <main class="flex flex-col self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <aside class="flex flex-col w-[36%] max-md:ml-0 max-md:w-full">
-            <div class="flex flex-col pt-1 pb-6 text-xl text-black rounded-xl border border-solid border-black border-opacity-60 max-md:mt-10">
-              <router-link to="/profile" class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5"> Ubah Data Profil </router-link>
-              <router-link to="/privatedata" class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5"> Data pribadi </router-link>
-              <router-link to="/passworddata" class="justify-center items-start px-6 py-6 rounded-3xl border-b border-solid border-black border-opacity-60 max-md:px-5"> Ubah Kata sandi </router-link>
-            </div>
-          </aside>
+          <div class="w-[344px] h-[264px] relative">
+            <SelectionCard />
+          </div>
           <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
             <h3 class="text-3xl font-semibold text-black max-md:max-w-full">Ubah Data Profil</h3>
-            <div class="flex flex-col items-end px-16 pt-20 pb-2 mt-11 ml-4 w-56 max-w-full rounded-full aspect-square max-md:pl-5 max-md:mt-10 max-md:ml-2.5 relative">
-              <img id="profile-pic" loading="lazy" :src="store.user.profilePicture" alt="Profile Picture" class="w-full h-full object-cover rounded-full"/>
-              <label for="upload-profile-pic" class="absolute bottom-4 right-4 bg-sky-600 rounded-full p-2 cursor-pointer">
-                <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/489b933a-693d-460e-b794-6859ef5bb1d0?apiKey=dbb585655fed49b6b0cf3f986b221850&" class="w-6 h-6" alt="Edit Icon" />
-                <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
-              </label>
+            <div class="flex items-center mt-11 ml-4 max-md:mt-10 max-md:ml-2.5 relative">
+              <div class="w-[100px] h-[100px] relative">
+                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault" alt="Profile Picture" class="w-full h-full object-cover rounded-full">
+                <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700">
+                  <i class="fas fa-pencil-alt text-white"></i>
+                  <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
+                </label>
+              </div>
             </div>
             <form class="mt-11 max-md:mt-10 max-md:max-w-full" @submit.prevent="updateUserData">
-              <label for="fullName" class="sr-only" id="name">Nama Lengkap Sesuai KTP</label>
-              <p id="fullName" class="justify-center items-start px-4 py-5 mt-6 text-xl font-medium text-black rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-                {{ store.user.name }}
-              </p>
-              <label for="phoneNumber" class="sr-only" id="nomor">Nomor Telepon</label>
-              <p id="phoneNumber" class="justify-center items-start px-4 py-6 mt-6 text-xl font-medium text-black whitespace-nowrap rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-                {{ store.user.phone }}
-              </p>
-              <label for="emailAddress" class="sr-only" id="email">Email</label>
-              <p id="emailAddress" class="justify-center items-start px-4 py-5 mt-7 text-xl font-medium text-black whitespace-nowrap rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full">
-                {{ store.user.email }}
-              </p>
-              <button type="submit" class="justify-center items-center px-16 py-5 mt-16 text-2xl font-semibold text-white bg-sky-600 rounded-xl max-md:px-5 max-md:mt-10 max-md:max-w-full">Ubah Data</button>
+              <div class="flex flex-col mb-6">
+                <label for="fullName" class="text-xl font-medium text-black">Username </label>
+                <input type="text" id="fullName" v-model="user.name" class="input-field">
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="phoneNumber" class="text-xl font-medium text-black">Nomor Telepon</label>
+                <input type="text" id="phoneNumber" v-model="user.phonenumber" class="input-field">
+              </div>
+              <div class="flex flex-col mb-6">
+                <label for="emailAddress" class="text-xl font-medium text-black">Email ( tidak dapat diubah )</label>
+                <p id="emailAddress" class="input-field">{{ user.email }}</p>
+              </div>
+              <button type="submit" class="button">Ubah Data</button>
             </form>
           </section>
         </div>
@@ -43,74 +41,157 @@
     <FooterComponent />
   </div>
 </template>
-
 <script>
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import { store } from '@/store';
-import Nav from '@/components/Nav.vue';
-import FooterComponent from "@/components/Footer.vue";
+import { computed, onMounted, ref } from 'vue';
+import { useStore } from 'vuex';
+import NavFixed from '@/components/NavFixed.vue';
+import SelectionCard from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
-    Nav,
-    FooterComponent
+    NavFixed,
+    SelectionCard,
   },
   setup() {
+    const store = useStore();
     const user = ref({
-      name: 'Data kosong',
-      email: 'Data kosong',
-      phone: 'Data kosong'
+      name: '',
+      phonenumber: '',
+      email: '',
+      photoprofile: '',
     });
 
-    onMounted(async () => {
+    const imageProfileDefault = 'path/to/default/image.jpg';
+
+    // Fungsi untuk mengambil data pengguna dari API
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://nearus.id/api/user');
-        const data = response.data;
-        const userData = data.find(user => user.ownerId === 8);
-        if (userData) {
-          store.updateUser({
-            name: userData.name || 'Data kosong',
-            email: userData.email || 'Data kosong',
-            phone: userData.phonenumber || 'Data kosong'
-          });
+        const response = await fetch('https://nearus.id/api/profile', {
+          headers: {
+            'Authorization': `Bearer ${store.state.token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
         }
+
+        const data = await response.json();
+        user.value = {
+          name: data.name,
+          phonenumber: data.phonenumber,
+          email: data.email,
+          photoprofile: data.photoprofile,
+        };
+
+        // Simpan data pengguna ke local storage
+        localStorage.setItem('userData', JSON.stringify(user.value));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
+    };
+
+    // Saat komponen dimuat, ambil data pengguna dari API atau local storage
+    onMounted(() => {
+      const storedUser = localStorage.getItem('userData');
+      if (storedUser) {
+        user.value = JSON.parse(storedUser);
+      } else {
+        fetchUserData();
+      }
     });
 
-    const updateProfilePic = (event) => {
+    // Fungsi untuk mengunggah foto profil baru
+    const updateProfilePic = async (event) => {
       const file = event.target.files?.[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imgElement = document.getElementById('profile-pic');
-          if (imgElement instanceof HTMLImageElement) {
-            imgElement.src = e.target.result;
+        const formData = new FormData();
+        formData.append('photoprofile', file);
+
+        try {
+          const response = await fetch('https://nearus.id/api/profile/update', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${store.state.token}`,
+            },
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to upload profile picture');
           }
-          store.updateProfilePicture(e.target.result);
-        };
-        reader.readAsDataURL(file);
+
+          const data = await response.json();
+          document.getElementById('profile-pic').src = URL.createObjectURL(file);
+
+          // Simpan URL foto profil baru ke local storage
+          const updatedUser = { ...user.value, photoprofile: data.photoprofile };
+          localStorage.setItem('userData', JSON.stringify(updatedUser));
+          user.value.photoprofile = data.photoprofile;
+
+          console.log('Profile picture uploaded successfully:', data);
+        } catch (error) {
+          console.error('Error uploading profile picture:', error);
+        }
       }
     };
 
-    const updateUserData = () => {
-      store.updateUser({
-        name: 'Updated Name', 
-        email: 'Updated Email',
-        phone: 'Updated Phone'
-      });
+    // Fungsi untuk memperbarui data pengguna
+    const updateUserData = async () => {
+      try {
+        const response = await fetch('https://nearus.id/api/profile/update', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${store.state.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: user.value.name,
+            phonenumber: user.value.phonenumber,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update user data');
+        }
+
+        const data = await response.json();
+
+        // Simpan data pengguna baru ke local storage
+        localStorage.setItem('userData', JSON.stringify(user.value));
+
+        console.log('User data updated successfully:', data);
+      } catch (error) {
+        console.error('Error updating user data:', error);
+      }
     };
 
     return {
-      store,
+      user,
+      imageProfileDefault,
       updateProfilePic,
-      updateUserData
+      updateUserData,
     };
-  }
+  },
 };
 </script>
-
 <style scoped>
+#profile-pic {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.label-field {
+  @apply text-xl font-medium text-black;
+}
+
+.input-field {
+  @apply px-4 py-5 mt-3 rounded-xl border border-solid border-black border-opacity-60 max-md:pr-5 max-md:max-w-full;
+}
+
+.button {
+  @apply px-16 py-5 mt-6 text-2xl font-semibold text-white bg-sky-600 rounded-xl max-md:px-5 max-md:mt-10 max-md:max-w-full;
+}
 </style>

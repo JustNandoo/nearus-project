@@ -14,9 +14,20 @@
         </ul>
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">
-        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
-          <img :src="store.user.profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
-          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">Halo, {{ store.user.name }}</p>
+        <!-- Tombol Login -->
+        <router-link v-if="!user" to="/login" class="text-xl font-medium text-white">
+          <button class="rounded-button bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">Login</button>
+        </router-link>
+        <!-- Tombol Register -->
+        <router-link v-if="!user" to="/register" class="text-xl font-medium text-white">
+          <button class="rounded-button border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded transition duration-300">Register</button>
+        </router-link>
+        <!-- Tombol Profile -->
+        <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
+          <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
+          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">
+            Halo, {{ user ? user.name : 'Guest' }}
+          </p>
         </div>
       </div>
     </nav>
@@ -24,11 +35,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
-import { store } from '../store';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import logo from '../assets/images/nearus.png';
 
+const store = useStore();
+const user = computed(() => store.getters.getUser);
 const scrolled = ref(false);
+const router = useRouter();
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
@@ -40,6 +55,7 @@ const toggleProfileCard = () => {
 };
 
 onMounted(() => {
+  store.dispatch('initializeStore');
   window.addEventListener('scroll', handleScroll);
 });
 
@@ -64,5 +80,14 @@ onBeforeUnmount(() => {
 
 .shadow-lg {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-button {
+  border-radius: 20px; /* Sesuaikan nilai sesuai keinginan Anda */
+}
+
+.rounded-button:hover {
+  /* Jika Anda ingin efek hover tetap konsisten, tambahkan properti border-radius pada hover juga */
+  border-radius: 20px;
 }
 </style>

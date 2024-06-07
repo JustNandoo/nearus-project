@@ -16,10 +16,10 @@
             <div class="w-[200px] h-[2px] absolute left-0 bottom-[0px] bg-gray-400"></div>
           </div>
         </div>
-        <div class="absolute left-0 top-[380px] text-center text-black text-xl font-medium font-montserrat leading-snug">
+        <div class="absolute left-[80px] top-[380px] text-center text-black text-xl font-medium font-montserrat leading-snug">
           Silahkan pencet tombol dibawah untuk melakukan verifikasi akun anda.
         </div>
-        <div class="absolute left-0 top-[520px] text-center text-black text-[15px] font-extralight font-montserrat leading-none">
+        <div class="absolute left-[150px] top-[520px] text-center text-black text-[15px] font-extralight font-montserrat leading-none">
           Anda bisa menutup email ini setelah anda selesai melakukan verfikasi email
         </div>
         <button class="w-[266px] h-[54px] absolute left-[292px] top-[443px] transition duration-300 ease-in-out transform hover:scale-105 bg-gradient-to-r from-sky-300 to-blue-500 rounded-md shadow">

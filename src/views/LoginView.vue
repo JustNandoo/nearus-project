@@ -4,7 +4,7 @@
       <div class="w-[1595px] h-[867px] relative">
         <div class="w-[1595px] h-[865px] left-0 top-[2px] absolute bg-white rounded-[20px] shadow"></div>
         <div class="w-[646px] h-[817px] left-[920px] top-[25px] absolute" id="onBoardingCard">
-          <img class="image w-[646px] h-[817px]" :src="imagePath" />
+          <img class="image w-[646px] h-[817px]" :src="background" />
           <div
             class="h-[243px] left-[147px] top-[287px] absolute flex-col justify-start items-start gap-[33px] inline-flex">
             <div class="w-[340px] text-white text-[26px] font-bold font-sans">Anda anak merantau? kesulitan mencari kos?
@@ -20,7 +20,7 @@
         </div>
         <div class="w-[571px] h-[817px] left-[68px] top-[25px] absolute">
           <div class="w-[172px] h-[49px] left-0 top-[36px] absolute">
-            <img class="left-0 top-0 absolute" :src="imageLogo" />
+            <img class="left-0 top-0 absolute" :src="logo" />
             <div class="w-4 h-4 left-[118px] top-[1px] absolute"></div>
             <div class="w-2 h-[8.17px] left-[137px] top-[5.87px] absolute bg-sky-600 rounded-full"></div>
           </div>
@@ -88,40 +88,33 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { API_URL } from '@/constants';
+import { mapActions } from 'vuex';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
 import NotifGagalLogin from '@/components/NotifGagalLogin.vue';
+import logo from '../assets/images/nearus.png';
+import background from '../assets/images/bg-loginPage.png';
 
 export default {
   components: {
     NotifBerhasilLogin,
-    NotifGagalLogin
+    NotifGagalLogin,
   },
   data() {
     return {
-      imagePath: '../src/assets/images/bg-loginPage.png',
-      imageLogo: '../src/assets/images/nearus.png',
-      rememberMe: false,
-      passwordVisible: false,
       email: '',
       password: '',
+      rememberMe: false,
+      passwordVisible: false,
       berhasilLogin: false,
-      gagalLogin: false
+      gagalLogin: false,
+      logo,
+      background
     };
   },
   methods: {
-    focusEmailInput() {
-      this.$refs.emailInput.focus();
-    },
+    ...mapActions(['login']),
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
-      const passwordInput = this.$refs.passwordInput;
-      if (this.passwordVisible) {
-        passwordInput.type = 'text';
-      } else {
-        passwordInput.type = 'password';
-      }
     },
     async handleSubmit() {
       if (!this.email || !this.password) {
@@ -132,28 +125,25 @@ export default {
         return;
       }
       try {
-       const  response = await axios.post(`${API_URL}/masuk`, {
+        await this.login({
           email: this.email,
           password: this.password,
-          remember: this.rememberMe
+          remember: this.rememberMe,
         });
-
-        console.log(response)
-
-        this.$router.push('/home');
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
           this.$router.push('/home');
         }, 1000);
       } catch (error) {
+        console.error('Login failed:', error.response ? error.response.data : error.message);
         this.gagalLogin = true;
         setTimeout(() => {
           this.gagalLogin = false;
         }, 5000);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -168,4 +158,3 @@ export default {
   background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
 }
 </style>
-x

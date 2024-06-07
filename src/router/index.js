@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-
-
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -64,8 +61,41 @@ const router = createRouter({
       name: 'passworddata',
       component: () => import ('../views/Profile/ProfilePassword.vue')
     },
-  ]
-})
+    {
+      path: '/detail-kost',
+      name: 'detailkost',
+      component: () => import ('../views/DetailPageView.vue')
+    },
+    {
+      path: '/AboutUs',
+      name: 'AboutUs',
+      component: () => import ('../views/AboutUsView.vue')
+    },
+    {
+      path: '/dashboard-data',
+      name: 'DataDasboard',
+      component: () => import ('../views/DataDashboard.vue')
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: () => import ('../views/OwnerDashboard.vue')
+    },
+    {
+      path: '/dashboard-dashboard',
+      name: 'DashboardDashboard',
+      component: () => import ('../views/DashboardDashboard.vue')
+    }, 
+    {
+      path: '/PrivacyPolicy',
+      name: 'PrivacyPolicy',
+      component: () => import ('../views/PrivacyPolicyView.vue')
+    }, 
+    {
+      path: '/',
+      redirect: '/home'
+    },]
+});
 
 
 export default router
