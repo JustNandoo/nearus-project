@@ -1,7 +1,5 @@
-// nav.vue
 <template>
-  <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]"
-          :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
+  <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]" :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-[92%] mx-auto mr-32">
       <div class="ml-60">
         <router-link to="/home">
@@ -17,8 +15,8 @@
       </div>
       <div class="flex items-center justify-between gap-2 mr-48 relative">
         <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
-          <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
-          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">Halo, Calvin Aprilio Hariyanto</p>
+          <img :src="store.user.profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
+          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">Halo, {{ store.user.name }}</p>
         </div>
       </div>
     </nav>
@@ -27,8 +25,8 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { store } from '../store';
 import logo from '../assets/images/nearus.png';
-import profilePicture from '../assets/images/tesimg1.jpeg';
 
 const scrolled = ref(false);
 
