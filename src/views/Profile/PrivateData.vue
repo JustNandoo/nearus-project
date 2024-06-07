@@ -3,32 +3,30 @@
     <NavFixed />
     <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="self-stretch mt-16 max-md:mt-10 max-md:max-w-full">
-        <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-          <div class="w-[344px] h-[264px] relative">
-            <!-- SelectionCard -->
+        <div class="grid grid-cols-1 max-md:grid-cols-none max-md:gap-0 max-md:grid-flow-row md:grid-cols-[344px,1fr] gap-5">
+          <div class="w-full h-[264px] max-md:h-auto relative">
+            <SelectionProfile class="align-self-start" />
           </div>
-          <section class="flex flex-col ml-5 w-[64%] max-md:ml-0 max-md:w-full">
-            <div class="flex flex-col grow mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
+          <section class="flex flex-col ml-5 w-full max-md:ml-0 max-md:w-full">
+            <div class="flex flex-col mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
               <h2 class="text-3xl font-semibold max-md:max-w-full">Data Pribadi</h2>
-              <div
-                class="flex gap-5 items-start px-5 py-3.5 mt-14 rounded-xl border border-solid border-black border-opacity-60 max-md:flex-wrap max-md:mt-10 max-md:max-w-full">
-                <label for="jenisKelamin" class="flex-auto my-auto">Jenis Kelamin</label>
-                <select name="jenisKelamin" id="jenisKelamin" v-model="dataPribadi.jenisKelamin" class="input" required>
-                  <option value="">Pilih Jenis Kelamin</option>
-                  <option value="Laki-laki">Laki-laki</option>
-                  <option value="Perempuan">Perempuan</option>
-                </select>
-              </div>
-              <div
-                class="flex gap-5 px-6 py-5 mt-12 rounded-xl border border-solid border-black border-opacity-60 max-md:flex-wrap max-md:px-5 max-md:mt-10 max-md:max-w-full">
-                <label for="tanggalLahir" class="flex-auto">Tanggal Lahir</label>
-                <input type="date" name="tanggalLahir" id="tanggalLahir" v-model="dataPribadi.tanggalLahir"
-                  class="input" required />
-              </div>
-              <div class="input-field">
-                <label for="alamatRumah" class="sr-only">Alamat Rumah</label>
-                <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah"
-                  placeholder="Alamat Rumah" class="input" required />
+              <div class="grid grid-cols-1 gap-5 max-md:grid-cols-none max-md:gap-0 max-md:grid-flow-row">
+                <div class="input-field">
+                  <label for="jenisKelamin" class="label-field">Jenis Kelamin</label>
+                  <select name="jenisKelamin" id="jenisKelamin" v-model="dataPribadi.jenisKelamin" class="input" required>
+                    <option value="">Pilih Jenis Kelamin</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
+                </div>
+                <div class="input-field">
+                  <label for="tanggalLahir" class="label-field">Tanggal Lahir</label>
+                  <input type="date" name="tanggalLahir" id="tanggalLahir" v-model="dataPribadi.tanggalLahir" class="input" required />
+                </div>
+                <div class="input-field">
+                  <label for="alamatRumah" class="label-field">Alamat Rumah</label>
+                  <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah" placeholder="Alamat Rumah" class="input" required />
+                </div>
               </div>
             </div>
           </section>
@@ -48,11 +46,13 @@ import axios from 'axios';
 import { API_URL } from '@/constants';
 import NavFixed from "@/components/NavFixed.vue";
 import Footer from '@/components/Footer.vue';
+import SelectionProfile from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
     NavFixed,
-    Footer
+    Footer,
+    SelectionProfile
   },
   computed: {
     ...mapState(['user', 'token'])
@@ -121,8 +121,6 @@ export default {
   border: 1px solid #000;
   border-radius: 10px;
   overflow: hidden;
-  display: flex;
-  align-items: center;
   padding: 1rem;
   margin-top: 2.5rem;
 }
@@ -134,7 +132,6 @@ export default {
   padding: 0.5rem;
   font-size: 1rem;
 }
-
 .label-field {
   font-size: 1.5rem;
   font-weight: bold;

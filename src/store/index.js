@@ -1,3 +1,4 @@
+// store/index.js
 import { createStore } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
@@ -32,6 +33,10 @@ export default createStore({
         state.token = token;
       }
     },
+    updateUser(state, updatedUser) {
+      state.user = updatedUser;
+      localStorage.setItem('local', JSON.stringify(updatedUser));
+    },
   },
   actions: {
     async login({ commit }, { email, password }) {
@@ -53,7 +58,7 @@ export default createStore({
           },
         });
         const updatedUser = response.data;
-        commit('setUser', updatedUser);
+        commit('updateUser', updatedUser);
       } catch (error) {
         console.error('Error updating user profile:', error);
         throw error;

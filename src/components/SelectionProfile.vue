@@ -1,24 +1,11 @@
 <template>
-  <div class="relative">
-    <div class="left-0 top-0 absolute text-black text-[32px] font-bold font-montserrat">Pengaturan</div>
-    <div class="w-[344px] h-[253px] left-0 top-[74px] absolute">
-      <div class="w-full h-full left-0 top-0 absolute rounded-[10px] border border-black border-opacity-60"></div>
-      <router-link to="/profile"
-        class="w-full h-[63px] left-0 top-[4px] absolute rounded-tl-[20px] rounded-tr-[20px] border-b border-black border-opacity-60 flex items-center justify-center">
-        Ubah Data Profil
-      </router-link>
-      <router-link to="/privatedata"
-        class="w-full h-[63px] left-0 top-[69px] absolute rounded-tl-[20px] rounded-tr-[20px] border-b border-black border-opacity-60 flex items-center justify-center">
-        Data Pribadi
-      </router-link>
-      <router-link to="/passworddata"
-        class="w-full h-[63px] left-0 top-[134px] absolute rounded-tl-[20px] rounded-tr-[20px] border-b border-black border-opacity-60 flex items-center justify-center">
-        Ubah Kata Sandi
-      </router-link>
-      <button @click="logout"
-        class="w-full h-[55px] left-0 top-[199px] absolute rounded-bl-[15px] rounded-br-[15px] border-b border-black border-opacity-60 flex items-center justify-center  text-black text-xl font-regular  font-montserrat cursor-pointer">
-        Log Out
-      </button>
+  <div class="relative flex flex-col items-center justify-center min-h-screen bg-gray-10">
+    <div class="text-3xl font-bold font-montserrat mb-8">Pengaturan</div>
+    <div class="w-80 h-96 flex flex-col items-center border border-black border-opacity-60 rounded-lg p-4 bg-white shadow-lg">
+      <router-link to="/profile" class="link-item">Ubah Data Profil</router-link>
+      <router-link to="/privatedata" class="link-item">Data Pribadi</router-link>
+      <router-link to="/passworddata" class="link-item">Ubah Kata Sandi</router-link>
+      <button @click="logout" class="logout-button">Log Out</button>
     </div>
   </div>
 </template>
@@ -37,7 +24,24 @@ const logout = () => {
 </script>
 
 <style scoped>
-.text-xl:last-child {
-  margin-bottom: 0;
+.link-item, .logout-button {
+  width: 100%;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+  color: white;
+  background-color: #0986cf; /* Warna biru */
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.link-item:hover, .logout-button:hover {
+  background-color: #1D4ED8; /* Warna biru muda */
+}
+
+.logout-button {
+  margin-top: auto;
 }
 </style>
