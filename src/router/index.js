@@ -85,7 +85,12 @@ const router = createRouter({
       path: '/dashboard-dashboard',
       name: 'DashboardDashboard',
       component: () => import ('../views/DashboardDashboard.vue')
-    }, ,
+    },
+    {
+      path: '/dashboard-statistic',
+      name: 'DashboardStatistic',
+      component: () => import ('../views/DashboardStatistic.vue')
+    },
     {
       path: '/',
       redirect: '/home'
