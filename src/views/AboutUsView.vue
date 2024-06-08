@@ -21,6 +21,7 @@ import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue";
 import Footer from "@/components/Footer.vue";
 import ProfileCard from "@/components/ProfileCard.vue";
 
+
 export default {
   components: {
     ProfileCard,

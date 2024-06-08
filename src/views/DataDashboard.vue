@@ -1,23 +1,70 @@
 <template>
   <div class="flex">
-    <sidebar/>
+    <sidebar />
+
     <div class="flex flex-col mt-10">
-      <h1 class="text-black text-[20px] ml-14">Data Kamar</h1>
+      <!-- Dropdown button -->
+      <div class="relative ml-12 mb-3">
+        <button @click="toggleDropdown" class="text-black bg-white shadow-lg border-[1px] border-blue-300 px-4 py-1 rounded-lg text-[18px] font-bold flex items-center space-x-1">
+          <div>{{dropdownText}}</div>
+          <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              :class="{ 'rotate-180': isDropdownOpen }"
+          >
+            <path
+                fill-rule="evenodd"
+                d="M10 18a1 1 0 0 1-.707-.293l-6-6a1 1 0 0 1 1.414-1.414L10 15.586l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6A1 1 0 0 1 10 18z"
+            />
+          </svg>
+        </button>
+        <!-- Dropdown menu -->
+        <div
+            v-show="isDropdownOpen"
+            @click.away="closeDropdown"
+            class="absolute z-10 top-full mt-2 w-48 bg-white rounded-lg shadow-md py-1"
+        >
+          <button @click="changeDropdownText('Data Kamar')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Data Kamar
+          </button>
+          <button @click="changeDropdownText('Data Penyewa')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+            Data Penyewa
+          </button>
+        </div>
+      </div>
+      <div class="container mx-8 mb-3">
+        <input
+            v-model="searchQuery"
+            type="text"
+            class="w-[1500px] py-2 px-4 ml-4 mt-4 mb-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:border-blue-500"
+            placeholder="Search..."
+        />
+      </div>
       <div class="container p-4 w-screen mx-8">
         <div class="table-container border border-gray-200 rounded-lg shadow-md max-h-80 overflow-y-auto">
           <table class="min-w-full bg-white">
             <thead>
             <tr>
-              <th class="py-2 px-4 border-b text-left">Name</th>
-              <th class="py-2 px-4 border-b text-left">Age</th>
-              <th class="py-2 px-4 border-b text-left">Email</th>
+              <th class="py-2 px-4 border-b text-left">ID</th>
+              <th class="py-2 px-4 border-b text-left">Product Name</th>
+              <th class="py-2 px-4 border-b text-left">Category</th>
+              <th class="py-2 px-4 border-b text-left">Location</th>
+              <th class="py-2 px-4 border-b text-left">Price</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="item in paginatedData" :key="item.id">
-              <td class="py-2 px-4 border-b">{{ item.name }}</td>
-              <td class="py-2 px-4 border-b">{{ item.age }}</td>
-              <td class="py-2 px-4 border-b">{{ item.email }}</td>
+            <tr
+                v-for="(item, index) in paginatedData"
+                :key="item.id"
+                :class="{'bg-gray-100': index % 2 === 0, 'bg-gray-200': index % 2 === 1}"
+            >
+              <td class="py-2 px-4 border-b">{{ index + 1 + (currentPage - 1) * rowsPerPage }}</td>
+              <td class="py-2 px-4 border-b">{{ item.productname }}</td>
+              <td class="py-2 px-4 border-b">{{ item.category }}</td>
+              <td class="py-2 px-4 border-b">{{ item.location }}</td>
+              <td class="py-2 px-4 border-b">{{ item.price }}</td>
             </tr>
             </tbody>
           </table>
@@ -33,31 +80,28 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import Sidebar from "@/components/sidebar.vue";
+import axios from 'axios';
 
-const data = ref([
-  { id: 1, name: 'John Doe', age: 25, email: 'john@example.com' },
-  { id: 2, name: 'Jane Smith', age: 30, email: 'jane@example.com' },
-  { id: 3, name: 'Alice Johnson', age: 27, email: 'alice@example.com' },
-  { id: 4, name: 'Michael Brown', age: 22, email: 'michael@example.com' },
-  { id: 5, name: 'Jessica White', age: 35, email: 'jessica@example.com' },
-  { id: 6, name: 'Daniel Green', age: 29, email: 'daniel@example.com' },
-  { id: 7, name: 'Laura Black', age: 31, email: 'laura@example.com' },
-  { id: 8, name: 'James Blue', age: 28, email: 'james@example.com' },
-  { id: 9, name: 'Emily Red', age: 26, email: 'emily@example.com' },
-  { id: 10, name: 'David Pink', age: 33, email: 'david@example.com' },
-  { id: 11, name: 'Sarah Purple', age: 24, email: 'sarah@example.com' },
-]);
-
+const data = ref([]);
 const currentPage = ref(1);
-const rowsPerPage = 5;
+const rowsPerPage = 10;
+const searchQuery = ref('');
+const isDropdownOpen = ref(false);
+const dropdownText = ref('Data Kamar'); // Reactive variable for dropdown text
 
-const totalPages = computed(() => Math.ceil(data.value.length / rowsPerPage));
+const totalPages = computed(() => Math.ceil(filteredData.value.length / rowsPerPage));
+
+const filteredData = computed(() => {
+  return data.value.filter(item =>
+      item.productname.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * rowsPerPage;
-  return data.value.slice(start, start + rowsPerPage);
+  return filteredData.value.slice(start, start + rowsPerPage);
 });
 
 const prevPage = () => {
@@ -67,10 +111,36 @@ const prevPage = () => {
 const nextPage = () => {
   if (currentPage.value < totalPages.value) currentPage.value++;
 };
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const closeDropdown = () => {
+  isDropdownOpen.value = false;
+};
+
+const changeDropdownText = (text) => {
+  dropdownText.value = text;
+  isDropdownOpen.value = false; // Close the dropdown when an option is selected
+};
+
+// Fetch data from the API
+const fetchData = async () => {
+  try {
+    const response = await axios.get('https://nearus.id/api/product');
+    data.value = response.data.data; // Assuming the API response structure
+  } catch (error) {
+    console.error('Failed to fetch data:', error);
+  }
+};
+
+onMounted(fetchData);
 </script>
+
 
 <style scoped>
 .table-container {
-  max-height: 320px;
+  max-height: 400px;
 }
 </style>
