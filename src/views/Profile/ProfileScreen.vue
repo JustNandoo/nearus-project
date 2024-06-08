@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
     <NavFixed />
-    <main class="flex flex-col items-center px-5 mt-12 w-full">
+    <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
       <section class="mt-16 w-full max-w-5xl">
         <div class="flex gap-5 max-md:flex-col max-md:gap-5">
           <div class="w-full md:w-[344px] h-[264px] relative">
             <SelectionCard />
           </div>
-          <section class="flex flex-col w-full max-md:w-full">
+          <section class="flex flex-col w-full max-md:w-full -mt-2">
             <h3 class="text-3xl font-semibold text-black">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 relative">
               <div class="w-[100px] h-[100px] relative">
@@ -40,7 +40,6 @@
   </div>
   <Footer />
 </template>
-
 <script>
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -109,8 +108,11 @@ export default {
         try {
           await store.dispatch('updateUserProfilePic', formData);
           document.getElementById('profile-pic').src = URL.createObjectURL(file);
+
+          const updatedUser = { ...user.value, photoprofile: data.photoprofile };
+          localStorage.setItem('userData', JSON.stringify(updatedUser));
           user.value.photoprofile = URL.createObjectURL(file);
-          console.log('Profile picture uploaded successfully');
+          console.log('Profile picture uploaded successfully:', data);
         } catch (error) {
           console.error('Error uploading profile picture:', error);
         }
@@ -154,7 +156,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .label-field {
   font-size: 1rem;
