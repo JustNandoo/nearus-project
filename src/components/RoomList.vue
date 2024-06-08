@@ -81,7 +81,7 @@
       {
         items: [
           { icon: socketIcon, name: 'Colokan' },
-          { icon: bathroomIcon, name: 'Kamar Mandi' },
+          { icon: bathroomIcon, name: 'Kamar Mandi Dalam' },
           { icon: toiletIcon, name: 'Kloset Duduk' },
         ],
       },

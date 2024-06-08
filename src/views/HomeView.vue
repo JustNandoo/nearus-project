@@ -31,7 +31,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-import Nav from "@/components/Nav.vue";
+import Nav from "@/components/NavFixed.vue";
 import CarouselHome from "@/components/CarouselHome.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import PriceSortCard from "@/components/PriceSortCard.vue";
