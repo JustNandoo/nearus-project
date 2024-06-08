@@ -1,5 +1,5 @@
 <template>
-  <Nav />
+  <NavFixed />
   <div class="head relative overflow-hidden rounded-b-3xl">
     <div class="carousel w-screen relative">
       <transition-group name="slide" tag="div" mode="out-in">
@@ -33,7 +33,7 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import HeroText from '@/components/HeroText.vue';
 import SearchBar from '@/components/SearchBar.vue';
-import Nav from '@/components/Nav.vue';
+import NavFixed from '@/components/NavFixed.vue';
 
 const currentIndex = ref(0);
 const items = [

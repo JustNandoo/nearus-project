@@ -5,7 +5,7 @@
       <section class="mt-16 max-md:mt-10 max-md:max-w-full">
         <div class="flex gap-5 max-md:flex-col max-md:gap-0">
           <div class="w-[344px] h-[264px] relative">
-            <SelectionCard/>
+            <SelectionProfile/>
           </div>
           <section class="flex flex-col w-[64%] max-md:ml-0 max-md:w-full">
             <div class="flex flex-col grow mt-5 text-2xl text-black max-md:mt-10 max-md:max-w-full">
@@ -57,17 +57,22 @@
       </section>
     </main>
   </div>
+  <Footer />
 </template>
 
 <script>
 import { useStore } from 'vuex';
 import NavFixed from "@/components/NavFixed.vue";
 import SelectionCard from '@/components/SelectionProfile.vue';
+import Footer from '@/components/Footer.vue';
+import SelectionProfile from '@/components/SelectionProfile.vue';
 
 export default {
   components: {
     SelectionCard,
     NavFixed,
+    Footer,
+    SelectionProfile
   },
   setup() {
     const store = useStore();
