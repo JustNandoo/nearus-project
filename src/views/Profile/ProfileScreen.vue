@@ -11,10 +11,8 @@
             <h3 class="text-3xl font-semibold text-black">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 relative">
               <div class="w-[100px] h-[100px] relative">
-                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault"
-                  alt="Profile Picture" class="w-full h-full object-cover rounded-full shadow-md">
-                <label for="upload-profile-pic"
-                  class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
+                <img id="profile-pic" loading="lazy" :src="profilePicSrc" alt="Profile Picture" class="w-full h-full object-cover rounded-full shadow-md">
+                <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
                   <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
                 </label>
@@ -44,11 +42,12 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/NavFixed.vue';
 import SelectionCard from '@/components/SelectionProfile.vue';
 import Footer from '@/components/Footer.vue';
+import imageProfileDefault from '@/assets/images/profile-pic.png'; // Impor gambar default menggunakan ES6 import
 
 export default {
   components: {
@@ -65,7 +64,9 @@ export default {
       photoprofile: '',
     });
 
-    const imageProfileDefault = '@/assets/images/profile-pic.png';
+    // Computed property untuk sumber gambar profil
+    const profilePicSrc = computed(() => store.state.user.photoprofile || imageProfileDefault);
+
     const fetchUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile', {
@@ -85,14 +86,14 @@ export default {
           email: data.email,
           photoprofile: data.photoprofile,
         };
-        localStorage.setItem('userData', JSON.stringify(user.value));
+        store.commit('setUser', user.value);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     onMounted(() => {
-      const storedUser = localStorage.getItem('userData');
+      const storedUser = localStorage.getItem('local');
       if (storedUser) {
         user.value = JSON.parse(storedUser);
       } else {
@@ -120,12 +121,10 @@ export default {
           }
 
           const data = await response.json();
-          document.getElementById('profile-pic').src = URL.createObjectURL(file);
+          const profilePicUrl = URL.createObjectURL(file);
+          document.getElementById('profile-pic').src = profilePicUrl;
 
-
-          const updatedUser = { ...user.value, photoprofile: data.photoprofile };
-          localStorage.setItem('userData', JSON.stringify(updatedUser));
-          user.value.photoprofile = data.photoprofile;
+          store.commit('updateUserProfilePic', profilePicUrl);
 
           console.log('Profile picture uploaded successfully:', data);
         } catch (error) {
@@ -133,7 +132,6 @@ export default {
         }
       }
     };
-
 
     const updateUserData = async () => {
       try {
@@ -155,7 +153,7 @@ export default {
 
         const data = await response.json();
 
-        localStorage.setItem('userData', JSON.stringify(user.value));
+        store.commit('updateUser', user.value);
 
         console.log('User data updated successfully:', data);
       } catch (error) {
@@ -165,7 +163,7 @@ export default {
 
     return {
       user,
-      imageProfileDefault,
+      profilePicSrc,
       updateProfilePic,
       updateUserData,
     };
