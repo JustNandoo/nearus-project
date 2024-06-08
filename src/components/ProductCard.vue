@@ -40,7 +40,7 @@ onMounted(async () => {
         productname: data[10].productname,
         location: data[10].location,
         category: data[10].category,
-        price: 'Rp.1.300.000'
+        price: data[10].price
       };
     } else {
       console.error('Error fetching product data: No data received from API');
