@@ -92,6 +92,21 @@ const router = createRouter({
       component: () => import ('../views/DashboardStatistic.vue')
     },
     {
+      path: '/dashboard-kosku',
+      name: 'DashboardKosku',
+      component: () => import ('../views/KoskuDashboard.vue')
+    },
+    {
+      path: '/dashboard-settings',
+      name: 'DashboardSettings',
+      component: () => import ('../views/SettingsDashboard.vue')
+    },
+    {
+      path: '/dashboard-profile',
+      name: 'DashboardProfile',
+      component: () => import ('../views/ProfileDashboard.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     },]

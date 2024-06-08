@@ -70,12 +70,12 @@ const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard-dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
   { text: 'Statistic', icon: faChartLine, path: '/dashboard-statistic' },
-  { text: 'KosKu', icon: faHouseUser, path: '/kosku' },
+  { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
 ];
 
 const generalItems = [
-  { text: 'Settings', icon: faGear, path: '/settings' },
-  { text: 'Profile', icon: faUser, path: '/profile' },
+  { text: 'Settings', icon: faGear, path: '/dashboard-settings' },
+  { text: 'Profile', icon: faUser, path: '/dashboard-profile' },
 ];
 
 const route = useRoute();
