@@ -1,32 +1,31 @@
 <template>
-  <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]"
-          :class="{'bg-white': scrolled, 'shadow-lg': scrolled}">
-    <nav class="flex justify-between items-center w-[92%] mx-auto mr-32">
-      <div class="ml-60">
+  <header class="header font-montserrat fixed w-full bg-transparent h-20 pt-3 pb-3 items-center z-[1000]" :class="{'bg-white text-black shadow-lg': scrolled}">
+    <nav class="flex justify-between items-center w-[92%] mx-auto">
+      <div class="ml-10">
         <router-link to="/home">
-          <img class="w-32 cursor-pointer" :src="logo" alt="logo">
+          <img class="w-32 cursor-pointer" :src="logo" alt="logo" :class="{'logo-scrolled': scrolled}">
         </router-link>
       </div>
-      <div class="mr-96">
-        <ul class="flex items-center gap-10 text-xl font-medium text-white" :class="{'text-change': scrolled}">
+      <div class="ml-auto">
+        <ul class="flex items-center gap-10 text-xl font-medium" :class="{'text-black': scrolled, 'text-white': !scrolled}">
           <li><router-link to="/home">Sewa</router-link></li>
           <li><a href="#">NearusFinance</a></li>
           <li><router-link to="/AboutUs">About Us</router-link></li>
         </ul>
       </div>
-      <div class="flex items-center justify-between gap-2 mr-48 relative">
-        <!-- Tombol Login -->
-        <router-link v-if="!user" to="/login" class="text-xl font-medium text-white">
+      <div class="flex items-center gap-2 ml-auto relative">
+
+        <router-link v-if="!user" to="/login" class="text-xl font-medium">
           <button class="rounded-button bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">Login</button>
         </router-link>
-        <!-- Tombol Register -->
-        <router-link v-if="!user" to="/register" class="text-xl font-medium text-white">
+
+        <router-link v-if="!user" to="/register" class="text-xl font-medium">
           <button class="rounded-button border border-blue-500 hover:border-blue-700 text-blue-500 hover:text-blue-700 py-2 px-4 rounded transition duration-300">Register</button>
         </router-link>
-        <!-- Tombol Profile -->
-        <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
+
+        <div v-else class="rounded-full gap-5 flex items-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
-          <p class="text-xl font-medium text-white" :class="{'text-change': scrolled}">
+          <p class="text-xl font-medium" :class="{'text-black': scrolled, 'text-white': !scrolled}">
             Halo, {{ user ? user.name : 'Guest' }}
           </p>
         </div>
@@ -39,8 +38,8 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import logo from '../assets/images/nearus.png';
 import profilePicture from '../assets/images/tesimg1.jpeg';
+import logo from '../assets/images/nearus.png';
 
 const store = useStore();
 const user = computed(() => store.getters.getUser);
@@ -76,7 +75,11 @@ onBeforeUnmount(() => {
   background-color: white;
 }
 
-.text-change {
+.text-white {
+  color: white;
+}
+
+.text-black {
   color: black;
 }
 
@@ -85,11 +88,12 @@ onBeforeUnmount(() => {
 }
 
 .rounded-button {
-  border-radius: 20px; /* Sesuaikan nilai sesuai keinginan Anda */
+  border-radius: 20px;
 }
 
 .rounded-button:hover {
-  /* Jika Anda ingin efek hover tetap konsisten, tambahkan properti border-radius pada hover juga */
   border-radius: 20px;
 }
+
+
 </style>
