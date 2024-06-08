@@ -64,7 +64,7 @@
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <p class="empty-message">Belum ada data kamar</p>
+         <RoomList />
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -84,6 +84,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
+import RoomList from "@/components/RoomList.vue";
 
 const showProfileCard = ref(false);
 const product = ref({});
