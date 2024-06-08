@@ -18,21 +18,18 @@
                     <option value="Laki-laki">Laki-laki</option>
                     <option value="Perempuan">Perempuan</option>
                   </select>
-                </div>
-                <div class="input-field">
-                  <label for="tanggalLahir" class="label-field">Tanggal Lahir</label>
-                  <input type="date" name="tanggalLahir" id="tanggalLahir" v-model="dataPribadi.tanggalLahir" class="input" required />
-                </div>
-                <div class="input-field">
-                  <label for="alamatRumah" class="label-field">Alamat Rumah</label>
-                  <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah" placeholder="Alamat Rumah" class="input" required />
-                </div>
+                  </div>
+                  <div class="input-field">
+                    <label for="tanggalLahir" class="label-field">Tanggal Lahir</label>
+                    <input type="date" name="tanggalLahir" id="tanggalLahir" v-model="dataPribadi.tanggalLahir" class="input" required />
+                  </div>
+                  <div class="input-field">
+                    <label for="alamatRumah" class="label-field">Alamat Rumah</label>
+                    <input type="text" name="alamatRumah" id="alamatRumah" v-model="dataPribadi.alamatRumah" placeholder="Alamat Rumah" class="input" required />
+                  </div>
               </div>
             </div>
-          </section>
-        </div>
-      </section>
-      <form @submit.prevent="saveData" class="mt-16 max-w-full w-[711px] max-md:mt-10">
+            <form @submit.prevent="saveData" class="mt-16 max-w-full w-[711px] max-md:mt-10">
         <h2 class="mt-16 text-3xl font-semibold max-md:mt-10 max-md:max-w-full">Kontak Darurat</h2>
         <div class="input-field">
           <label for="namaPanjang" class="sr-only">Nama Panjang</label>
@@ -58,7 +55,7 @@
           />
         </div>
         <div class="flex gap-5 mt-11 max-w-full w-[711px] max-md:flex-wrap max-md:mt-10">
-          <div class="shrink-0 border border-solid aspect-[1.67] border-black border-opacity-60 w-[122px] flex items-center justify-center">
+          <div class="shrink-0 border border-solid aspect-[1.67] border-black border-opacity-60 w-[100px] h-[120px] flex items-center justify-center">
             +62
           </div>  
           <div class="input-field flex-auto">
@@ -78,11 +75,13 @@
           Simpan
         </button>
       </form>
+          </section>
+        </div>
+      </section>
     </main>
     <Footer />
   </div>
 </template>
-
 <script>
 import { mapActions, mapState } from 'vuex';
 import axios from 'axios';

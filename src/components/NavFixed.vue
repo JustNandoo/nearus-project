@@ -30,7 +30,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import logo from '../assets/images/nearus.png';
 import scrolledLogo from '../assets/images/nearuswhite.png';
-import profilePicture from '../assets/images/tesimg1.jpeg';
+import imageProfileDefault from '@/assets/images/profile-pic.png';
 
 const store = useStore();
 const user = computed(() => store.getters.getUser);
@@ -41,10 +41,15 @@ const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
 };
 
+
 const toggleProfileCard = () => {
   const event = new Event('toggle-profile-card');
   window.dispatchEvent(event);
 };
+
+// Computed properties to get user data from the Vuex store
+const profilePicture = computed(() => store.state.user?.photoprofile || imageProfileDefault);
+const userName = computed(() => store.state.user?.name || 'Guest');
 
 onMounted(() => {
   store.dispatch('initializeStore');

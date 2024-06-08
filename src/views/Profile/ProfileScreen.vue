@@ -1,20 +1,18 @@
 <template>
   <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
     <NavFixed />
-    <main class="flex flex-col items-end self-center px-5 mt-12 max-w-full w-[1208px] max-md:mt-10">
+    <main class="flex flex-col items-center px-5 mt-12 w-full">
       <section class="mt-16 w-full max-w-5xl">
         <div class="flex gap-5 max-md:flex-col max-md:gap-5">
           <div class="w-full md:w-[344px] h-[264px] relative">
             <SelectionCard />
           </div>
-          <section class="flex flex-col w-full max-md:w-full -mt-2">
+          <section class="flex flex-col w-full max-md:w-full">
             <h3 class="text-3xl font-semibold text-black">Ubah Data Profil</h3>
             <div class="flex items-center mt-11 relative">
               <div class="w-[100px] h-[100px] relative">
-                <img id="profile-pic" loading="lazy" :src="user.photoprofile || imageProfileDefault"
-                  alt="Profile Picture" class="w-full h-full object-cover rounded-full shadow-md">
-                <label for="upload-profile-pic"
-                  class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
+                <img id="profile-pic" loading="lazy" :src="profilePicSrc" alt="Profile Picture" class="w-full h-full object-cover rounded-full shadow-md">
+                <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
                   <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
                 </label>
@@ -42,12 +40,14 @@
   </div>
   <Footer />
 </template>
+
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/NavFixed.vue';
 import SelectionCard from '@/components/SelectionProfile.vue';
 import Footer from '@/components/Footer.vue';
+import imageProfileDefault from '@/assets/images/profile-pic.png'; // Impor gambar default menggunakan ES6 import
 
 export default {
   components: {
@@ -64,7 +64,8 @@ export default {
       photoprofile: '',
     });
 
-    const imageProfileDefault = '@/assets/images/profile-pic.png';
+    const profilePicSrc = computed(() => user.value.photoprofile || imageProfileDefault);
+
     const fetchUserData = async () => {
       try {
         const response = await fetch('https://nearus.id/api/profile', {
@@ -106,26 +107,10 @@ export default {
         formData.append('photoprofile', file);
 
         try {
-          const response = await fetch('https://nearus.id/api/profile/update', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${store.state.token}`,
-            },
-            body: formData,
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to upload profile picture');
-          }
-
-          const data = await response.json();
+          await store.dispatch('updateUserProfilePic', formData);
           document.getElementById('profile-pic').src = URL.createObjectURL(file);
-
-          const updatedUser = { ...user.value, photoprofile: data.photoprofile };
-          localStorage.setItem('userData', JSON.stringify(updatedUser));
-          user.value.photoprofile = data.photoprofile;
-
-          console.log('Profile picture uploaded successfully:', data);
+          user.value.photoprofile = URL.createObjectURL(file);
+          console.log('Profile picture uploaded successfully');
         } catch (error) {
           console.error('Error uploading profile picture:', error);
         }
@@ -152,7 +137,7 @@ export default {
 
         const data = await response.json();
 
-        localStorage.setItem('userData', JSON.stringify(user.value));
+        store.commit('updateUser', user.value);
 
         console.log('User data updated successfully:', data);
       } catch (error) {
@@ -162,51 +147,38 @@ export default {
 
     return {
       user,
-      imageProfileDefault,
+      profilePicSrc,
       updateProfilePic,
       updateUserData,
     };
-  },
+  }
 };
 </script>
-<style scoped>
-#profile-pic {
-  object-fit: cover;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-}
 
+<style scoped>
 .label-field {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .input-field {
-  padding: 1rem;
-  margin-top: 0.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.6);
-  max-width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
 }
 
 .button {
-  padding: 1rem 4rem;
-  margin-top: 1.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #0986cf;
-  border-radius: 0.75rem;
+  background-color: #008DDA;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #1D4ED8;
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #0072b1;
 }
 </style>
