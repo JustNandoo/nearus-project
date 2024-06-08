@@ -64,8 +64,7 @@ export default {
       photoprofile: '',
     });
 
-    // Computed property untuk sumber gambar profil
-    const profilePicSrc = computed(() => store.state.user.photoprofile || imageProfileDefault);
+    const profilePicSrc = computed(() => user.value.photoprofile || imageProfileDefault);
 
     const fetchUserData = async () => {
       try {
@@ -86,14 +85,14 @@ export default {
           email: data.email,
           photoprofile: data.photoprofile,
         };
-        store.commit('setUser', user.value);
+        localStorage.setItem('userData', JSON.stringify(user.value));
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     onMounted(() => {
-      const storedUser = localStorage.getItem('local');
+      const storedUser = localStorage.getItem('userData');
       if (storedUser) {
         user.value = JSON.parse(storedUser);
       } else {
@@ -108,25 +107,10 @@ export default {
         formData.append('photoprofile', file);
 
         try {
-          const response = await fetch('https://nearus.id/api/profile/update', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${store.state.token}`,
-            },
-            body: formData,
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to upload profile picture');
-          }
-
-          const data = await response.json();
-          const profilePicUrl = URL.createObjectURL(file);
-          document.getElementById('profile-pic').src = profilePicUrl;
-
-          store.commit('updateUserProfilePic', profilePicUrl);
-
-          console.log('Profile picture uploaded successfully:', data);
+          await store.dispatch('updateUserProfilePic', formData);
+          document.getElementById('profile-pic').src = URL.createObjectURL(file);
+          user.value.photoprofile = URL.createObjectURL(file);
+          console.log('Profile picture uploaded successfully');
         } catch (error) {
           console.error('Error uploading profile picture:', error);
         }
@@ -167,48 +151,34 @@ export default {
       updateProfilePic,
       updateUserData,
     };
-  },
+  }
 };
 </script>
 
 <style scoped>
-#profile-pic {
-  object-fit: cover;
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-}
-
 .label-field {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #000;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .input-field {
-  padding: 1rem;
-  margin-top: 0.75rem;
-  border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.6);
-  max-width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
 }
 
 .button {
-  padding: 1rem 4rem;
-  margin-top: 1.5rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-  background-color: #0986cf;
-  border-radius: 0.75rem;
+  background-color: #008DDA;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .button:hover {
-  background-color: #1D4ED8;
-}
-
-.shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #0072b1;
 }
 </style>

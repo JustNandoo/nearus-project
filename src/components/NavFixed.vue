@@ -15,7 +15,7 @@
       <div class="flex items-center gap-2 relative">
         <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
-          <p class="text-xl font-medium text-black" :class="{'text-change': scrolled}">Halo, Calvin Aprilio Hariyanto</p>
+          <p class="text-xl font-medium text-black" :class="{'text-change': scrolled}">Halo, {{ userName }}</p>
         </div>
       </div>
     </nav>
@@ -23,21 +23,28 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
+import { useStore } from 'vuex';
 import logo from '../assets/images/nearus.png';
 import scrolledLogo from '../assets/images/nearuswhite.png';
-import profilePicture from '../assets/images/tesimg1.jpeg';
+import imageProfileDefault from '@/assets/images/profile-pic.png';
 
+const store = useStore();
 const scrolled = ref(false);
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
 };
 
+
 const toggleProfileCard = () => {
   const event = new Event('toggle-profile-card');
   window.dispatchEvent(event);
 };
+
+// Computed properties to get user data from the Vuex store
+const profilePicture = computed(() => store.state.user?.photoprofile || imageProfileDefault);
+const userName = computed(() => store.state.user?.name || 'Guest');
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);
