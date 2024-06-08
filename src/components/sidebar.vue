@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-[350px] border-r-[1px] text-white shadow-lg flex flex-col justify-between">
+  <div class="h-screen w-[350px] w-min-[350px] border-r-[1px] text-white shadow-lg flex flex-col justify-between">
     <div>
       <div class="p-4 text-2xl font-bold border-b-[0.5px]">
         <img class="w-[120px] h-auto" :src="logo" alt="">
@@ -69,7 +69,7 @@ const setActive = (item) => {
 const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard-dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
-  { text: 'Statistic', icon: faChartLine, path: '/statistic' },
+  { text: 'Statistic', icon: faChartLine, path: '/dashboard-statistic' },
   { text: 'KosKu', icon: faHouseUser, path: '/kosku' },
 ];
 
