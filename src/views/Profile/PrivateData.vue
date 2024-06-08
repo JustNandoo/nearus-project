@@ -33,7 +33,50 @@
         </div>
       </section>
       <form @submit.prevent="saveData" class="mt-16 max-w-full w-[711px] max-md:mt-10">
-        <!-- Form Kontak Darurat -->
+        <h2 class="mt-16 text-3xl font-semibold max-md:mt-10 max-md:max-w-full">Kontak Darurat</h2>
+        <div class="input-field">
+          <label for="namaPanjang" class="sr-only">Nama Panjang</label>
+          <input 
+            type="text" 
+            id="namaPanjang" 
+            v-model="kontakDarurat.namaLengkap"
+            class="input" 
+            placeholder="Nama Panjang" 
+            required
+          />
+        </div>
+        <div class="flex gap-5 justify-between items-center input-field mt-11 max-w-full w-[711px] max-md:flex-wrap max-md:mt-10">
+          <div class="my-auto">Status</div>
+          <input 
+            type="text" 
+            name="status" 
+            id="status" 
+            v-model="kontakDarurat.status"
+            class="input"
+            placeholder="Status"
+            required 
+          />
+        </div>
+        <div class="flex gap-5 mt-11 max-w-full w-[711px] max-md:flex-wrap max-md:mt-10">
+          <div class="shrink-0 border border-solid aspect-[1.67] border-black border-opacity-60 w-[122px] flex items-center justify-center">
+            +62
+          </div>  
+          <div class="input-field flex-auto">
+            <label for="nomorTelepon" class="sr-only">Nomor Telepon</label>
+            <input 
+              type="tel" 
+              name="nomorTelepon" 
+              id="nomorTelepon" 
+              v-model="kontakDarurat.nomorTelepon"
+              placeholder="Nomor Telepon" 
+              class="input"
+              required
+            />
+          </div>
+        </div>
+        <button type="submit" class="justify-center items-center px-16 py-4 mt-16 max-w-full text-2xl font-semibold text-white whitespace-nowrap bg-sky-600 rounded-xl w-[711px] max-md:px-5 max-md:mt-10">
+          Simpan
+        </button>
       </form>
     </main>
     <Footer />
@@ -69,7 +112,17 @@ export default {
           });
 
           if (response && response.data) {
-            // Simpan data dari response ke dataPribadi dan kontakDarurat
+            const userData = response.data.data;
+            this.dataPribadi = {
+              jenisKelamin: userData.dataPribadi.jenisKelamin || '',
+              tanggalLahir: userData.dataPribadi.tanggalLahir || '',
+              alamatRumah: userData.dataPribadi.alamatRumah || ''
+            };
+            this.kontakDarurat = {
+              namaLengkap: userData.kontakDarurat.namaLengkap || '',
+              status: userData.kontakDarurat.status || '',
+              nomorTelepon: userData.kontakDarurat.nomorTelepon || ''
+            };
           }
         } catch (error) {
           console.error('Failed to fetch user data:', error);
@@ -77,9 +130,17 @@ export default {
       }
     },
     async saveData() {
-      // Simpan data yang akan dikirim ke server
       const payload = {
-        // Data yang akan disimpan
+        dataPribadi: {
+          jenisKelamin: this.dataPribadi.jenisKelamin,
+          tanggalLahir: this.dataPribadi.tanggalLahir,
+          alamatRumah: this.dataPribadi.alamatRumah
+        },
+        kontakDarurat: {
+          namaLengkap: this.kontakDarurat.namaLengkap,
+          status: this.kontakDarurat.status,
+          nomorTelepon: this.kontakDarurat.nomorTelepon
+        }
       };
 
       try {

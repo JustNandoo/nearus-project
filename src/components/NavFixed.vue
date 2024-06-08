@@ -29,6 +29,7 @@ import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import logo from '../assets/images/nearus.png';
+import scrolledLogo from '../assets/images/nearuswhite.png';
 import profilePicture from '../assets/images/tesimg1.jpeg';
 
 const store = useStore();
