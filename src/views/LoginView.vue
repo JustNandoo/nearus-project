@@ -41,7 +41,7 @@
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
                 Sandi</label>
-              <input id="passwordInput" v-model="password" ref="passwordInput" type="password"
+              <input id="passwordInput" v-model="password" ref="passwordInput" :type="passwordVisible ? 'text' : 'password'"
                 class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
                 placeholder="Masukkan Kata Sandi Anda" />
               <button @click="togglePasswordVisibility"
@@ -84,9 +84,9 @@
     </div>
     <NotifBerhasilLogin v-if="berhasilLogin" />
     <NotifGagalLogin v-if="gagalLogin" />
-  </div>
-</template>
 
+</div>
+</template>
 <script>
 import { mapActions } from 'vuex';
 import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
@@ -95,66 +95,65 @@ import logo from '../assets/images/nearus.png';
 import background from '../assets/images/bg-loginPage.png';
 
 export default {
-  components: {
-    NotifBerhasilLogin,
-    NotifGagalLogin,
+components: {
+  NotifBerhasilLogin,
+  NotifGagalLogin,
+},
+data() {
+  return {
+    email: '',
+    password: '',
+    rememberMe: false,
+    passwordVisible: false,
+    berhasilLogin: false,
+    gagalLogin: false,
+    logo,
+    background
+  };
+},
+methods: {
+  ...mapActions(['login']),
+  togglePasswordVisibility() {
+    this.passwordVisible = !this.passwordVisible;
   },
-  data() {
-    return {
-      email: '',
-      password: '',
-      rememberMe: false,
-      passwordVisible: false,
-      berhasilLogin: false,
-      gagalLogin: false,
-      logo,
-      background
-    };
+  async handleSubmit() {
+    if (!this.email || !this.password) {
+      this.gagalLogin = true;
+      setTimeout(() => {
+        this.gagalLogin = false;
+      }, 5000);
+      return;
+    }
+    try {
+      await this.login({
+        email: this.email,
+        password: this.password,
+        remember: this.rememberMe,
+      });
+      this.berhasilLogin = true;
+      setTimeout(() => {
+        this.berhasilLogin = false;
+        this.$router.push('/home');
+      }, 1000);
+    } catch (error) {
+      console.error('Login failed:', error.response ? error.response.data : error.message);
+      this.gagalLogin = true;
+      setTimeout(() => {
+        this.gagalLogin = false;
+      }, 5000);
+    }
   },
-  methods: {
-    ...mapActions(['login']),
-    togglePasswordVisibility() {
-      this.passwordVisible = !this.passwordVisible;
-    },
-    async handleSubmit() {
-      if (!this.email || !this.password) {
-        this.gagalLogin = true;
-        setTimeout(() => {
-          this.gagalLogin = false;
-        }, 5000);
-        return;
-      }
-      try {
-        await this.login({
-          email: this.email,
-          password: this.password,
-          remember: this.rememberMe,
-        });
-        this.berhasilLogin = true;
-        setTimeout(() => {
-          this.berhasilLogin = false;
-          this.$router.push('/home');
-        }, 1000);
-      } catch (error) {
-        console.error('Login failed:', error.response ? error.response.data : error.message);
-        this.gagalLogin = true;
-        setTimeout(() => {
-          this.gagalLogin = false;
-        }, 5000);
-      }
-    },
-  },
+},
 };
 </script>
-
 <style scoped>
 .full-screen-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: -1;
+background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
 }
 </style>

@@ -64,7 +64,7 @@
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <p class="empty-message">Belum ada data kamar</p>
+          <RoomList />
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -75,6 +75,7 @@
 </template>
 
 <script setup>
+import RoomList from "@/components/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
