@@ -36,11 +36,11 @@ onMounted(async () => {
 
     if (data && data.length > 0) {
       product.value = {
-        image: data[0].image,
-        productname: data[0].productname,
-        location: data[0].location,
-        category: data[0].category,
-        price: 'Rp.1.300.000'
+        image: data[10].image,
+        productname: data[10].productname,
+        location: data[10].location,
+        category: data[10].category,
+        price: data[10].price
       };
     } else {
       console.error('Error fetching product data: No data received from API');

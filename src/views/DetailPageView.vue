@@ -36,14 +36,15 @@
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
     <div class="mt-10 mr-32 ml-32 mb-20">
       <h1 class="font-bold text-[28px]">Fasilitas Bersama</h1>
+      <p class="empty-message">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
         <h1 class="font-bold text-[28px]">Lokasi</h1>
-        <div class="flex gap-8 justify-be">
-          <div class="w-1/2">
+        <div class="flex gap-8 justify-between">
+          <div class="w-1/2 mt-12">
             <LeafletMap />
           </div>
-          <div class="w-1/2 container mx-auto py-8">
+          <div class="w-1/2 container mx-auto py-8 -mt-12">
             <div v-for="item in items" :key="item.id" class="flex items-center justify-between py-5">
               <div class="flex items-center gap-5">
                 <div class="flex-shrink-0">
@@ -62,8 +63,9 @@
 
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
-          <h1 class="font-bold text-[28px] mb-10">kamar</h1>
-
+          <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
+          <p class="empty-message">Belum ada data kamar</p>
+          <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
     </div>
@@ -166,6 +168,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
+
 .container {
   margin-left: 9rem; /* Adjust as needed */
   padding-top: 8rem; /* Adjust as needed */
@@ -180,6 +184,12 @@ img {
   object-fit: cover;
   border-radius: 0.75rem; /* Adjust as needed */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
+}
+.empty-message {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  text-align: center;
+  margin: 20px 0;
 }
 
 /* Custom styles for Disqus comments */

@@ -37,6 +37,12 @@ export default createStore({
       state.user = updatedUser;
       localStorage.setItem('local', JSON.stringify(updatedUser));
     },
+    updateUserProfilePic(state, profilePicUrl) {
+      if (state.user) {
+        state.user.photoprofile = profilePicUrl;
+        localStorage.setItem('local', JSON.stringify(state.user));
+      }
+    }
   },
   actions: {
     async login({ commit }, { email, password }) {
@@ -61,6 +67,21 @@ export default createStore({
         commit('updateUser', updatedUser);
       } catch (error) {
         console.error('Error updating user profile:', error);
+        throw error;
+      }
+    },
+    async updateUserProfilePic({ commit, state }, formData) {
+      try {
+        const response = await axios.post(`${API_URL}/profile/update`, formData, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+            'Content-Type': 'multipart/form-data'
+          },
+        });
+        const updatedUser = response.data;
+        commit('updateUserProfilePic', updatedUser.photoprofile);
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
         throw error;
       }
     },

@@ -85,12 +85,29 @@ const router = createRouter({
       path: '/dashboard-dashboard',
       name: 'DashboardDashboard',
       component: () => import ('../views/DashboardDashboard.vue')
-    }, 
+
+    },
     {
-      path: '/PrivacyPolicy',
-      name: 'PrivacyPolicy',
-      component: () => import ('../views/PrivacyPolicyView.vue')
-    }, 
+      path: '/dashboard-statistic',
+      name: 'DashboardStatistic',
+      component: () => import ('../views/DashboardStatistic.vue')
+    },
+
+    {
+      path: '/dashboard-kosku',
+      name: 'DashboardKosku',
+      component: () => import ('../views/KoskuDashboard.vue')
+    },
+    {
+      path: '/dashboard-settings',
+      name: 'DashboardSettings',
+      component: () => import ('../views/SettingsDashboard.vue')
+    },
+    {
+      path: '/dashboard-profile',
+      name: 'DashboardProfile',
+      component: () => import ('../views/ProfileDashboard.vue')
+    },
     {
       path: '/',
       redirect: '/home'

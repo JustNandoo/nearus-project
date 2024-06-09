@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col items-center justify-center min-h-screen bg-gray-10">
+  <div class="relative flex flex-col items-center justify-center min-h-screen bg-gray-10 -mt-60 -left-20">
     <div class="text-3xl font-bold font-montserrat mb-8">Pengaturan</div>
     <div class="w-80 h-96 flex flex-col items-center border border-black border-opacity-60 rounded-lg p-4 bg-white shadow-lg">
       <router-link to="/profile" class="link-item">Ubah Data Profil</router-link>
