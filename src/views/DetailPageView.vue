@@ -21,7 +21,7 @@
       <div class="flex flex-col gap-3 w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-[24px]">Mulai Dari</h1>
-          <h1 class="font-bold text-[24px]">Rp.{{product.price}} / 6 bulan</h1>
+          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / 6 bulan</h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
           <button class="rounded-lg border-black border-2 w-20 h-12">
@@ -36,7 +36,12 @@
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
     <div class="mt-10 mr-32 ml-32 mb-20">
       <h1 class="font-bold text-[28px]">Fasilitas Bersama</h1>
-      <p class="empty-message">Belum ada data fasilitas</p>
+      <div v-if="facilities.length">
+        <ul>
+          <li v-for="facility in facilities" :key="facility.id">{{ facility.name }}</li>
+        </ul>
+      </div>
+      <p v-else class="empty-message">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
         <h1 class="font-bold text-[28px]">Lokasi</h1>
@@ -60,11 +65,17 @@
             </div>
           </div>
         </div>
-
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <RoomList />
+
+          <div v-if="rooms.length">
+            <ul>
+              <li v-for="room in rooms" :key="room.id">{{ room.name }} - {{ room.price }}</li>
+            </ul>
+          </div>
+          <p v-else class="empty-message">Belum ada data kamar</p>
+
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -88,6 +99,9 @@ import Footer from "@/components/Footer.vue";
 
 const showProfileCard = ref(false);
 const product = ref({});
+const facilities = ref([]);
+const rooms = ref([]);
+
 const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
@@ -96,33 +110,12 @@ import icon1 from '@/assets/images/school.png';
 import icon2 from '@/assets/images/tempatmakan.png';
 import icon3 from '@/assets/images/tokokelontong.png';
 import icon4 from '@/assets/images/laundry.png';
-import ProductDetail from "@/components/ProductDetail.vue";
 
 const items = ref([
-  {
-    id: 1,
-    icon: icon1,
-    title: 'SMK RADEN UMAR SAID KUDUS',
-    text: '0.85 KM',
-  },
-  {
-    id: 2,
-    icon: icon2,
-    title: 'Tempat Makan MakRU',
-    text: '0.70 KM',
-  },
-  {
-    id: 3,
-    icon: icon3,
-    title: 'Toko Lima',
-    text: '1.25 KM',
-  },
-  {
-    id: 4,
-    icon: icon4,
-    title: 'Laundry Reftalia',
-    text: '0.25 KM',
-  },
+  { id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM' },
+  { id: 2, icon: icon2, title: 'Tempat Makan MakRU', text: '0.70 KM' },
+  { id: 3, icon: icon3, title: 'Toko Lima', text: '1.25 KM' },
+  { id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM' },
 ]);
 
 console.log('Icon 1:', icon1);
@@ -131,11 +124,11 @@ console.log('Icon 3:', icon3);
 console.log('Icon 4:', icon4);
 console.log('Items:', items.value);
 
-(function() { 
-    var d = document, s = d.createElement('script');
-    s.src = 'https://nearus.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://nearus.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
 })();
 
 onMounted(async () => {
@@ -145,12 +138,18 @@ onMounted(async () => {
     const data = response.data.data;
 
     if (data && data.length > 0) {
+      // For demo purposes, let's use the first item
+      const selectedProduct = data[0];
       product.value = {
-        productname: data[10].productname,
-        location: data[10].location,
-        category: data[10].category,
-        price: data[10].price
+        productname: selectedProduct.productname,
+        location: selectedProduct.location,
+        category: selectedProduct.category,
+        price: selectedProduct.price,
+        facilities: selectedProduct.facilities || [],
+        rooms: selectedProduct.rooms || []
       };
+      facilities.value = selectedProduct.facilities || [];
+      rooms.value = selectedProduct.rooms || [];
     } else {
       console.error('Error fetching product data: no data response');
     }
@@ -167,6 +166,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 </script>
+
 
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
@@ -199,3 +199,4 @@ img {
   margin: 0 auto; /* Center the comments */
 }
 </style>
+
