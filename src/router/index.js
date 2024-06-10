@@ -104,6 +104,13 @@ const router = createRouter({
       component: () => import ('../views/ProfileDashboard.vue')
     },
     {
+      path: '/PrivacyPolicy',
+      name: 'PrivacyPolicy',
+      component: () => import ('../views/PrivacyPolicyView.vue')
+    },
+  
+    
+    {
       path: '/',
       redirect: '/home'
     },]

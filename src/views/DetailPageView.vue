@@ -84,6 +84,7 @@
 </template>
 
 <script setup>
+import RoomList from "@/components/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
