@@ -5,7 +5,7 @@
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="index in 8" :key="index" />
+        <ProductCard v-for="product in products" :key="product.id" :product="product" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">
@@ -15,7 +15,7 @@
       <h1 class="font-extrabold text-3xl">Cari Kos Sesuai Budgetmu</h1>
       <PriceSortCard />
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="index in 8" :key="index" />
+        <ProductCard v-for="product in products" :key="product.id" :product="product" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">
@@ -30,6 +30,7 @@
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import axios from 'axios';
 
 import Nav from "@/components/Nav.vue";
 import CarouselHome from "@/components/CarouselHome.vue";
@@ -39,9 +40,20 @@ import ProfileCard from "@/components/ProfileCard.vue";
 import FooterComponent from "@/components/Footer.vue";
 
 const showProfileCard = ref(false);
+const products = ref([]);
+
+const fetchProducts = async () => {
+  try {
+    const response = await axios.get('https://nearus.id/api/product');
+    products.value = response.data.data;
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+  }
+};
 
 onMounted(() => {
   window.addEventListener('toggle-profile-card', toggleProfileCard);
+  fetchProducts();
 });
 
 onBeforeUnmount(() => {
@@ -65,13 +77,13 @@ const toggleProfileCard = () => {
 }
 
 .bg-blue-primary {
-  background-color: #007bff; 
+  background-color: #007bff;
 }
 
 .profile-card {
   position: absolute;
-  top: 5rem; 
-  right: 2rem; 
+  top: 5rem;
+  right: 2rem;
   z-index: 1100;
 }
 </style>
