@@ -74,7 +74,8 @@
               <li v-for="room in rooms" :key="room.id">{{ room.name }} - {{ room.price }}</li>
             </ul>
           </div>
-          <p v-else class="empty-message">Belum ada data kamar</p>
+          <!-- <p v-else class="empty-message">Belum ada data kamar</p> -->
+          <RoomList />
 
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
