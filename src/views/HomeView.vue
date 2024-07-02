@@ -1,6 +1,5 @@
 <template>
   <div class="bg-white p-0 m-0 relative">
-    <Nav />
     <CarouselHome />
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
@@ -32,7 +31,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
-import Nav from "@/components/Nav.vue";
+
 import CarouselHome from "@/components/CarouselHome.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import PriceSortCard from "@/components/PriceSortCard.vue";
