@@ -43,7 +43,7 @@ const products = ref([]);
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('https://nearus.id/api/product');
+    const response = await axios.get('https://api.nearus.id/api/product');
     products.value = response.data.data;
   } catch (error) {
     console.error('Error fetching product data:', error);
