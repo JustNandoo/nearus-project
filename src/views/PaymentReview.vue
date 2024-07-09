@@ -111,6 +111,7 @@ export default {
     Footer
   },
 }
+
 </script>
 
 <style scoped>

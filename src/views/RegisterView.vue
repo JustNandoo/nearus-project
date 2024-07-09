@@ -70,18 +70,23 @@
 </template>
 
 <script>
-export default {
-  
-  data() {
-    return {
-      imagePath: '../src/assets/images/bg-loginPage.png',
-      imagePengguna: '../src/assets/images/pengguna.png',
-      imageKemitraan: '../src/assets/images/kemitraan.png',
-      imageLogo:'../src/assets/images/nearus.png',
-    };
-  },
-};
+  import imagePath from '@/assets/images/bg-loginPage.png';
+  import imagePengguna from '@/assets/images/pengguna.png';
+  import imageKemitraan from '@/assets/images/kemitraan.png';
+  import imageLogo from '@/assets/images/nearus.png';
+
+  export default {
+    data() {
+      return {
+        imagePath: imagePath,
+        imagePengguna: imagePengguna,
+        imageKemitraan: imageKemitraan,
+        imageLogo: imageLogo,
+      };
+    },
+  };
 </script>
+
 
 <style scoped>
 .full-screen-bg {
