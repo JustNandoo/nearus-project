@@ -1,2 +1,2 @@
 // constants.js
-export const API_URL = 'https://api.nearus.id';
+export const API_URL = 'https://api.nearus.id/api';
