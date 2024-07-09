@@ -3,7 +3,8 @@
         <Nav />
         <div class="flex justify-center items-center">
             <div class="w-[523px] h-[480px] relative mb-20" style="top: 130px;">
-                <div class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
+                <div
+                    class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
                     <i class="fas fa-arrow-left mr-5"></i> Pesan Kamar
                 </div>
 
@@ -47,12 +48,17 @@
                     <i class="fas fa-check-circle text-green-500 mr-1"></i>
                     <span class="text-black text-xs font-normal font-montserrat leading-7">Tersedia</span>
                 </div>
-                <div class="text-slate-400/opacity-60 text-sm font-semibold font-montserrat absolute left-0 top-[407px]">
+                <div
+                    class="text-slate-400/opacity-60 text-sm font-semibold font-montserrat absolute left-0 top-[407px]">
                     Total
                 </div>
-                <div class="absolute left-[263px] top-[425px] w-[260px] h-[55px] bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex">
-                    <div class="text-white text-lg font-semibold font-montserrat text-center">Bayar</div>
-                </div>
+                <router-link to="/PaymentPage">
+                    <div
+                        class="absolute left-[263px] top-[425px] w-[260px] h-[55px] bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer">
+                        <div class="text-white text-lg font-semibold font-montserrat text-center">Bayar</div>
+                    </div>
+                </router-link>
+
                 <div class="absolute left-0 top-[446px] text-black text-xl font-semibold font-montserrat">
                     Rp 7.200.000/6bln
                 </div>
@@ -80,24 +86,27 @@
 
                 <div class="absolute left-[1px] top-[157px] flex items-center">
                     <i class="far fa-file-alt text-black mr-3"></i>
-                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Tagihan akan dikirimkan ke
+                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Tagihan akan dikirimkan
+                        ke
                         kontak di atas</span>
                 </div>
 
                 <div class="absolute left-[1px] top-[187px] flex items-center">
                     <i class="far fa-id-card text-black mr-2"></i>
-                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Siapkan kartu identitas asli
+                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Siapkan kartu identitas
+                        asli
                         (KTP/KITAS) pada saat check-in untuk keperluan verifikasi</span>
                 </div>
 
                 <div class="absolute left-[1px] top-[240px] flex items-center">
                     <i class="fas fa-times text-black mr-3"></i>
-                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Tidak dapat melakukanpembatalan
+                    <span class="text-black text-[13px] font-normal font-montserrat leading-7">Tidak dapat
+                        melakukanpembatalan
                         setelah membayar</span>
                 </div>
             </div>
         </div>
-        <Footer /> 
+        <Footer />
     </div>
 </template>
 
@@ -106,10 +115,10 @@ import Footer from "@/components/Footer.vue";
 import Nav from "@/components/Nav.vue";
 
 export default {
-  components: {
-    Nav,
-    Footer
-  },
+    components: {
+        Nav,
+        Footer
+    },
 }
 
 </script>

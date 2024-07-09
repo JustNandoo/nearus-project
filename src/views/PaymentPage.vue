@@ -79,10 +79,13 @@
                 <div
                     class="w-[446px] h-[0px] left-0 top-0 absolute origin-top-left rotate-90 border border-slate-400/opacity-60">
                 </div>
-                <div
-                    class="w-[375px] h-[55px] pl-[70px] pr-[72px] pt-[17px] pb-[21px] left-[20px] top-[370px] absolute bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex">
-                    <div class="text-center text-white text-sm font-semibold font-montserrat">NeaRuS Finance</div>
-                </div>
+                <router-link to="/home">
+                    <div
+                        class="w-[375px] h-[55px] pl-[70px] pr-[72px] pt-[17px] pb-[21px] left-[20px] top-[370px] absolute bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer">
+                        <div class="text-center text-white text-sm font-semibold font-montserrat">NeaRuS Finance</div>
+                    </div>
+                </router-link>
+
             </div>
         </div>
         <Footer />
