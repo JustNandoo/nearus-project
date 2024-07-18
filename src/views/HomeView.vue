@@ -1,3 +1,4 @@
+<!-- src/views/HomeView.vue -->
 <template>
   <div class="bg-white p-0 m-0 relative">
     <CarouselHome />
@@ -23,6 +24,7 @@
       </div>
     </div>
     <ProfileCard v-if="showProfileCard" class="profile-card"/>
+    <Chatbot />
     <FooterComponent/>
   </div>
 </template>
@@ -31,12 +33,12 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
-
 import CarouselHome from "@/components/CarouselHome.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import PriceSortCard from "@/components/PriceSortCard.vue";
 import ProfileCard from "@/components/ProfileCard.vue";
 import FooterComponent from "@/components/Footer.vue";
+import Chatbot from "@/components/ChatBot.vue";
 
 const showProfileCard = ref(false);
 const products = ref([]);
