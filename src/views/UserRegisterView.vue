@@ -104,6 +104,8 @@ import axios from "axios";
 import { API_URL } from '@/constants.js';
 import RegistrasiBerhasil from "@/components/RegistrasiBerhasil.vue"; 
 import RegistrasiGagal from "@/components/RegistrasiGagal.vue";
+import imagePath from '@/assets/images/bg-loginPage.png';
+import imageLogo from '@/assets/images/nearus.png';
 
 export default {
   components: {
@@ -112,8 +114,8 @@ export default {
   },
   data() {
     return {
-      imagePath: '../src/assets/images/bg-loginPage.png',
-      imageLogo: '../src/assets/images/nearus.png',
+      imagePath: imagePath,
+      imageLogo: imageLogo,
       rememberMe: false,
       passwordVisible: false,
       showRegistrasiBerhasil: false,

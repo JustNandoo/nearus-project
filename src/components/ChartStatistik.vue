@@ -9,7 +9,7 @@
 <script setup>
 import { ref } from 'vue'
 const chartType = ref('bar')
-const chartWidth = ref('980px')
+const chartWidth = ref('1430px')
 const chartHeight = ref('250px')
 
 const series = ref([

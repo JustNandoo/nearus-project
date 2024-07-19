@@ -78,11 +78,6 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      name: 'Dashboard',
-      component: () => import ('../views/OwnerDashboard.vue')
-    },
-    {
-      path: '/dashboard-dashboard',
       name: 'DashboardDashboard',
       component: () => import ('../views/DashboardDashboard.vue')
 
@@ -108,6 +103,24 @@ const router = createRouter({
       name: 'DashboardProfile',
       component: () => import ('../views/ProfileDashboard.vue')
     },
+    {
+      path: '/PrivacyPolicy',
+      name: 'PrivacyPolicy',
+      component: () => import ('../views/PrivacyPolicyView.vue')
+    },
+    {
+      path: '/PaymentReview',
+      name: 'PaymentReview',
+      component: () => import ('../views/PaymentReview.vue')
+    },
+    {
+      path: '/PaymentPage',
+      name: 'PaymentPage',
+
+      component: () => import ('../views/PaymentPage.vue')
+    },
+  
+    
     {
       path: '/',
       redirect: '/home'

@@ -110,7 +110,7 @@ export default {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch('https://nearus.id/api/profile', {
+        const response = await fetch('https://api.nearus.id/api/profile', {
           headers: {
             'Authorization': `Bearer ${store.state.token}`,
           },

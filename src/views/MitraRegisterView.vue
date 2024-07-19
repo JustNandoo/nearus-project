@@ -93,11 +93,14 @@
 </template>
 
 <script>
+import imagePath from '@/assets/images/bg-loginPage.png';
+import imageLogo from '@/assets/images/nearus.png';
+
 export default {
   data() {
     return {
-      imagePath: '../src/assets/images/bg-loginPage.png',
-      imageLogo:'../src/assets/images/nearus.png',
+      imagePath: imagePath,
+      imageLogo: imageLogo,
       rememberMe: false,
       passwordVisible: false
     };
