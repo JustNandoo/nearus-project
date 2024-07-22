@@ -38,7 +38,7 @@
       <h1 class="font-bold text-[28px]">Fasilitas Bersama</h1>
       <div v-if="facilities.length">
         <ul>
-          <li v-for="facility in facilities" :key="facility.id">{{ facility.name }}</li>
+          <li v-for="facility in facilities" :key="facility">{{ facility }}</li>
         </ul>
       </div>
       <p v-else class="empty-message">Belum ada data fasilitas</p>
@@ -73,7 +73,7 @@
               <li v-for="room in rooms" :key="room.id">{{ room.name }} - {{ room.price }}</li>
             </ul>
           </div>
-<!--          <p v-else class="empty-message">Belum ada data kamar</p>-->
+          <RoomList />
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -88,12 +88,16 @@ import RoomList from "@/components/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useRoute } from 'vue-router';
 import ProfileCard from "@/components/ProfileCard.vue";
 import Gallery from "@/components/Gallery.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
+
+const route = useRoute();
+const productId = route.params.id;
 
 const showProfileCard = ref(false);
 const product = ref({});
@@ -131,22 +135,20 @@ console.log('Items:', items.value);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://nearus.id/api/product');
+    const response = await axios.get(`https://nearus.id/api/product/${productId}`);
     console.log('API Response:', response);
-    const data = response.data.data;
+    const selectedProduct = response.data.data;
 
-    if (data && data.length > 0) {
-      // For demo purposes, let's use the first item
-      const selectedProduct = data[0];
+    if (selectedProduct) {
       product.value = {
         productname: selectedProduct.productname,
         location: selectedProduct.location,
         category: selectedProduct.category,
         price: selectedProduct.price,
-        facilities: selectedProduct.facilities || [],
+        facilities: selectedProduct.fasilitas || [],
         rooms: selectedProduct.rooms || []
       };
-      facilities.value = selectedProduct.facilities || [];
+      facilities.value = selectedProduct.fasilitas || [];
       rooms.value = selectedProduct.rooms || [];
     } else {
       console.error('Error fetching product data: no data response');
@@ -165,8 +167,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-
-<style lang="scss" scoped>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
 
 .container {
@@ -197,4 +198,3 @@ img {
   margin: 0 auto; /* Center the comments */
 }
 </style>
-

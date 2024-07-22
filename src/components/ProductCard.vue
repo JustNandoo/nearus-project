@@ -1,6 +1,6 @@
 <template>
-  <router-link to="/detail-kost">
-    <div class="mt-10 product-card h-full w-[400px]" v-if="product">
+  <router-link :to="`/detail-kost/${product.id}`">
+    <div class="mt-10 product-card h-full w-[400px]">
       <img class="w-full h-[220px] rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
       <div class="flex mt-4 gap-4 text-[20px] items-center">
         <font-awesome-icon class="text-black w-6 h-6" :icon="faChild" />
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { defineProps } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faChild } from '@fortawesome/free-solid-svg-icons';
 
@@ -33,4 +33,5 @@ const props = defineProps({
 </script>
 
 <style scoped>
+/* Your styles here */
 </style>
