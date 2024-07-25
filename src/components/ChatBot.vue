@@ -7,16 +7,19 @@
       <div class="chatbot-header">
         <div class="chatbot-info">
           <div class="chatbot-avatar">
-            <div class="chatbot-avatar-bg"></div>
-            <div class="chatbot-status"></div>
-            <div class="chatbot-icon"></div>
+            <div class="chatbot-avatar-bg">
+              <i class="fas fa-headset chatbot-icon"></i>
+              <div class="chatbot-status"></div>
+            </div>
           </div>
           <div class="chatbot-text">
-            <div class="chatbot-title">ChatBot-AI</div>
-            <div class="chatbot-subtitle">AI Customer Service</div>
+            <div class="chatbot-title">NeaRuS-Service</div>
+            <div class="chatbot-subtitle">Your reliable customer service</div>
           </div>
         </div>
-        <button @click="toggleChatbot" class="close-button">x</button>
+        <button @click="toggleChatbot" class="close-button">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="chatbot-body">
         <div class="messages">
@@ -24,10 +27,24 @@
             {{ message.text }}
           </div>
         </div>
+        <div v-if="loading" class="loading-spinner">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+        <div class="divider-container" v-if="!loading && messages.length === 0">
+          <div class="divider">
+            <i class="fas fa-headset chatbot-divider-icon"></i>
+          </div>
+        </div>
+    
         <div class="predefined-questions">
-          <button v-for="(question, index) in questions" :key="index" @click="sendMessage(question)">
-            {{ question }}
-          </button>
+       
+          <button @click="sendMessage(questions[0])">{{ questions[0] }}</button>
+          <button @click="sendMessage(questions[1])">{{ questions[1] }}</button>
+          <button @click="sendMessage(questions[2])">{{ questions[2] }}</button>
+          <button @click="sendMessage(questions[3])">{{ questions[3] }}</button>
+          <button @click="sendMessage(questions[4])">{{ questions[4] }}</button>
         </div>
       </div>
     </div>
@@ -50,6 +67,7 @@ export default {
       'tentang nearus finance',
       'hubungi admin'
     ]);
+    const loading = ref(false);
 
     const toggleChatbot = () => {
       showChat.value = !showChat.value;
@@ -57,12 +75,20 @@ export default {
 
     const sendMessage = async (message) => {
       messages.value.push({ text: message, isUser: true });
+      loading.value = true;
       
       try {
         const response = await axios.post('https://api.nearus.id/api/bot', { message });
-        messages.value.push({ text: response.data.message, isUser: false });
+        if (response.data.redirect_url) {
+          messages.value.push({ text: response.data.message, isUser: false });
+          window.open(response.data.redirect_url, "_blank");
+        } else {
+          messages.value.push({ text: response.data.message, isUser: false });
+        }
       } catch (error) {
         console.error('Error sending message:', error);
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -71,7 +97,8 @@ export default {
       messages,
       questions,
       toggleChatbot,
-      sendMessage
+      sendMessage,
+      loading
     };
   }
 };
@@ -125,6 +152,10 @@ export default {
   background-color: #4629f2;
   border: 1px solid #e3e3e3;
   border-radius: 50%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chatbot-status {
@@ -138,13 +169,8 @@ export default {
 }
 
 .chatbot-icon {
-  position: absolute;
-  left: 13px;
-  top: 11.76px;
-  width: 24px;
-  height: 24px;
-  background: url('/path-to-your-icon.png') no-repeat center center;
-  background-size: contain;
+  font-size: 24px;
+  color: white;
 }
 
 .chatbot-text {
@@ -177,10 +203,14 @@ export default {
 
 .chatbot-body {
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 110px);
 }
 
 .messages {
-  max-height: 300px;
+  max-height: 55%;
   overflow-y: auto;
 }
 
@@ -201,25 +231,80 @@ export default {
   color: #000;
 }
 
-.predefined-questions {
+.divider-container {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.divider {
+  width: 50px;
+  height: 50px;
+  background-color: #cdcdcd;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatbot-divider-icon {
+  color: #fff;
+  font-size: 24px;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.spinner-border {
+  border-top-color: #4629f2;
+  width: 2rem;
+  height: 2rem;
+}
+
+.predefined-questions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 60px) 1fr;
   gap: 0.5rem;
+  justify-items: center; 
+  align-items: center; 
+  margin-top: -2  rem; 
 }
 
 .predefined-questions button {
-  width: 210px;
-  height: 45px;
+  width: 100%; 
+  height: 100%; 
   background-color: #fff;
   border: 1px solid #000;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px; 
+  font-weight: 500;
+  text-align: center;
 }
 
 .predefined-questions button:hover {
   background-color: #f1f1f1;
 }
+
+
+.predefined-questions button:nth-child(5) {
+  grid-column: span 2;
+  width: 100%;
+}
+
+
+.predefined-questions button:nth-child(5) {
+  width: 100%; 
+  height: 60px; 
+}
+
+
 
 .chatbot-toggle-button {
   position: fixed;
