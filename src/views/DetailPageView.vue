@@ -97,7 +97,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
-import RoomList from "@/components/RoomList.vue";
+
 
 const showProfileCard = ref(false);
 const product = ref({});

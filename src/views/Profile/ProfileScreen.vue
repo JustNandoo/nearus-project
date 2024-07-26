@@ -51,7 +51,7 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-gray-700">Nomor Telepon</label>
-                  <input type="text" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.city">
+                  <input type="text" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.phone">
                 </div>
                 <div>
                   <label class="block text-gray-700">Jenis Kelamin</label>
@@ -60,16 +60,6 @@
                     <option value="female">Perempuan</option>
                     <option value="other">Lainnya</option>
                   </select>
-                </div>
-              </div>
-              <div class="grid grid-cols-3 gap-4">
-                <div>
-                  <label class="block text-gray-700">Tanggal Lahir</label>
-                  <input type="date" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.zip">
-                </div>
-                <div>
-                  <label class="block text-gray-700">Alamat Rumah</label>
-                  <input type="text" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.city">
                 </div>
               </div>
               <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-6">Update Information</button>
@@ -99,10 +89,8 @@ export default {
     const user = ref({
       name: '',
       email: '',
-      phone: '', // Tambahkan nomor telepon
-      gender: 'other', // Tambahkan jenis kelamin
-      birthDate: '', // Tambahkan tanggal lahir
-      address: '',
+      phone: '',
+      gender: 'other',
       photoprofile: '',
     });
 
@@ -124,10 +112,8 @@ export default {
         user.value = {
           name: data.name,
           email: data.email,
-          phone: data.phone || '', // Ambil nomor telepon
-          gender: data.gender || 'other', // Ambil jenis kelamin
-          birthDate: data.birthDate || '', // Ambil tanggal lahir
-          address: data.address,
+          phone: data.phone || '',
+          gender: data.gender || 'other',
           photoprofile: data.photoprofile,
         };
         localStorage.setItem('userData', JSON.stringify(user.value));
@@ -154,6 +140,7 @@ export default {
         try {
           await store.dispatch('updateUserProfilePic', formData);
           user.value.photoprofile = URL.createObjectURL(file);
+          localStorage.setItem('userData', JSON.stringify(user.value));
         } catch (error) {
           console.error('Error uploading profile picture:', error);
         }
@@ -165,11 +152,10 @@ export default {
         await store.dispatch('updateUserProfile', {
           name: user.value.name,
           email: user.value.email,
-          phone: user.value.phone, // Kirim nomor telepon
-          gender: user.value.gender, // Kirim jenis kelamin
-          birthDate: user.value.birthDate, // Kirim tanggal lahir
-          address: user.value.address,
+          phone: user.value.phone,
+          gender: user.value.gender,
         });
+        localStorage.setItem('userData', JSON.stringify(user.value));
         console.log('User data updated successfully');
       } catch (error) {
         console.error('Error updating user data:', error);
@@ -186,7 +172,42 @@ export default {
 };
 </script>
 
-
 <style scoped>
-/* Your scoped styles here */
+#profile-pic {
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.label-field {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4a4a4a;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #2563eb;
+}
 </style>

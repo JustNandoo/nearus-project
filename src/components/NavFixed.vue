@@ -13,16 +13,16 @@
         <router-link to="/AboutUS">About Us</router-link>
       </div>
       <div class="flex items-center gap-4 relative">
-        <router-link v-if="!user" to="/login" class="text-xl font-medium">
+        <router-link v-if="!isLoggedIn" to="/login" class="text-xl font-medium">
           <button class="rounded-button login-button">Login</button>
         </router-link>
-        <router-link v-if="!user" to="/register" class="text-xl font-medium">
+        <router-link v-if="!isLoggedIn" to="/register" class="text-xl font-medium">
           <button class="rounded-button register-button">Register</button>
         </router-link>
         <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
           <p class="text-xl font-medium text-black" :class="{'text-change': scrolled}">
-            Halo, {{ user.name }}
+            Halo, {{ userName }}
           </p>
         </div>
       </div>
@@ -39,10 +39,9 @@ import scrolledLogo from '../assets/images/nearuswhite.png';
 import imageProfileDefault from '@/assets/images/profile-pic.png';
 
 const store = useStore();
-const user = computed(() => store.getters.getUser);
-const scrolled = ref(false);
 const router = useRouter();
 
+const scrolled = ref(false);
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
 };
@@ -52,8 +51,9 @@ const toggleProfileCard = () => {
   window.dispatchEvent(event);
 };
 
-const profilePicture = computed(() => store.state.user?.photoprofile || imageProfileDefault);
-const userName = computed(() => store.state.user?.name || 'Guest');
+const isLoggedIn = computed(() => store.getters.isLoggedIn);
+const userName = computed(() => store.getters.getUser?.name || 'Guest');
+const profilePicture = computed(() => store.getters.getUser?.photoprofile || imageProfileDefault);
 
 onMounted(() => {
   store.dispatch('initializeStore');
