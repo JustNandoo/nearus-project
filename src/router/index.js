@@ -33,6 +33,12 @@ const router = createRouter({
       component: () => import('../views/MitraRegisterView.vue')
     },
     {
+      path: '/RegistKost',
+      name: 'RegistKost',
+
+      component: () => import ('../views/RegisterKosView.vue')
+    },
+    {
       path: '/verif',
       name: 'verif',
       component: () => import('../views/verifEmail.vue')
