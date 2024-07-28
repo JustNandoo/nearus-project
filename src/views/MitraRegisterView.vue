@@ -31,7 +31,7 @@
             <label for="namaInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusNamaInput">Nama Pemilik</label>
-            <input id="namaInput" ref="namaInput" type="text"
+            <input v-model="nama" id="namaInput" ref="namaInput" type="text"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Nama Anda" />
           </div>
@@ -39,7 +39,7 @@
             <label for="emailInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusEmailInput">Alamat Email</label>
-            <input id="emailInput" ref="emailInput" type="email"
+            <input v-model="email" id="emailInput" ref="emailInput" type="email"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Email Anda" />
           </div>
@@ -47,7 +47,7 @@
             <label for="nomorteleponInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusNomorTeleponInput">Nomor Telepon</label>
-            <input id="nomorteleponInput" ref="nomorTeleponInput" type="text"
+            <input v-model="nomorTelepon" id="nomorteleponInput" ref="nomorTeleponInput" type="text"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Nomor Telepon Anda" />
           </div>
@@ -55,7 +55,7 @@
             <label for="passwordInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
               Sandi</label>
-            <input id="passwordInput" ref="passwordInput" type="password"
+            <input v-model="password" id="passwordInput" ref="passwordInput" type="password"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Kata Sandi Anda" />
             <button @click="togglePasswordVisibility" class="absolute right-0 top-[50%] transform -translate-y-1/2 mr-2">
@@ -68,7 +68,8 @@
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
                 @click="focusBuktiKepemilikanInput">Foto Bukti Kepemilikan (JPEG/JPG/PNG)</label>
               <input id="buktiKepemilikanInput" ref="buktiKepemilikanInput" type="file" accept="image/*"
-                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]" />
+                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
+                @change="handleFileUpload" />
                 <i class="fas fa-file-alt fa-lg absolute right-0 top-[75%] transform -translate-y-1/2 mr-2"></i>
 
             </div>
@@ -81,20 +82,19 @@
               </div>
             </router-link>
           </div>
-          <router-link to="/home">
-            <button
-              class="w-[266px] h-[54px] left-0 top-[760px] absolute transition duration-300 ease-in-out transform hover:scale-105"
-              id="btn-signUp" @click="signUp">
-              <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
-              </div>
-              <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white">
-              </div>
-              <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
-              <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
-                <i class="fas fa-chevron-right text-white"></i>
-              </div>
-            </button>
-          </router-link>
+          <button
+            class="w-[266px] h-[54px] left-0 top-[760px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+            id="btn-signUp" @click="signUp">
+            <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
+            </div>
+            <div class="w-[49px] h-[0px] left-[197px] top-[3px] absolute origin-top-left rotate-90 border border-white">
+            </div>
+            <div class="left-[65px] top-[15px] absolute text-white text-xl font-bold font-sans">SignUp</div>
+            <div class="w-6 h-6 left-[220px] top-[15px] absolute flex items-center justify-center">
+              <i class="fas fa-chevron-right text-white"></i>
+            </div>
+          </button>
+          <div v-if="message" class="message">{{ message }}</div>
         </div>
       </div>
     </div>
@@ -102,36 +102,73 @@
 </template>
 
 <script>
+import axios from 'axios';
 import imagePath from '@/assets/images/bg-loginPage.png';
 import imageLogo from '@/assets/images/nearus.png';
+import { API_URL } from '@/constants.js';
 
 export default {
   data() {
     return {
       imagePath: imagePath,
       imageLogo: imageLogo,
+      nama: '',
+      email: '',
+      nomorTelepon: '',
+      password: '',
+      confirmpassword: '',
+      buktiKepemilikan: null,
       rememberMe: false,
-      passwordVisible: false
+      passwordVisible: false,
+      message: ''
     };
   },
   methods: {
+    focusNamaInput() {
+      this.$refs.namaInput.focus();
+    },
     focusEmailInput() {
       this.$refs.emailInput.focus();
+    },
+    focusNomorTeleponInput() {
+      this.$refs.nomorTeleponInput.focus();
+    },
+    focusPasswordInput() {
+      this.$refs.passwordInput.focus();
+    },
+    focusBuktiKepemilikanInput() {
+      this.$refs.buktiKepemilikanInput.focus();
     },
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
       const passwordInput = this.$refs.passwordInput;
-      if (this.passwordVisible) {
-        passwordInput.type = 'text';
-      } else {
-        passwordInput.type = 'password';
+      passwordInput.type = this.passwordVisible ? 'text' : 'password';
+    },
+    handleFileUpload(event) {
+      this.buktiKepemilikan = event.target.files[0];
+    },
+    async signUp() {
+      const formData = new FormData();
+      formData.append('name', this.nama);
+      formData.append('email', this.email);
+      formData.append('phonenumber', this.nomorTelepon);
+      formData.append('password', this.password);
+      formData.append('buktiimage', this.buktiKepemilikan);
+
+      try {
+        const response = await axios.post(`${API_URL}/daftar`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        this.message = 'Registration successful!';
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          this.message = 'Validation error: ' + error.response.data.message;
+        } else {
+          this.message = 'An error occurred: ' + error.message;
+        }
       }
-    },
-    signUp() {
-      console.log('Sign Up clicked');
-    },
-    login() {
-      console.log('Login clicked');
     }
   }
 };
