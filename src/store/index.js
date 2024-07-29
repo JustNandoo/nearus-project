@@ -1,5 +1,6 @@
 // store.js
 import { createStore } from 'vuex';
+import axios from 'axios';
 
 export default createStore({
   state: {
@@ -27,6 +28,28 @@ export default createStore({
     },
   },
   actions: {
+    async login({ commit }, { email, password, remember }) {
+      try {
+        const response = await axios.post('https://api.nearus.id/api/login', {
+          email,
+          password,
+        });
+        const { token, user } = response.data;
+
+        if (remember) {
+          commit('setToken', token);
+          commit('setUser', user);
+        } else {
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('user', JSON.stringify(user));
+        }
+
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      } catch (error) {
+        console.error('Failed to login:', error);
+        throw error;
+      }
+    },
     async initializeStore({ commit }) {
       if (localStorage.getItem('token')) {
         try {
