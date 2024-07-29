@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -43,79 +43,78 @@ const router = createRouter({
       component: () => import('../views/emailverification.vue'),
       props: true,
     },
-
     {
       path: '/profile',
       name: 'profilescreen',
       component: () => import('../views/Profile/ProfileScreen.vue')
     },
-
     {
       path: '/privatedata',
       name: 'privatedata',
-      component: () => import ('../views/Profile/PrivateData.vue')
+      component: () => import('../views/Profile/PrivateData.vue')
     },
-
     {
       path: '/passworddata/:id',
       name: 'passworddata',
-      component: () => import ('../views/Profile/ProfilePassword.vue'),
-      props : true
+      component: () => import('../views/Profile/ProfilePassword.vue'),
+      props: true
     },
     {
-      path: '/detail-kost',
+      path: '/detail-kost/:id',
       name: 'detailkost',
-      component: () => import ('../views/DetailPageView.vue')
+      component: () => import('../views/DetailPageView.vue'),
+      props: true
     },
     {
       path: '/AboutUs',
       name: 'AboutUs',
-      component: () => import ('../views/AboutUsView.vue')
+      component: () => import('../views/AboutUsView.vue')
     },
     {
       path: '/dashboard-data',
       name: 'DataDasboard',
-      component: () => import ('../views/DataDashboard.vue')
+      component: () => import('../views/DataDashboard.vue')
     },
     {
       path: '/dashboard',
       name: 'DashboardDashboard',
-      component: () => import ('../views/DashboardDashboard.vue')
-
+      component: () => import('../views/DashboardDashboard.vue')
     },
-    {
-      path: '/dashboard-statistic',
-      name: 'DashboardStatistic',
-      component: () => import ('../views/DashboardStatistic.vue')
-    },
-
     {
       path: '/dashboard-kosku',
       name: 'DashboardKosku',
-      component: () => import ('../views/KoskuDashboard.vue')
+      component: () => import('../views/KoskuDashboard.vue')
     },
     {
       path: '/dashboard-settings',
       name: 'DashboardSettings',
-      component: () => import ('../views/SettingsDashboard.vue')
+      component: () => import('../views/SettingsDashboard.vue')
     },
     {
       path: '/dashboard-profile',
       name: 'DashboardProfile',
-      component: () => import ('../views/ProfileDashboard.vue')
+      component: () => import('../views/ProfileDashboard.vue')
     },
     {
       path: '/PrivacyPolicy',
       name: 'PrivacyPolicy',
-      component: () => import ('../views/PrivacyPolicyView.vue')
+      component: () => import('../views/PrivacyPolicyView.vue')
     },
-  
-    
+    {
+      path: '/PaymentReview',
+      name: 'PaymentReview',
+      component: () => import('../views/PaymentReview.vue')
+    },
+    {
+      path: '/PaymentPage',
+      name: 'PaymentPage',
+      component: () => import('../views/PaymentPage.vue')
+    },
     {
       path: '/',
       redirect: '/home'
-    },]
+    }
+  ]
 });
 
-
-export default router
+export default router;

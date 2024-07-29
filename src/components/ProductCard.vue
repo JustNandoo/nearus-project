@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/detail-kost/${product.id}`">
+  <router-link :to="{ name: 'detailkost', params: { id: product.id } }" class="product-card-link">
     <div class="mt-10 product-card h-full w-[400px]">
       <img class="w-full h-[220px] rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
       <div class="flex mt-4 gap-4 text-[20px] items-center">

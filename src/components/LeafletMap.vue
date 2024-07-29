@@ -42,7 +42,7 @@ const product = ref({});
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://nearus.id/api/product');
+    const response = await axios.get('https://api.nearus.id/api/product');
     console.log('API Response:', response);
     const data = response.data.data;
 

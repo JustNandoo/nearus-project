@@ -69,7 +69,6 @@ const setActive = (item) => {
 const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
-  { text: 'Statistic', icon: faChartLine, path: '/dashboard-statistic' },
   { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
 ];
 

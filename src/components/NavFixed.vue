@@ -1,5 +1,5 @@
 <template>
-  <header class="header bg-white font-montserrat fixed top-0 w-screen bg-h-20 pt-3 pb-3 items-center z-[1000] shadow-lg"
+  <header class="header bg-white font-montserrat fixed top-0 w-screen h-20 pt-3 pb-3 items-center z-[1000]"
           :class="{'bg-blue-primary': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-full px-8">
       <div>
@@ -12,11 +12,17 @@
         <router-link to="/">NearusFinance</router-link>
         <router-link to="/AboutUS">About Us</router-link>
       </div>
-      <div class="flex items-center gap-2 relative">
-        <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
+      <div class="flex items-center gap-4 relative">
+        <router-link v-if="!user" to="/login" class="text-xl font-medium">
+          <button class="rounded-button login-button">Login</button>
+        </router-link>
+        <router-link v-if="!user" to="/register" class="text-xl font-medium">
+          <button class="rounded-button register-button">Register</button>
+        </router-link>
+        <div v-else class="rounded-full gap-5 flex items-center justify-center cursor-pointer" @click="toggleProfileCard">
           <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
           <p class="text-xl font-medium text-black" :class="{'text-change': scrolled}">
-            Halo, {{ user ? user.name : 'Guest' }}
+            Halo, {{ user.name }}
           </p>
         </div>
       </div>
@@ -41,13 +47,11 @@ const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
 };
 
-
 const toggleProfileCard = () => {
   const event = new Event('toggle-profile-card');
   window.dispatchEvent(event);
 };
 
-// Computed properties to get user data from the Vuex store
 const profilePicture = computed(() => store.state.user?.photoprofile || imageProfileDefault);
 const userName = computed(() => store.state.user?.name || 'Guest');
 
@@ -84,5 +88,31 @@ onBeforeUnmount(() => {
   .header .gap-10 {
     display: none; /* Sembunyikan menu di layar kecil */
   }
+}
+
+.rounded-button {
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.login-button {
+  background-color: #3490dc; /* Blue */
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.login-button:hover {
+  background-color: #2779bd; /* Darker blue */
+}
+
+.register-button {
+  background-color: #3490dc; /* Blue */
+  color: white;
+  padding: 0.5rem 1rem;
+}
+
+.register-button:hover {
+  border-color: #ffffff;
+  color: #ffffff;
 }
 </style>

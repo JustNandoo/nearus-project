@@ -1,3 +1,4 @@
+<!-- src/views/ProductDetail.vue -->
 <template>
   <div>
     <NavFixed />
@@ -135,7 +136,7 @@ console.log('Items:', items.value);
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`https://nearus.id/api/product/${productId}`);
+    const response = await axios.get(`https://api.nearus.id/api/product/${productId}`);
     console.log('API Response:', response);
     const selectedProduct = response.data.data;
 
@@ -166,35 +167,3 @@ onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 </script>
-
-<style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap');
-
-.container {
-  margin-left: 9rem; /* Adjust as needed */
-  padding-top: 8rem; /* Adjust as needed */
-}
-.error {
-  color: red;
-}
-.gallery {
-  width: 100%;
-}
-img {
-  object-fit: cover;
-  border-radius: 0.75rem; /* Adjust as needed */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
-}
-.empty-message {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
-  text-align: center;
-  margin: 20px 0;
-}
-
-/* Custom styles for Disqus comments */
-#disqus_thread {
-  max-width: 800px; /* Adjust maximum width as needed */
-  margin: 0 auto; /* Center the comments */
-}
-</style>

@@ -1,11 +1,11 @@
+<!-- src/views/HomeView.vue -->
 <template>
   <div class="bg-white p-0 m-0 relative">
-    <Nav />
     <CarouselHome />
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in products" :key="product.id" :product="product" />
+        <ProductCard v-for="product in products" :key="product.kostid" :product="product" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">
@@ -24,6 +24,7 @@
       </div>
     </div>
     <ProfileCard v-if="showProfileCard" class="profile-card"/>
+    <Chatbot />
     <FooterComponent/>
   </div>
 </template>
@@ -32,19 +33,19 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
-import Nav from "@/components/Nav.vue";
 import CarouselHome from "@/components/CarouselHome.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import PriceSortCard from "@/components/PriceSortCard.vue";
 import ProfileCard from "@/components/ProfileCard.vue";
 import FooterComponent from "@/components/Footer.vue";
+import Chatbot from "@/components/ChatBot.vue";
 
 const showProfileCard = ref(false);
 const products = ref([]);
 
 const fetchProducts = async () => {
   try {
-    const response = await axios.get('https://nearus.id/api/product');
+    const response = await axios.get('https://api.nearus.id/api/product');
     products.value = response.data.data;
   } catch (error) {
     console.error('Error fetching product data:', error);
