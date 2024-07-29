@@ -1,4 +1,4 @@
-<template>
+  <template>
   <Nav />
   <div class="head relative overflow-hidden rounded-b-3xl">
     <div class="carousel w-screen relative">
