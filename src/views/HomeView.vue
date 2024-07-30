@@ -5,7 +5,7 @@
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in products" :key="product.id" :product="product" />
+        <ProductCard v-for="product in products" :key="product.kostid" :product="product" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">

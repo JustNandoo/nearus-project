@@ -49,7 +49,7 @@
              </div>
            </div>
          </div>
-
+          <ChartStatistik/>
        </div>
      </div>
     </div>
@@ -63,6 +63,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { faArrowUp, faMoneyBill, faDoorClosed, faUser } from '@fortawesome/free-solid-svg-icons';
 import ColumnChart from "@/components/ColumnChart.vue";
 import TabelData from "@/components/TabelData.vue";
+import ChartStatistik from "@/components/ChartStatistik.vue";
 
 </script>
 

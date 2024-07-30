@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store';
+const isAuthenticated = () => {
+  return !!store.state.token;
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,8 +39,7 @@ const router = createRouter({
     {
       path: '/RegistKost',
       name: 'RegistKost',
-
-      component: () => import ('../views/RegisterKosView.vue')
+      component: () => import('../views/RegisterKosView.vue')
     },
     {
       path: '/verif',
@@ -49,89 +52,95 @@ const router = createRouter({
       component: () => import('../views/emailverification.vue'),
       props: true,
     },
-
     {
       path: '/profile',
       name: 'profilescreen',
       component: () => import('../views/Profile/ProfileScreen.vue')
     },
-
     {
       path: '/privatedata',
       name: 'privatedata',
-      component: () => import ('../views/Profile/PrivateData.vue')
+      component: () => import('../views/Profile/PrivateData.vue')
     },
-
     {
-      path: '/passworddata',
+      path: '/passworddata/:id',
       name: 'passworddata',
-      component: () => import ('../views/Profile/ProfilePassword.vue')
+      component: () => import('../views/Profile/ProfilePassword.vue'),
+      props: true
     },
     {
-      path: '/detail-kost',
+      path: '/detail-kost/:id',
       name: 'detailkost',
-      component: () => import ('../views/DetailPageView.vue')
+      component: () => import('../views/DetailPageView.vue'),
+      props: true
     },
     {
       path: '/AboutUs',
       name: 'AboutUs',
-      component: () => import ('../views/AboutUsView.vue')
+      component: () => import('../views/AboutUsView.vue')
     },
     {
       path: '/dashboard-data',
       name: 'DataDasboard',
-      component: () => import ('../views/DataDashboard.vue')
+      component: () => import('../views/DataDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard',
       name: 'DashboardDashboard',
-      component: () => import ('../views/DashboardDashboard.vue')
-
+      component: () => import('../views/DashboardDashboard.vue'),
+      meta: { requiresAuth: true }
     },
-    {
-      path: '/dashboard-statistic',
-      name: 'DashboardStatistic',
-      component: () => import ('../views/DashboardStatistic.vue')
-    },
-
     {
       path: '/dashboard-kosku',
       name: 'DashboardKosku',
-      component: () => import ('../views/KoskuDashboard.vue')
+      component: () => import('../views/KoskuDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-settings',
       name: 'DashboardSettings',
-      component: () => import ('../views/SettingsDashboard.vue')
+      component: () => import('../views/SettingsDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-profile',
       name: 'DashboardProfile',
-      component: () => import ('../views/ProfileDashboard.vue')
+      component: () => import('../views/ProfileDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/PrivacyPolicy',
       name: 'PrivacyPolicy',
-      component: () => import ('../views/PrivacyPolicyView.vue')
+      component: () => import('../views/PrivacyPolicyView.vue')
     },
     {
       path: '/PaymentReview',
       name: 'PaymentReview',
-      component: () => import ('../views/PaymentReview.vue')
+      component: () => import('../views/PaymentReview.vue')
     },
     {
       path: '/PaymentPage',
       name: 'PaymentPage',
-
-      component: () => import ('../views/PaymentPage.vue')
+      component: () => import('../views/PaymentPage.vue')
     },
-  
-    
     {
       path: '/',
       redirect: '/home'
-    },]
+    }
+  ]
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated()) {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
-export default router
+export default router;

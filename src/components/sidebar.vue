@@ -41,7 +41,7 @@
     </div>
     <div class="mb-4">
       <div
-          @click="setActive('Logout')"
+          @click="showLogoutConfirmation"
           :class="[
           'flex gap-1 items-center rounded-lg mx-4 py-2 cursor-pointer transition',
           activeItem === 'Logout' ? 'bg-[#F6F6F6] text-black font-bold' : 'text-neutral-500 font-medium hover:bg-[#E0E0E0] hover:text-black'
@@ -51,17 +51,24 @@
         <p class="px-4 py-2">Logout</p>
       </div>
     </div>
+    <Modal :isVisible="isLogoutModalVisible" @confirm="handleLogout" @cancel="hideLogoutModal" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import logo from '../assets/images/nearus.png';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faHouse, faDoorOpen, faGear, faUser, faDatabase, faChartLine, faHouseUser } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faDoorOpen, faGear, faUser, faDatabase, faHouseUser } from '@fortawesome/free-solid-svg-icons';
+import Modal from '@/components/Modal.vue';
 
+const store = useStore();
+const router = useRouter();
 const activeItem = ref('Dashboard');
+const isLogoutModalVisible = ref(false);
+
 const setActive = (item) => {
   activeItem.value = item;
 };
@@ -69,7 +76,6 @@ const setActive = (item) => {
 const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
-  { text: 'Statistic', icon: faChartLine, path: '/dashboard-statistic' },
   { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
 ];
 
@@ -83,7 +89,22 @@ const route = useRoute();
 const isActive = (path) => {
   return route.path === path;
 };
+
+const showLogoutConfirmation = () => {
+  isLogoutModalVisible.value = true;
+};
+
+const hideLogoutModal = () => {
+  isLogoutModalVisible.value = false;
+};
+
+const handleLogout = () => {
+  store.dispatch('logout');
+  router.push({ name: 'login' });
+  hideLogoutModal();
+};
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+/* Add any additional styling if needed */
 </style>
