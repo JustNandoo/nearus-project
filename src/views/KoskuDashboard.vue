@@ -19,9 +19,6 @@
                 </div>
               </div>
               <div class="flex">
-<!--                <div class="w-1/3">-->
-<!--                  <img :src="product.image[0]" alt="Product Image" class="w-50 h-50 object-cover">-->
-<!--                </div>-->
                 <div class="w-2/3 p-4">
                   <div class="text-xl font-semibold mb-2">{{ product.productname }}</div>
                   <p class="text-gray-700">{{ product.about }}</p>
@@ -95,7 +92,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
@@ -119,6 +115,12 @@ const newProduct = ref({
   fasilitas: '',
   roomid: null,
   about: ''
+});
+
+const user = ref({
+  name: '',
+  phonenumber: '',
+  email: ''
 });
 
 // Fetch data from the API
@@ -145,14 +147,26 @@ const toggleMenu = (id) => {
 
 const deleteProduct = async (id) => {
   try {
-    await axios.delete(`https://api.nearus.id/api/product/delete/${id}`);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return;
+    }
+
+    await axios.delete(`https://api.nearus.id/api/product/delete/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
     products.value = products.value.filter(product => product.id !== id);
   } catch (error) {
     console.error('Failed to delete product:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+    }
     alert('Failed to delete product. Please try again later.');
   }
 };
-
 
 const editProduct = (id) => {
   alert(`Edit product with ID: ${id}`);
@@ -161,6 +175,12 @@ const editProduct = (id) => {
 // Add new product
 const addProduct = async () => {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return;
+    }
+
     const newProductData = {
       image: [newProduct.value.image],
       productname: newProduct.value.productname,
@@ -174,12 +194,19 @@ const addProduct = async () => {
       about: newProduct.value.about
     };
 
-    const response = await axios.post('https://api.nearus.id/api/product', newProductData);
+    const response = await axios.post('https://api.nearus.id/api/product', newProductData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
     products.value.push(response.data.data);
     showAddModal.value = false;
     resetNewProductForm();
   } catch (error) {
     console.error('Failed to add product:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+    }
     alert('Failed to add product. Please try again later.');
   }
 };
@@ -200,9 +227,43 @@ const resetNewProductForm = () => {
   };
 };
 
-onMounted(fetchData);
-</script>
+// Fetch user data
+const fetchUserData = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return;
+    }
+    const response = await axios.get('https://api.nearus.id/api/profile', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
 
+    if (response.status === 200) {
+      user.value = {
+        name: response.data.name,
+        phonenumber: response.data.phonenumber,
+        email: response.data.email
+      };
+      localStorage.setItem('userData', JSON.stringify(user.value));
+    } else {
+      console.error('Failed to fetch user data');
+    }
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+    }
+  }
+};
+
+onMounted(() => {
+  fetchData();
+  fetchUserData();
+});
+</script>
 
 <style lang="scss" scoped>
 .modal-content {
@@ -217,6 +278,4 @@ onMounted(fetchData);
   right: 1rem;
   cursor: pointer;
 }
-
 </style>
-
