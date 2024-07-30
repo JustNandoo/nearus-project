@@ -5,23 +5,23 @@
       <div class="w-[1500px] ml-8 mt-10">
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
-          <div v-for="product in products" :key="product.kostid" class="my-4">
-            <div class="bg-white overflow-hidden shadow-md rounded-lg relative">
+          <div v-for="product in products" :key="product.id" class="my-4">
+            <div class="bg-white overflow-hidden shadow-md rounded-lg relative h-32">
               <div class="absolute top-0 right-0 p-2">
                 <font-awesome-icon
                     :icon="faEllipsisV"
                     class="text-gray-500 w-6 h-6 cursor-pointer"
-                    @click="toggleMenu(product.kostid)"
+                    @click="toggleMenu(product.id)"
                 />
-                <div v-if="showMenu === product.kostid" class="absolute right-0 bg-white shadow-md rounded-lg p-2">
-                  <div class="cursor-pointer p-2" @click="editProduct(product.kostid)">Edit</div>
-                  <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.kostid)">Delete</div>
+                <div v-if="showMenu === product.id" class="absolute right-0 bg-white shadow-md rounded-lg p-2">
+                  <div class="cursor-pointer p-2" @click="editProduct(product.id)">Edit</div>
+                  <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.id)">Delete</div>
                 </div>
               </div>
               <div class="flex">
-                <div class="w-1/3">
-                  <img :src="product.image[0]" alt="Product Image" class="w-50 h-50 object-cover">
-                </div>
+<!--                <div class="w-1/3">-->
+<!--                  <img :src="product.image[0]" alt="Product Image" class="w-50 h-50 object-cover">-->
+<!--                </div>-->
                 <div class="w-2/3 p-4">
                   <div class="text-xl font-semibold mb-2">{{ product.productname }}</div>
                   <p class="text-gray-700">{{ product.about }}</p>
@@ -135,28 +135,27 @@ const fetchData = async () => {
 };
 
 // Toggle menu visibility
-const toggleMenu = (kostid) => {
-  if (showMenu.value === kostid) {
+const toggleMenu = (id) => {
+  if (showMenu.value === id) {
     showMenu.value = null;
   } else {
-    showMenu.value = kostid;
+    showMenu.value = id;
   }
 };
 
-// Delete product
-const deleteProduct = async (kostid) => {
+const deleteProduct = async (id) => {
   try {
-    await axios.delete(`https://api.nearus.id/api/product/delete/${kostid}`);
-    products.value = products.value.filter(product => product.kostid !== kostid);
+    await axios.delete(`https://api.nearus.id/api/product/delete/${id}`);
+    products.value = products.value.filter(product => product.id !== id);
   } catch (error) {
     console.error('Failed to delete product:', error);
     alert('Failed to delete product. Please try again later.');
   }
 };
 
-// Edit product (placeholder function)
-const editProduct = (kostid) => {
-  alert(`Edit product with ID: ${kostid}`);
+
+const editProduct = (id) => {
+  alert(`Edit product with ID: ${id}`);
 };
 
 // Add new product
@@ -211,11 +210,13 @@ onMounted(fetchData);
   max-height: 80%;
   overflow-y: auto;
 }
+
 .modal-close {
   position: absolute;
   top: 1rem;
   right: 1rem;
   cursor: pointer;
 }
+
 </style>
 

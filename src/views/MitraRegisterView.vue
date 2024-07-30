@@ -19,62 +19,71 @@
           </div>
         </div>
         <div class="w-[571px] h-[817px] left-[68px] top-[25px] absolute">
-          <div class="w-[180px] h-[49px] left-0 top-[36px] absolute">
+          <div class="w-[180px] h-[49px] left-0 top-[15px] absolute">
             <img class="left-0 top-0 absolute" :src="imageLogo" />
             <div class="w-4 h-4 left-[118px] top-[1px] absolute"></div>
             <div class="w-2 h-[8.17px] left-[137px] top-[5.87px] absolute bg-sky-600 rounded-full"></div>
           </div>
           <div
-            class="w-[600px] left-0 top-[117px] absolute text-black text-[34px] font-bold font-sans leading-[41.48px] tracking-wide">
+            class="w-[600px] left-0 top-[80px] absolute text-black text-[34px] font-bold font-sans leading-[41.48px] tracking-wide">
             Selamat Datang, Silahkan Daftar untuk lanjut menjadi kemitraan kami</div>
-          <div class="w-[571px] h-[90px] left-0 top-[280px] absolute" id="NamaInput">
+          <div class="w-[571px] h-[90px] left-0 top-[240px] absolute" id="NamaInput">
             <label for="namaInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusNamaInput">Nama Pemilik</label>
-            <input id="namaInput" ref="namaInput" type="text"
+            <input v-model="nama" id="namaInput" ref="namaInput" type="text"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Nama Anda" />
           </div>
-          <div class="w-[571px] h-[90px] left-0 top-[390px] absolute" id="EmailNput">
+          <div class="w-[571px] h-[90px] left-0 top-[340px] absolute" id="EmailInput">
             <label for="emailInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusEmailInput">Alamat Email</label>
-            <input id="emailInput" ref="emailInput" type="email"
+            <input v-model="email" id="emailInput" ref="emailInput" type="email"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Email Anda" />
           </div>
-          <div class="w-[571px] h-[90px] left-0 top-[500px] absolute" id="NomorTeleponInput">
+          <div class="w-[571px] h-[90px] left-0 top-[440px] absolute" id="NomorTeleponInput">
             <label for="nomorteleponInput"
               class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
               @click="focusNomorTeleponInput">Nomor Telepon</label>
-            <input id="nomorteleponInput" ref="NomorTeleponInput" type="text"
+            <input v-model="nomorTelepon" id="nomorteleponInput" ref="nomorTeleponInput" type="text"
               class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
               placeholder="Masukkan Nomor Telepon Anda" />
-        </div>
-        <div class="w-[571px] h-[90px] left-0 top-[610px] absolute" id="PasswordInput">
-          <label for="passwordInput"
-            class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
-            Sandi</label>
-          <input id="passwordInput" ref="passwordInput" type="password"
-            class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
-            placeholder="Masukkan Kata Sandi Anda" />
-          <button @click="togglePasswordVisibility" class="absolute right-0 top-[50%] transform -translate-y-1/2 mr-2">
-            <i v-if="passwordVisible" class="fas fa-eye text-lg" style="margin-top: 40px;"></i>
-            <i v-else class="fas fa-eye-slash text-lg" style="margin-top: 40px;"></i>
-          </button>
-        </div>
-        <div class="w-[202px] h-[54px] left-[369px] top-[730px] absolute">
-          <router-link to="/login">
-            <div
-              class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300"
-              style="border-width: 4px;"></div>
-            <div class="left-[73px] top-[13px] absolute text-black text-lg font-bold font-sans hover:text-sky-600">Login
+          </div>
+          <div class="w-[571px] h-[90px] left-0 top-[540px] absolute" id="PasswordInput">
+            <label for="passwordInput"
+              class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
+              Sandi</label>
+            <input v-model="password" id="passwordInput" ref="passwordInput" type="password"
+              class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
+              placeholder="Masukkan Kata Sandi Anda" />
+            <button @click="togglePasswordVisibility" class="absolute right-0 top-[50%] transform -translate-y-1/2 mr-2">
+              <i v-if="passwordVisible" class="fas fa-eye text-lg" style="margin-top: 40px;"></i>
+              <i v-else class="fas fa-eye-slash text-lg" style="margin-top: 40px;"></i>
+            </button>
+          </div>
+          <div class="w-[571px] h-[90px] left- top-[640px] absolute" id="BuktiKepemilikanInput">
+              <label for="buktiKepemilikanInput"
+                class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal"
+                @click="focusBuktiKepemilikanInput">Foto Bukti Kepemilikan (JPEG/JPG/PNG)</label>
+              <input id="buktiKepemilikanInput" ref="buktiKepemilikanInput" type="file" accept="image/*"
+                class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
+                @change="handleFileUpload" />
+                <i class="fas fa-file-alt fa-lg absolute right-0 top-[75%] transform -translate-y-1/2 mr-2"></i>
+
             </div>
-          </router-link>
-        </div>
-        <router-link to="/home">
+          <div class="w-[202px] h-[54px] left-[369px] top-[760px] absolute">
+            <router-link to="/login">
+              <div
+                class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300"
+                style="border-width: 4px;"></div>
+              <div class="left-[73px] top-[13px] absolute text-black text-lg font-bold font-sans hover:text-sky-600">Login
+              </div>
+            </router-link>
+          </div>
           <button
-            class="w-[266px] h-[54px] left-0 top-[730px] absolute transition duration-300 ease-in-out transform hover:scale-105"
+            class="w-[266px] h-[54px] left-0 top-[760px] absolute transition duration-300 ease-in-out transform hover:scale-105"
             id="btn-signUp" @click="signUp">
             <div class="w-[266px] h-[54px] left-0 top-0 absolute bg-gradient-to-r from-sky-300 to-blue-500 shadow">
             </div>
@@ -85,47 +94,85 @@
               <i class="fas fa-chevron-right text-white"></i>
             </div>
           </button>
-        </router-link>
+          <div v-if="message" class="message">{{ message }}</div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
+  </div>  
 </template>
 
 <script>
+import axios from 'axios';
 import imagePath from '@/assets/images/bg-loginPage.png';
 import imageLogo from '@/assets/images/nearus.png';
+import { API_URL } from '@/constants.js';
 
 export default {
   data() {
     return {
       imagePath: imagePath,
       imageLogo: imageLogo,
+      nama: '',
+      email: '',
+      nomorTelepon: '',
+      password: '',
+      confirmpassword: '',
+      buktiKepemilikan: null,
       rememberMe: false,
-      passwordVisible: false
+      passwordVisible: false,
+      message: ''
     };
   },
   methods: {
+    focusNamaInput() {
+      this.$refs.namaInput.focus();
+    },
     focusEmailInput() {
       this.$refs.emailInput.focus();
+    },
+    focusNomorTeleponInput() {
+      this.$refs.nomorTeleponInput.focus();
+    },
+    focusPasswordInput() {
+      this.$refs.passwordInput.focus();
+    },
+    focusBuktiKepemilikanInput() {
+      this.$refs.buktiKepemilikanInput.focus();
     },
     togglePasswordVisibility() {
       this.passwordVisible = !this.passwordVisible;
       const passwordInput = this.$refs.passwordInput;
-      if (this.passwordVisible) {
-        passwordInput.type = 'text';
-      } else {
-        passwordInput.type = 'password';
+      passwordInput.type = this.passwordVisible ? 'text' : 'password';
+    },
+    handleFileUpload(event) {
+      this.buktiKepemilikan = event.target.files[0];
+    },
+    async signUp() {
+      const formData = new FormData();
+      formData.append('name', this.nama);
+      formData.append('email', this.email);
+      formData.append('phonenumber', this.nomorTelepon);
+      formData.append('password', this.password);
+      formData.append('buktiimage', this.buktiKepemilikan);
+
+      try {
+        const response = await axios.post(`${API_URL}/daftar`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        this.message = 'Registration successful!';
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          this.message = 'Validation error: ' + error.response.data.message;
+        } else {
+          this.message = 'An error occurred: ' + error.message;
+        }
       }
-    },
-    signUp() {
-      console.log('Sign Up clicked');
-    },
-    login() {
-      console.log('Login clicked');
     }
   }
 };
+
 </script>
 
 <style scoped>

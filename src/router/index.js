@@ -1,4 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store';
+const isAuthenticated = () => {
+  return !!store.state.token;
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +35,11 @@ const router = createRouter({
       path: '/mitra-register',
       name: 'mitra-register',
       component: () => import('../views/MitraRegisterView.vue')
+    },
+    {
+      path: '/RegistKost',
+      name: 'RegistKost',
+      component: () => import('../views/RegisterKosView.vue')
     },
     {
       path: '/verif',
@@ -73,27 +82,32 @@ const router = createRouter({
     {
       path: '/dashboard-data',
       name: 'DataDasboard',
-      component: () => import('../views/DataDashboard.vue')
+      component: () => import('../views/DataDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard',
       name: 'DashboardDashboard',
-      component: () => import('../views/DashboardDashboard.vue')
+      component: () => import('../views/DashboardDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-kosku',
       name: 'DashboardKosku',
-      component: () => import('../views/KoskuDashboard.vue')
+      component: () => import('../views/KoskuDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-settings',
       name: 'DashboardSettings',
-      component: () => import('../views/SettingsDashboard.vue')
+      component: () => import('../views/SettingsDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-profile',
       name: 'DashboardProfile',
-      component: () => import('../views/ProfileDashboard.vue')
+      component: () => import('../views/ProfileDashboard.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/PrivacyPolicy',
@@ -115,6 +129,18 @@ const router = createRouter({
       redirect: '/home'
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!isAuthenticated()) {
+      next({ name: 'login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;
