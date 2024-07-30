@@ -1,20 +1,16 @@
-// store.js
 import { createStore } from 'vuex';
 import axios from 'axios';
+import { API_URL } from '@/constants';
 
 export default createStore({
   state: {
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    token: localStorage.getItem('token') || '',
-  },
-  getters: {
-    getUser: (state) => state.user,
-    isLoggedIn: (state) => !!state.token,
+    user: JSON.parse(localStorage.getItem('local')) || null,
+    token: localStorage.getItem('token') || null,
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('local', JSON.stringify(user));
     },
     setToken(state, token) {
       state.token = token;
@@ -22,57 +18,87 @@ export default createStore({
     },
     clearUser(state) {
       state.user = null;
-      localStorage.removeItem('user');
-      state.token = '';
+      state.token = null;
+      localStorage.removeItem('local');
       localStorage.removeItem('token');
     },
+    loadUserFromStorage(state) {
+      const user = localStorage.getItem('local');
+      const token = localStorage.getItem('token');
+      if (user) {
+        state.user = JSON.parse(user);
+      }
+      if (token) {
+        state.token = token;
+      }
+    },
+    updateUser(state, updatedUser) {
+      state.user = updatedUser;
+      localStorage.setItem('local', JSON.stringify(updatedUser));
+    },
+    updateUserProfilePic(state, profilePicUrl) {
+      if (state.user) {
+        state.user.photoprofile = profilePicUrl;
+        localStorage.setItem('local', JSON.stringify(state.user));
+      }
+    }
   },
   actions: {
-    async login({ commit }, { email, password, remember }) {
+    async login({ commit }, { email, password }) {
       try {
-        const response = await axios.post('https://api.nearus.id/api/login', {
-          email,
-          password,
-        });
-        const { token, user } = response.data;
-
-        if (remember) {
-          commit('setToken', token);
-          commit('setUser', user);
-        } else {
-          sessionStorage.setItem('token', token);
-          sessionStorage.setItem('user', JSON.stringify(user));
-        }
-
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        const response = await axios.post(`${API_URL}/masuk`, { email, password });
+        const user = response.data;
+        commit('setUser', user.data);
+        commit('setToken', user.token);
       } catch (error) {
-        console.error('Failed to login:', error);
+        console.error('Login failed:', error);
         throw error;
       }
     },
-    async initializeStore({ commit }) {
-      if (localStorage.getItem('token')) {
-        try {
-          const response = await fetch('https://api.nearus.id/api/profile', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            commit('setUser', data);
-          } else {
-            commit('clearUser');
-          }
-        } catch (error) {
-          console.error('Failed to fetch user data:', error);
-          commit('clearUser');
-        }
+    async updateUserProfile({ commit, state }, updatedProfileData) {
+      try {
+        const response = await axios.post(`${API_URL}/profile/update`, updatedProfileData, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+          },
+        });
+        const updatedUser = response.data;
+        commit('updateUser', updatedUser);
+      } catch (error) {
+        console.error('Error updating user profile:', error);
+        throw error;
+      }
+    },
+    async updateUserProfilePic({ commit, state }, formData) {
+      try {
+        const response = await axios.post(`${API_URL}/profile/update`, formData, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+            'Content-Type': 'multipart/form-data'
+          },
+        });
+        const updatedUser = response.data;
+        commit('updateUserProfilePic', updatedUser.photoprofile);
+      } catch (error) {
+        console.error('Error updating profile picture:', error);
+        throw error;
       }
     },
     logout({ commit }) {
       commit('clearUser');
+    },
+    initializeStore({ commit }) {
+      commit('loadUserFromStorage');
+    },
+  },
+  getters: {
+    isLoggedIn: state => !!state.user,
+    getUser: state => state.user,
+    getPhoneNumber: state => {
+      if (state.user && state.user.phoneNumber) {
+        return state.user.phoneNumber.toString();
+      }
+      return null;
     },
   },
 });

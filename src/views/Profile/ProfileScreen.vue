@@ -62,13 +62,12 @@
                   </select>
                 </div>
               </div>
-              <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-6">Update Information</button>
+              <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-6">Update Profile</button>
             </form>
           </section>
         </div>
       </section>
     </main>
-    <Footer />
   </div>
 </template>
 
@@ -76,25 +75,23 @@
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/NavFixed.vue';
-import Footer from '@/components/Footer.vue';
 import imageProfileDefault from '@/assets/images/profile-pic.png';
 
 export default {
-  components: {
-    NavFixed,
-    Footer,
-  },
+  components: { NavFixed },
   setup() {
     const store = useStore();
     const user = ref({
       name: '',
       email: '',
       phone: '',
-      gender: 'other',
+      gender: '',
       photoprofile: '',
     });
 
-    const profilePicSrc = computed(() => user.value.photoprofile || imageProfileDefault);
+    const profilePicSrc = computed(() => {
+      return user.value.photoprofile || imageProfileDefault;
+    });
 
     const fetchUserData = async () => {
       try {
@@ -116,16 +113,16 @@ export default {
           gender: data.gender || 'other',
           photoprofile: data.photoprofile,
         };
-        localStorage.setItem('userData', JSON.stringify(user.value));
+        store.commit('updateUser', user.value);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
 
     onMounted(() => {
-      const storedUser = localStorage.getItem('userData');
+      const storedUser = store.state.user;
       if (storedUser) {
-        user.value = JSON.parse(storedUser);
+        user.value = storedUser;
       } else {
         fetchUserData();
       }
@@ -140,7 +137,7 @@ export default {
         try {
           await store.dispatch('updateUserProfilePic', formData);
           user.value.photoprofile = URL.createObjectURL(file);
-          localStorage.setItem('userData', JSON.stringify(user.value));
+          store.commit('updateUser', user.value);
         } catch (error) {
           console.error('Error uploading profile picture:', error);
         }
@@ -155,7 +152,7 @@ export default {
           phone: user.value.phone,
           gender: user.value.gender,
         });
-        localStorage.setItem('userData', JSON.stringify(user.value));
+        store.commit('updateUser', user.value);
         console.log('User data updated successfully');
       } catch (error) {
         console.error('Error updating user data:', error);
