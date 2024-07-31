@@ -128,7 +128,7 @@ const changeDropdownText = (text) => {
 // Fetch data from the API
 const fetchData = async () => {
   try {
-    const response = await axios.get('https://nearus.id/api/product');
+    const response = await axios.get('https://api.nearus.id/api/product');
     data.value = response.data.data; // Assuming the API response structure
   } catch (error) {
     console.error('Failed to fetch data:', error);
