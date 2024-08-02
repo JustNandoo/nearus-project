@@ -1,4 +1,3 @@
-// store/index.js
 import { createStore } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
@@ -58,7 +57,7 @@ export default createStore({
     },
     async updateUserProfile({ commit, state }, updatedProfileData) {
       try {
-        const response = await axios.put(`${API_URL}/profile/update`, updatedProfileData, {
+        const response = await axios.post(`${API_URL}/profile/update`, updatedProfileData, {
           headers: {
             'Authorization': `Bearer ${state.token}`,
           },

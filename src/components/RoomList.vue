@@ -117,7 +117,7 @@ const product = ref({
 
 const fetchUserData = async () => {
   try {
-    const response = await axios.get('https://api.nearus.id/api/profile', {
+    const response = await axios.get('https://api.nearus.id/api/product', {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },

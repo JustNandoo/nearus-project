@@ -5,12 +5,9 @@
         <div class="w-[1595px] h-[865px] left-0 top-[2px] absolute bg-white rounded-[20px] shadow"></div>
         <div class="w-[646px] h-[817px] left-[920px] top-[25px] absolute" id="onBoardingCard">
           <img class="image w-[646px] h-[817px]" :src="imagePath" />
-          <div
-            class="h-[243px] left-[147px] top-[287px] absolute flex-col justify-start items-start gap-[33px] inline-flex">
-            <div class="w-[340px] text-white text-[26px] font-bold font-sans">Anda anak merantau? kesulitan mencari kos?
-              banyak kos yang tidak cocok?</div>
-            <div class="w-[351px] text-white text-lg font-normal font-sans">Nearus hadir sebagai platform website
-              pencari kos disekitar anda dengan kriteria yang sesuai.</div>
+          <div class="h-[243px] left-[147px] top-[287px] absolute flex-col justify-start items-start gap-[33px] inline-flex">
+            <div class="w-[340px] text-white text-[26px] font-bold font-sans">Anda anak merantau? kesulitan mencari kos? banyak kos yang tidak cocok?</div>
+            <div class="w-[351px] text-white text-lg font-normal font-sans">Nearus hadir sebagai platform website pencari kos disekitar anda dengan kriteria yang sesuai.</div>
             <div class="w-[312px] h-[15px] justify-center items-start gap-3 inline-flex">
               <div class="w-24 h-[15px] bg-white shadow"></div>
               <div class="w-[95px] h-[15px] bg-white bg-opacity-40 shadow"></div>
@@ -24,8 +21,7 @@
             <div class="w-4 h-4 left-[118px] top-[1px] absolute"></div>
             <div class="w-2 h-[8.17px] left-[137px] top-[5.87px] absolute bg-sky-600 rounded-full"></div>
           </div>
-          <div
-            class="w-[600px] left-0 top-[80px] absolute text-black text-[34px] font-bold font-sans leading-[41.48px] tracking-wide">
+          <div class="w-[600px] left-0 top-[80px] absolute text-black text-[34px] font-bold font-sans leading-[41.48px] tracking-wide">
             Selamat Datang, Silahkan Daftar untuk lanjut menjadi kemitraan kami</div>
           <div class="w-[571px] h-[90px] left-0 top-[240px] absolute" id="NamaInput">
             <label for="namaInput"
@@ -98,16 +94,21 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
+  <PopUpSuccess :isVisible="isPopupVisible" @close="closePopup" @login="goToLogin" />
 </template>
 
 <script>
 import axios from 'axios';
 import imagePath from '@/assets/images/bg-loginPage.png';
 import imageLogo from '@/assets/images/nearus.png';
+import PopUpSuccess from '@/components/PopUpSuccess.vue';
 import { API_URL } from '@/constants.js';
 
 export default {
+  components: {
+    PopUpSuccess
+  },
   data() {
     return {
       imagePath: imagePath,
@@ -120,7 +121,8 @@ export default {
       buktiKepemilikan: null,
       rememberMe: false,
       passwordVisible: false,
-      message: ''
+      message: '',
+      isPopupVisible: false
     };
   },
   methods: {
@@ -161,7 +163,7 @@ export default {
             'Content-Type': 'multipart/form-data'
           }
         });
-        this.message = 'Registration successful!';
+        this.isPopupVisible = true;
       } catch (error) {
         if (error.response && error.response.status === 422) {
           this.message = 'Validation error: ' + error.response.data.message;
@@ -169,6 +171,12 @@ export default {
           this.message = 'An error occurred: ' + error.message;
         }
       }
+    },
+    closePopup() {
+      this.isPopupVisible = false;
+    },
+    goToLogin() {
+      this.$router.push('/login');
     }
   }
 };

@@ -2,7 +2,7 @@
   <transition name="slide-appear">
     <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[670px] px-5 z-[10000]">
       <div class="flex items-start justify-between border-b-[1px] border-black pb-4">
-        <div class="mt-8         ml-8px text-left">
+        <div class="mt-8 ml-8px text-left">
           <h1 class="mb-4 font-bold text-[23px]" id="nama">{{ user.name }}</h1>
           <p>{{ user.email }}</p>
         </div>
@@ -47,18 +47,15 @@ import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { faHouseUser, faGear, faHeadset, faCircleQuestion, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import profilePicture from '../assets/images/tesimg1.jpeg';
 import { useStore } from 'vuex';
+import imageProfileDefault from '@/assets/images/profile-pic.png';
 
 const isVisible = ref(false);
 const router = useRouter();
 const store = useStore();
 
-const user = computed(() => {
-  const userData = store.getters.getUser;
-  console.log('User data in ProfileCard:', userData); 
-  return userData;
-});
+const user = computed(() => store.getters.getUser || { name: 'Guest', email: '' });
+const profilePicture = computed(() => store.getters.getUser?.photoprofile || imageProfileDefault);
 
 const logout = () => {
   store.dispatch('logout');
@@ -69,7 +66,6 @@ setTimeout(() => {
   isVisible.value = true;
 }, 100);
 </script>
-
 
 <style scoped>
 .profile-card {

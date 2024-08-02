@@ -168,16 +168,25 @@
         </div>
         <div class="mb-4">
           <label class="block text-gray-700">Image</label>
-          <input type="file" @change="handleEditFileUpload" class="w-full p-2 border border-gray-300 rounded mt-1">
+          <input type="file" @change="handleFileUpload" class="w-full p-2 border border-gray-300 rounded mt-1">
+          <div class="flex flex-wrap mt-2">
+            <div v-for="(image, index) in editedProduct.images" :key="index" class="w-24 h-24 mr-2 mb-2 relative">
+              <img :src="image.url" class="w-full h-full object-cover rounded">
+              <button class="absolute top-1 right-1 text-red-500" @click="deleteImage(index)">
+                <font-awesome-icon :icon="faTimesCircle" class="w-4 h-4"/>
+              </button>
+            </div>
+          </div>
         </div>
         <div class="flex justify-end">
           <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" @click="closeEditModal">Cancel</button>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Update Product</button>
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
         </div>
       </form>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';

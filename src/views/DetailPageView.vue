@@ -97,8 +97,11 @@ import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
 
+<<<<<<< HEAD
+=======
 const route = useRoute();
 const productId = route.params.id;
+>>>>>>> 1b11a839f2b2affb77ce99c3737424ce3bd2ac59
 
 const showProfileCard = ref(false);
 const product = ref({});

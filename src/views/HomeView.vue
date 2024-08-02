@@ -1,11 +1,11 @@
-<!-- src/views/HomeView.vue -->
 <template>
   <div class="bg-white p-0 m-0 relative">
     <CarouselHome />
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in products" :key="product.kostid" :product="product" />
+        <ProductCard v-for="product in products" :key="product.kostid" :product="product" :isLoading="isLoading" />
+        <ProductCard v-if="isLoading" v-for="n in 4" :key="'loading-' + n" :isLoading="true" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">
@@ -15,7 +15,8 @@
       <h1 class="font-extrabold text-3xl">Cari Kos Sesuai Budgetmu</h1>
       <PriceSortCard />
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in products" :key="product.id" :product="product" />
+        <ProductCard v-for="product in products" :key="product.id" :product="product" :isLoading="isLoading" />
+        <ProductCard v-if="isLoading" v-for="n in 4" :key="'loading-' + n" :isLoading="true" />
       </div>
       <div class="flex justify-center mt-10 mb-20">
         <button class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg">
@@ -42,13 +43,16 @@ import Chatbot from "@/components/ChatBot.vue";
 
 const showProfileCard = ref(false);
 const products = ref([]);
+const isLoading = ref(true);
 
 const fetchProducts = async () => {
   try {
     const response = await axios.get('https://api.nearus.id/api/product');
     products.value = response.data.data;
+    isLoading.value = false;
   } catch (error) {
     console.error('Error fetching product data:', error);
+    isLoading.value = false;
   }
 };
 
