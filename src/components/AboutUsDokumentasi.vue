@@ -1,38 +1,32 @@
 <template>
-    <div class="w-[1599px] h-[322px] relative">
-       <div class="w-[374px] h-[37px] left-[612px] top-0 absolute text-black text-3xl font-bold font-['Montserrat']">Dokumentasi Website</div>
-       <div class="w-[1599px] h-[238px] left-0 top-[84px] absolute">
-           <img class="w-[259px] h-[238px] left-0 top-0 absolute" :src="imageVue" />
-           <img class="w-[259px] h-[238px] left-[335px] top-0 absolute" :src="imageTailwind" />
-           <img class="w-[259px] h-[238px] left-[670px] top-0 absolute" :src="imagePHP" />
-           <img class="w-[259px] h-[238px] left-[1005px] top-0 absolute" :src="imageLaravel" />
-           <img class="w-[259px] h-[238px] left-[1340px] top-0 absolute" :src="imageVite" />
-       </div>
-   </div>
-   </template>
-   
-   <script>
-   import imagePHP from '../assets/images/php_icon.png';
-   import imageLaravel from '../assets/images/laravel_icon.png';
-   import imageVue from '../assets/images/vue_icon.png';
-   import imageTailwind from '../assets/images/tailwind_icon.png';
-   import imageVite from '../assets/images/vite_icon.png';
-   
-   export default {
-     
-     data() {
-       return {
-         imagePHP,
-         imageLaravel,
-         imageVue,
-         imageTailwind,
-         imageVite
-       };
-     },
-   };
-   </script>
-   
-   <style lang="scss" scoped>
-   
-   </style>
-   
+  <div className="w-full max-w-screen-xl mx-auto p-6">
+    <div className="flex justify-center mb-8">
+      <div className="text-black text-3xl font-bold font-['Montserrat'] mr-2">Keuntungan Kos di</div>
+      <div className="text-[#008dda] text-3xl font-bold font-['Montserrat']">NEARuS</div>
+    </div>
+    <div className="flex flex-row justify-center gap-8">
+      <div className="flex flex-col items-center">
+        <img className="w-[800px] h-[247.12px] rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" src="https://via.placeholder.com/427x247" />
+        <div className="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Fully furnished</div>
+      </div>
+      <div className="flex flex-col items-center">
+        <img className="w-[800px] h-[247.12px] rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" src="https://via.placeholder.com/427x247" />
+        <div className="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Aman</div>
+      </div>
+      <div className="flex flex-col items-center">
+        <img className="w-[800px] h-[247.12px] rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" src="https://via.placeholder.com/427x247" />
+        <div className="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Layanan Menyeluruh</div>
+      </div>
+      <div className="flex flex-col items-center">
+        <img className="w-[800px] h-[247.12px] rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" src="https://via.placeholder.com/427x247" />
+        <div className="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Pembayaran Fleksibel</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+</script>
+
+<style lang="scss" scoped>
+</style>
