@@ -3,7 +3,7 @@
     <AboutUsCard />
     <CardProductAboutUs />
     <AboutUsText />
-    <TeamCard class="mb-80"/>
+    <CariKosSeakrang/>
     <AboutUsDokumentasi />
     <ProfileCard v-if="showProfileCard" class="profile-card"/>
     <div class="w-[1777px] text-sky-600 text-4xl font-bold font-['Montserrat'] mt-40">"NeaRuS: Temukan Kost Terbaik, Nyaman, dan Terjangkau untuk Kehidupan yang Lebih Baik!"</div>
@@ -16,7 +16,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import AboutUsCard from "@/components/AboutUsCard.vue";
 import CardProductAboutUs from "@/components/CardProductAboutUs.vue";
 import AboutUsText from "@/components/AboutUsText.vue";
-import TeamCard from "@/components/TeamCard.vue";
+import CariKosSeakrang from "@/components/CariKosSekarang.vue";
 import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue"; 
 import Footer from "@/components/Footer.vue";
 import ProfileCard from "@/components/ProfileCard.vue";
@@ -28,7 +28,7 @@ export default {
     AboutUsCard,
     CardProductAboutUs,
     AboutUsText,
-    TeamCard,
+    CariKosSeakrang,
     AboutUsDokumentasi, 
     Footer
   },
