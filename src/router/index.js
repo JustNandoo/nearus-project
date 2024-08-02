@@ -125,6 +125,11 @@ const router = createRouter({
       component: () => import('../views/PaymentPage.vue')
     },
     {
+      path: '/dashboard-chat',
+      name: 'DashboardChat',
+      component: () => import('../views/DashboardChat.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }
