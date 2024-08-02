@@ -34,7 +34,6 @@
                 <h2 class="font-bold text-lg">Upload a New Photo</h2>
                 <p class="text-gray-600">Profile-pic.jpg</p>
               </div>
-              <button class="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg">Update</button>
             </div>
             <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
             <form class="space-y-4" @submit.prevent="updateUserData">
