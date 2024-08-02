@@ -61,7 +61,15 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import logo from '../assets/images/nearus.png';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faHouse, faDoorOpen, faGear, faUser, faDatabase, faHouseUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faHouse,
+  faDoorOpen,
+  faGear,
+  faUser,
+  faDatabase,
+  faHouseUser,
+  faMessage
+} from '@fortawesome/free-solid-svg-icons';
 import Modal from '@/components/Modal.vue';
 
 const store = useStore();
@@ -77,6 +85,7 @@ const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
   { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
+  { text: 'Chat', icon: faMessage, path: '/dashboard-chat' },
 ];
 
 const generalItems = [

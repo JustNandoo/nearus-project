@@ -6,9 +6,11 @@
        <div class="flex flex-col">
          <div class="flex justify-between items-center w-[1500px] mx-10 mt-5 gap-2 h-10px">
            <h1 class="text-black font-medium text-[18px]">Dashboard</h1>
-           <div class="flex items-center gap-4">
-             <img class="w-10 h-10 rounded-full" :src="profilePicture" alt="">
-             <h1>Nando Fajar</h1>
+           <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer">
+             <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
+             <p class="text-xl font-medium text-black">
+               Halo, {{ user.name }}
+             </p>
            </div>
          </div>
          <div class="flex mt-8 mx-auto gap-8">
@@ -57,14 +59,24 @@
 </template>
 
 <script setup>
-import profilePicture from '../assets/images/tesimg1.jpeg';
 import Sidebar from "@/components/sidebar.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { faArrowUp, faMoneyBill, faDoorClosed, faUser } from '@fortawesome/free-solid-svg-icons';
-import ColumnChart from "@/components/ColumnChart.vue";
-import TabelData from "@/components/TabelData.vue";
+import {onMounted} from "vue";
 import ChartStatistik from "@/components/ChartStatistik.vue";
+import {computed, ref} from "vue";
+import imageProfileDefault from "@/assets/images/profile-pic.png";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
+const profilePicture = computed(() => store.state.user?.photoprofile || imageProfileDefault);
+const userName = computed(() => store.state.user?.name || 'Guest');
+const store = useStore();
+const user = computed(() => store.getters.getUser);
+const router = useRouter();
 
+onMounted(()=>{
+  store.dispatch('initializeStore');
+})
 </script>
 
 <style lang="scss" scoped>
