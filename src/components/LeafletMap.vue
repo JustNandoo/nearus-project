@@ -40,32 +40,32 @@ const attribution = "&copy; <a href='https://www.openstreetmap.org/copyright'>Op
 
 const product = ref({});
 
-onMounted(async () => {
-  try {
-    const response = await axios.get('https://api.nearus.id/api/product');
-    console.log('API Response:', response);
-    const data = response.data.data;
-
-    if (data && data.length > 0 && data[0].linklocation) {
-      product.value = {
-        linklocation: data[10].linklocation,
-      };
-      const [lat, lng] = product.value.linklocation.split(',').map(Number);
-      console.log(lat);
-      console.log(lng);
-      if (!isNaN(lat) && !isNaN(lng)) {
-        center.value = [lat, lng];
-        markerPosition.value = [lat, lng];
-      } else {
-        console.error('Invalid coordinates:', product.value.linklocation);
-      }
-    } else {
-      console.error('Error fetching product data: no data response or missing linklocation');
-    }
-  } catch (error) {
-    console.error('Error fetching product data:', error);
-  }
-});
+// onMounted(async () => {
+//   try {
+//     const response = await axios.get('https://api.nearus.id/api/product');
+//     console.log('API Response:', response);
+//     const data = response.data.data;
+//
+//     if (data && data.length > 0 && data[0].linklocation) {
+//       product.value = {
+//         linklocation: data[10].linklocation,
+//       };
+//       const [lat, lng] = product.value.linklocation.split(',').map(Number);
+//       console.log(lat);
+//       console.log(lng);
+//       if (!isNaN(lat) && !isNaN(lng)) {
+//         center.value = [lat, lng];
+//         markerPosition.value = [lat, lng];
+//       } else {
+//         console.error('Invalid coordinates:', product.value.linklocation);
+//       }
+//     } else {
+//       console.error('Error fetching product data: no data response or missing linklocation');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching product data:', error);
+//   }
+// });
 </script>
 
 <style scoped>

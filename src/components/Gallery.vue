@@ -18,9 +18,9 @@
   </div>
 </template>
 
-
 <script setup>
 import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import axios from 'axios';
 
 // Define placeholder images to use in case of missing data
@@ -32,21 +32,25 @@ const placeholderImages = [
   'https://via.placeholder.com/300x200',
 ];
 
+// Get the route to access the id parameter
+const route = useRoute();
+const productId = route.params.id;
+
 // Define a reactive variable to hold the images
 const images = ref([]);
 
 // Fetch data from the API on component mount
 onMounted(async () => {
   try {
-    const response = await axios.get('https://api.nearus.id/api/product');
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
     console.log('API Response:', response);
     const data = response.data.data;
 
     // Check if data exists and map through it to extract images
-    if (data && data.length > 0) {
-      images.value = data.flatMap(product => product.image);
+    if (data && data.image && data.image.length > 0) {
+      images.value = data.image;
     } else {
-      console.error('Error: No data received from API. Using placeholder images.');
+      console.error('Error: No image data received from API. Using placeholder images.');
       images.value = placeholderImages;
     }
   } catch (error) {
@@ -55,8 +59,6 @@ onMounted(async () => {
   }
 });
 </script>
-
-
 
 <style scoped>
 .container {

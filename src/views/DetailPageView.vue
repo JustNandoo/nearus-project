@@ -1,4 +1,3 @@
-<!-- src/views/ProductDetail.vue -->
 <template>
   <div>
     <NavFixed />
@@ -47,10 +46,10 @@
       <div>
         <h1 class="font-bold text-[28px]">Lokasi</h1>
         <div class="flex gap-8 justify-between">
-          <div class="w-1/2 mt-12">
+          <div class="">
             <LeafletMap />
           </div>
-          <div class="w-1/2 container mx-auto py-8 -mt-12">
+          <div class="w-1/2 container mx-auto py-8">
             <div v-for="item in items" :key="item.id" class="flex items-center justify-between py-5">
               <div class="flex items-center gap-5">
                 <div class="flex-shrink-0">
@@ -97,12 +96,8 @@ import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
 
-<<<<<<< HEAD
-=======
 const route = useRoute();
 const productId = route.params.id;
->>>>>>> 1b11a839f2b2affb77ce99c3737424ce3bd2ac59
-
 const showProfileCard = ref(false);
 const product = ref({});
 const facilities = ref([]);
@@ -139,7 +134,7 @@ console.log('Items:', items.value);
 
 onMounted(async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/product/${productId}`);
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
     console.log('API Response:', response);
     const selectedProduct = response.data.data;
 
