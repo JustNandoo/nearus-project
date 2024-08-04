@@ -1,38 +1,38 @@
 <template>
-    <div class="w-[1599px] h-[322px] relative">
-       <div class="w-[374px] h-[37px] left-[612px] top-0 absolute text-black text-3xl font-bold font-['Montserrat']">Dokumentasi Website</div>
-       <div class="w-[1599px] h-[238px] left-0 top-[84px] absolute">
-           <img class="w-[259px] h-[238px] left-0 top-0 absolute" :src="imageVue" />
-           <img class="w-[259px] h-[238px] left-[335px] top-0 absolute" :src="imageTailwind" />
-           <img class="w-[259px] h-[238px] left-[670px] top-0 absolute" :src="imagePHP" />
-           <img class="w-[259px] h-[238px] left-[1005px] top-0 absolute" :src="imageLaravel" />
-           <img class="w-[259px] h-[238px] left-[1340px] top-0 absolute" :src="imageVite" />
-       </div>
-   </div>
-   </template>
-   
-   <script>
-   import imagePHP from '../assets/images/php_icon.png';
-   import imageLaravel from '../assets/images/laravel_icon.png';
-   import imageVue from '../assets/images/vue_icon.png';
-   import imageTailwind from '../assets/images/tailwind_icon.png';
-   import imageVite from '../assets/images/vite_icon.png';
-   
-   export default {
-     
-     data() {
-       return {
-         imagePHP,
-         imageLaravel,
-         imageVue,
-         imageTailwind,
-         imageVite
-       };
-     },
-   };
-   </script>
-   
-   <style lang="scss" scoped>
-   
-   </style>
-   
+  <div class="w-full max-w-screen-xl mx-auto p-6">
+    <div class="flex justify-center mb-8">
+      <div class="text-black text-3xl font-bold font-['Montserrat'] mr-2">Keuntungan Kos di</div>
+      <div class="text-[#008dda] text-3xl font-bold font-['Montserrat']">NEARuS</div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div class="flex flex-col items-center">
+        <img class="w-full max-w-xs rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" :src="furnishImage" />
+        <div class="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Fully furnished</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <img class="w-full max-w-xs rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" :src="amanImage" />
+        <div class="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Aman</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <img class="w-full max-w-xs rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" :src="layananImage" />
+        <div class="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Layanan Menyeluruh</div>
+      </div>
+      <div class="flex flex-col items-center">
+        <img class="w-full max-w-xs rounded-[23px] shadow-lg transition-transform duration-300 transform hover:scale-105" :src="bayarImage" />
+        <div class="text-black text-xl md:text-2xl font-bold font-['Montserrat'] text-center mt-4">Pembayaran Fleksibel</div>
+      </div>
+    </div>
+  </div>
+</template>
+
+
+<script setup>
+import furnishImage from '../assets/images/furnish.webp';
+import amanImage from '../assets/images/aman.jpg';
+import layananImage from '../assets/images/layanan.webp';
+import bayarImage from '../assets/images/bayar.webp';
+</script>
+
+
+<style lang="scss" scoped>
+</style>
