@@ -135,6 +135,11 @@ const router = createRouter({
       component: () => import('../views/NearusFinance/NearusFinanceView.vue')
     },
     {
+      path: '/NearusFinance2',
+      name: 'NearusFinance2',
+      component: () => import('../views/NearusFinance/NearusFinanceAfter.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }
