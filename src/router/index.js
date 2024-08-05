@@ -130,9 +130,14 @@ const router = createRouter({
       component: () => import('../views/DashboardChat.vue')
     },
     {
-      path: '/testapi',
-      name: 'testapi',
-      component: () => import('../views/testgetapi.vue')
+      path: '/NearusFinance',
+      name: 'NearusFinance',
+      component: () => import('../views/NearusFinance/NearusFinanceView.vue')
+    },
+    {
+      path: '/NearusFinance2',
+      name: 'NearusFinance2',
+      component: () => import('../views/NearusFinance/NearusFinanceAfter.vue')
     },
     {
       path: '/',

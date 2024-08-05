@@ -34,35 +34,34 @@
                 <h2 class="font-bold text-lg">Upload a New Photo</h2>
                 <p class="text-gray-600">Profile-pic.jpg</p>
               </div>
-              <button class="ml-auto bg-blue-500 text-white px-4 py-2 rounded-lg">Update</button>
             </div>
             <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
             <form class="space-y-4" @submit.prevent="updateUserData">
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-gray-700">Nama Lengkap</label>
-                  <input type="text" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.name">
+                  <input type="text" class="input-field" v-model="user.name">
                 </div>
                 <div>
                   <label class="block text-gray-700">Email Address</label>
-                  <input type="email" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.email">
+                  <input type="email" class="input-field" v-model="user.email">
                 </div>
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-gray-700">Nomor Telepon</label>
-                  <input type="text" class="w-full border-gray-300 rounded-lg mt-1" v-model="user.phone">
+                  <input type="text" class="input-field" v-model="user.phone">
                 </div>
                 <div>
                   <label class="block text-gray-700">Jenis Kelamin</label>
-                  <select class="w-full border-gray-300 rounded-lg mt-1" v-model="user.gender">
+                  <select class="input-field" v-model="user.gender">
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
                     <option value="other">Lainnya</option>
                   </select>
                 </div>
               </div>
-              <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-6">Update Profile</button>
+              <button type="submit" class="button">Update Profile</button>
             </form>
           </section>
         </div>
@@ -183,10 +182,17 @@ export default {
 
 .input-field {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   margin-top: 0.5rem;
-  border: 1px solid #d1d5db;
+  border: 2px solid #d1d5db;
   border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.input-field:focus {
+  border-color: #2563eb;
+  outline: none;
 }
 
 .button {
