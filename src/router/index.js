@@ -130,6 +130,11 @@ const router = createRouter({
       component: () => import('../views/DashboardChat.vue')
     },
     {
+      path: '/testapi',
+      name: 'testapi',
+      component: () => import('../views/testgetapi.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }

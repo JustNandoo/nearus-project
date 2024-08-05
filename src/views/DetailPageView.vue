@@ -97,7 +97,7 @@ import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
 
 const route = useRoute();
-const productId = route.params.id;
+const productId = route.params.kostid;
 const showProfileCard = ref(false);
 const product = ref({});
 const facilities = ref([]);

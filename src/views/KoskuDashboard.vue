@@ -5,27 +5,7 @@
       <div class="w-[1500px] ml-8 mt-10">
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
-          <div v-for="product in products" :key="product.id" class="my-4">
-            <div class="bg-white overflow-hidden shadow-md rounded-lg relative h-32">
-              <div class="absolute top-0 right-0 p-2">
-                <font-awesome-icon
-                    :icon="faEllipsisV"
-                    class="text-gray-500 w-6 h-6 cursor-pointer"
-                    @click="toggleMenu(product.id)"
-                />
-                <div v-if="showMenu === product.id" class="absolute right-0 bg-white shadow-md rounded-lg p-2">
-                  <div class="cursor-pointer p-2" @click="openEditModal(product)">Edit</div>
-                  <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.id)">Delete</div>
-                </div>
-              </div>
-              <div class="flex">
-                <div class="w-2/3 p-4">
-                  <div class="text-xl font-semibold mb-2">{{ product.productname }}</div>
-                  <p class="text-gray-700">{{ product.about }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <KoskuCard/>
         </div>
       </div>
     </div>
@@ -185,6 +165,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEllipsisV, faPlus, faTimes, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from "@/components/sidebar.vue";
+import KoskuCard from "@/components/KoskuCard.vue";
 
 
 const products = ref([]);
