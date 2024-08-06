@@ -9,7 +9,7 @@
       </div>
       <div class="flex items-center gap-10 text-xl font-medium text-black ml-39" :class="{'text-change': scrolled}">
         <router-link to="/home">Sewa</router-link>
-        <router-link to="/">NearusFinance</router-link>
+        <router-link to="/NearusFinance">NearusFinance</router-link>
         <router-link to="/AboutUS">About Us</router-link>
       </div>
       <div class="flex items-center gap-4 relative">
