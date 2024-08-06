@@ -5,7 +5,42 @@
       <div class="w-[1500px] ml-8 mt-10">
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
-          <KoskuCard/>
+          <div v-for="product in products" :key="product.id" class="w-[60%] border-[1px] border-neutral-600 h-[190px] rounded-lg flex m-5">
+            <div v-if="isLoading" class="flex justify-center items-center w-full">Loading...</div>
+            <div v-else class="flex items-center gap-2 w-full p-2">
+              <div class="w-[320px] h-full">
+                <img class="w-full h-full rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
+              </div>
+              <div class="flex flex-col justify-between flex-1 h-full">
+                <div class="mx-2 relative">
+                  <div class="flex justify-between">
+                    <p class="font-medium text-[18px]">{{ product.productname }}</p>
+                    <div class="relative">
+                      <font-awesome-icon
+                          :icon="faEllipsisV"
+                          class="text-gray-500 w-6 h-6 cursor-pointer"
+                          @click="toggleMenu(product.id)"
+                      />
+                      <div v-if="showMenu === product.id" class="absolute right-0 bg-white shadow-md rounded-lg p-2">
+                        <div class="cursor-pointer p-2" @click="openEditModal(product)">Edit</div>
+                        <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.id)">Delete</div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr class="my-2 w-full border-[1px] bg-[#8692A6] h-1">
+                  <div class="flex justify-between items-center">
+                    <p class="text-[16px]">5 Penyewa</p>
+                    <p>10 Kamar Tersedia</p>
+                  </div>
+                </div>
+                <div class="mx-5 mb-2">
+                  <button class="bg-[#008DDA] rounded-full w-full hover:bg-[#006bb3] transition duration-300">
+                    <a href="" class="text-white block text-center py-2">Manage</a>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -15,7 +50,6 @@
       <font-awesome-icon :icon="faPlus" class="text-white w-10 h-10"/>
     </div>
   </div>
-
   <div v-if="showAddModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
     <div class="bg-white p-8 rounded-lg shadow-lg w-3/4 max-h-3/4 overflow-y-auto relative">
       <button class="absolute top-2 right-2 text-gray-500" @click="closeAddModal">
