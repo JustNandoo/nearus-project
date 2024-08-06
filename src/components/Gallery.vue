@@ -23,7 +23,6 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
 
-// Define placeholder images to use in case of missing data
 const placeholderImages = [
   { url: 'https://via.placeholder.com/600x400' },
   { url: 'https://via.placeholder.com/300x200' },
@@ -45,8 +44,6 @@ onMounted(async () => {
     const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
     console.log('API Response:', response);
     const data = response.data.data;
-
-    // Check if data exists and map through it to extract images
     if (data && Array.isArray(data.image) && data.image.length > 0) {
       images.value = data.image;
     } else {

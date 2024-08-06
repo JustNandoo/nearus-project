@@ -1,9 +1,8 @@
-<!-- src/views/ProductDetail.vue -->
 <template>
   <div>
     <NavFixed />
     <ProfileCard v-if="showProfileCard" class="profile-card" />
-    <Gallery />
+    <Gallery/>
     <div class="ml-36 mr-36 mt-5 flex justify-between">
       <div class="flex flex-col">
         <div class="flex items-center gap-3">
@@ -47,10 +46,10 @@
       <div>
         <h1 class="font-bold text-[28px]">Lokasi</h1>
         <div class="flex gap-8 justify-between">
-          <div class="w-1/2 mt-12">
+          <div class="">
             <LeafletMap />
           </div>
-          <div class="w-1/2 container mx-auto py-8 -mt-12">
+          <div class="w-1/2 container mx-auto py-8">
             <div v-for="item in items" :key="item.id" class="flex items-center justify-between py-5">
               <div class="flex items-center gap-5">
                 <div class="flex-shrink-0">
@@ -99,7 +98,6 @@ import Footer from "@/components/Footer.vue";
 
 const route = useRoute();
 const productId = route.params.id;
-
 const showProfileCard = ref(false);
 const product = ref({});
 const facilities = ref([]);
@@ -136,16 +134,12 @@ console.log('Items:', items.value);
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://api.nearus.id/api/product/get/${productId}');
-    console.log('API Response:', response.data.ownerId);
-    console.log(response.data.ownerId);
-    const selectedProduct = response.data.data[0];
-    console.log(selectedProduct.ownerId);
-
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
+    console.log('API Response:', response);
+    const selectedProduct = response.data.data;
 
     if (selectedProduct) {
       product.value = {
-
         productname: selectedProduct.productname,
         location: selectedProduct.location,
         category: selectedProduct.category,
