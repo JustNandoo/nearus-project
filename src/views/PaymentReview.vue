@@ -96,15 +96,16 @@ export default {
     return {
       isEditing: false,
       selectedDate: "2024-04-24",
+      // Use dummy data for the user
       user: {
-        name: '',
-        phonenumber: '',
-        email: ''
+        name: 'John Doe',            // Dummy name
+        phonenumber: '081234567890', // Dummy phone number
+        email: 'johndoe@example.com' // Dummy email
       },
       roomData: {
-        roomName: '',
-        productName: '',
-        price: ''
+        roomName: 'Kamar Test',
+        productName: 'Produk Test',
+        price: 'Rp 7.200.000/6bln'
       }
     };
   },
@@ -117,28 +118,6 @@ export default {
     toggleEditing() {
       this.isEditing = !this.isEditing;
     },
-    async fetchUserData() {
-      try {
-        const response = await axios.get('https://api.nearus.id/api/profile', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-
-        if (response.status === 200) {
-          this.user = {
-            name: response.data.name,
-            phonenumber: response.data.phonenumber,
-            email: response.data.email
-          };
-          localStorage.setItem('userData', JSON.stringify(this.user));
-        } else {
-          console.error('Failed to fetch user data');
-        }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    },
 
     async processPayment() {
       try {
@@ -149,8 +128,7 @@ export default {
           ownerId: 1,
           detail: this.roomData.roomName + ' - ' + this.roomData.productName,
           duration: formattedDate,
-          price: 1,
-
+          price: 100000
         });
 
         const response = await axios.post('https://api.nearus.id/api/checkout', {
@@ -159,15 +137,12 @@ export default {
           ownerId: 1,
           detail: this.roomData.roomName + ' - ' + this.roomData.productName,
           duration: formattedDate,
-          price: 1,
-
-
+          price: 100000
         }, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           }
         });
-
 
         if (response.data.success) {
           const snapToken = response.data.snapToken;
@@ -178,7 +153,7 @@ export default {
                 payment_time: result.transaction_time,
                 payment_method: result.payment_type.toUpperCase()
               });
-              router.push('/PaymentPage')
+              router.push('/PaymentPage');
             },
             onPending: function(result) {
               alert("Waiting for your payment!");
@@ -206,7 +181,7 @@ export default {
     },
     loadSnapScript() {
       const script = document.createElement('script');
-      script.src = 'https://app.midtrans.com/snap/snap.js';
+      script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
       script.setAttribute('data-client-key', 'Mid-client-RgPSumJlMsThnpLo');
       script.async = true;
       document.body.appendChild(script);
@@ -221,22 +196,15 @@ export default {
     }
   },
   mounted() {
-    const storedUser = localStorage.getItem('userData');
-    if (storedUser) {
-      this.user = JSON.parse(storedUser);
-    } else {
-      this.fetchUserData();
-    }
-
     const storedRoomData = localStorage.getItem('roomData');
     if (storedRoomData) {
       this.roomData = JSON.parse(storedRoomData);
     }
     this.loadSnapScript();
-
   }
 };
 </script>
+
 
 <style scoped>
 .font-montserrat {

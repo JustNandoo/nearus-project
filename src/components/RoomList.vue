@@ -43,10 +43,9 @@
         </div>
       </div>
       <div class="flex flex-col ml-5 w-[22%] max-md:ml-0 max-md:w-full">
-        <div
-            class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
+        <div class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
           <div class="shrink-0 mt-1 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
-          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10">{{ room.price }}</div>
+          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10">{{ room.price }} / {{room.time}}</div>
           <button @click="handleCheckout" class="justify-center items-center px-24 py-5 ml-12 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
             Pilih
           </button>
@@ -56,10 +55,10 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import router from "@/router/index.js";
 
 import bedIcon from '../assets/images/ph_bed-duotone.png';
 import acIcon from '../assets/images/streamline_hotel-air-conditioner.png';
@@ -71,80 +70,61 @@ import wardrobeIcon from '../assets/images/mdi_wardrobe-outline.png';
 import mirrorIcon from '../assets/images/mdi_mirror.png';
 import availableIcon from '../assets/images/lets-icons_check-fill.png';
 import roomImage from '../assets/images/image 3.png';
-import router from "@/router/index.js";
 
-const room = ref({
-  name: 'Kamar Test',
-  image: roomImage,
-  features: ['5 X 8 M', 'non-listrik', 'pria'],
-  facilities: [
-    {
-      items: [
-        { icon: bedIcon, name: 'Kasur' },
-        { icon: acIcon, name: 'AC' },
-        { icon: deskIcon, name: 'Meja' },
-      ],
-    },
-    {
-      items: [
-        { icon: socketIcon, name: 'Colokan' },
-        { icon: bathroomIcon, name: 'Kamar Mandi Dalam' },
-        { icon: toiletIcon, name: 'Kloset Duduk' },
-      ],
-    },
-    {
-      items: [
-        { icon: wardrobeIcon, name: 'Lemari Baju' },
-        { icon: mirrorIcon, name: 'Cermin' },
-      ],
-    },
-  ],
-  price: 'Rp 7.200.000/6bln',
-  availabilityIcon: availableIcon,
-  ownerId: ''
-});
+// const room = ref({
+//   name: 'Kamar Test',
+//   image: roomImage,
+//   features: ['5 X 8 M', 'non-listrik', 'pria'],
+//   facilities: [
+//     {
+//       items: [
+//         { icon: bedIcon, name: 'Kasur' },
+//         { icon: acIcon, name: 'AC' },
+//         { icon: deskIcon, name: 'Meja' },
+//       ],
+//     },
+//     {
+//       items: [
+//         { icon: socketIcon, name: 'Colokan' },
+//         { icon: bathroomIcon, name: 'Kamar Mandi Dalam' },
+//         { icon: toiletIcon, name: 'Kloset Duduk' },
+//       ],
+//     },
+//     {
+//       items: [
+//         { icon: wardrobeIcon, name: 'Lemari Baju' },
+//         { icon: mirrorIcon, name: 'Cermin' },
+//       ],
+//     },
+//   ],
+//   price: 'Rp 7.200.000/6bln',
+//   availabilityIcon: availableIcon,
+//   ownerId: ''
+// });
 
+// Dummy user data
 const user = ref({
-  name: '',
-  phonenumber: '',
-  email: ''
-
+  name: 'John Doe',
+  phonenumber: '1234567890',
+  email: 'johndoe@example.com'
 });
 
-const product = ref({
-  productname: '',
-});
-
-const fetchUserData = async () => {
-  try {
-    const response = await axios.get('https://api.nearus.id/api/product', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-
-    if (response.status === 200) {
-      user.value = {
-        name: response.data.name,
-        phonenumber: response.data.phonenumber,
-        email: response.data.email
-      };
-      localStorage.setItem('userData', JSON.stringify(user.value));
-    } else {
-      console.error('Failed to fetch user data');
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-  }
-};
+const room = ref({});
 
 const fetchProductData = async () => {
   try {
-    const response = await axios.get('https://api.nearus.id/api/product');
+    const response = await axios.get('https://api.nearus.id/api/rooms/19');
     if (response.status === 200 && response.data.data.length > 0) {
       const selectedProduct = response.data.data[0];
-      product.value.productname = selectedProduct.productname;
-      room.value.ownerId = selectedProduct.ownerId;
+      console.log(selectedProduct);
+      if (selectedProduct){
+        room.value = {
+          name: selectedProduct.name,
+          image: selectedProduct.image,
+          price: selectedProduct.price,
+          time: selectedProduct.time,
+        }
+      }
     } else {
       console.error('No product data available');
     }
@@ -152,10 +132,10 @@ const fetchProductData = async () => {
     console.error('Error fetching product data:', error);
   }
 };
+
 const handleCheckout = async () => {
   try {
-    await fetchUserData();
-
+    // Prepare the request body
     const requestBody = {
       name: user.value.name,
       phonenumber: user.value.phonenumber,
@@ -165,11 +145,14 @@ const handleCheckout = async () => {
       ownerId: room.value.ownerId
     };
 
+    console.log('Request body:', requestBody);
+
+    // Make the checkout request
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
     });
+
+    console.log('Response:', response.data);
 
     if (response.data.success) {
       console.log('Checkout successful:', response.data.message);
@@ -182,25 +165,16 @@ const handleCheckout = async () => {
       }));
 
       router.push('/PaymentReview');
-
     } else {
       console.error('Checkout failed:', response.data.message);
     }
   } catch (error) {
-    console.error('Error during checkout:', error);
+    console.error('Error during checkout:', error.response?.data || error.message);
+    console.log('Error details:', error); // Log the entire error object for further inspection
   }
 };
 
-
-
 onMounted(async () => {
-  const storedUser = localStorage.getItem('userData');
-  if (storedUser) {
-    user.value = JSON.parse(storedUser);
-  } else {
-    await fetchUserData();
-  }
-
   await fetchProductData();
 });
 </script>

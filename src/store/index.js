@@ -45,6 +45,9 @@ export default createStore({
   },
   actions: {
     async login({ commit }, { email, password }) {
+      if (!email || !password) {
+        throw new Error('Email and password are required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
@@ -56,6 +59,10 @@ export default createStore({
       }
     },
     async updateUserProfile({ commit, state }, updatedProfileData) {
+      const { name, phoneNumber, email } = updatedProfileData;
+      if (!name || !phoneNumber || !email) {
+        throw new Error('Name, phone number, and email are required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/profile/update`, updatedProfileData, {
           headers: {
@@ -70,6 +77,9 @@ export default createStore({
       }
     },
     async updateUserProfilePic({ commit, state }, formData) {
+      if (!formData || !formData.has('profilePic')) {
+        throw new Error('Profile picture is required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/profile/update`, formData, {
           headers: {
@@ -102,4 +112,3 @@ export default createStore({
     },
   },
 });
-
