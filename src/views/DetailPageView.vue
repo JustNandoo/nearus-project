@@ -2,7 +2,7 @@
   <div>
     <NavFixed />
     <ProfileCard v-if="showProfileCard" class="profile-card" />
-    <Gallery />
+    <Gallery/>
     <div class="ml-36 mr-36 mt-5 flex justify-between">
       <div class="flex flex-col">
         <div class="flex items-center gap-3">
@@ -97,7 +97,7 @@ import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
 
 const route = useRoute();
-const productId = route.params.kostid;
+const productId = route.params.id;
 const showProfileCard = ref(false);
 const product = ref({});
 const facilities = ref([]);

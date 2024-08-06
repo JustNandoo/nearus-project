@@ -166,6 +166,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEllipsisV, faPlus, faTimes, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from "@/components/sidebar.vue";
 import KoskuCard from "@/components/KoskuCard.vue";
+import Gallery from "@/components/Gallery.vue";
 
 
 const products = ref([]);
