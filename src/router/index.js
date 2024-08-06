@@ -150,6 +150,11 @@ const router = createRouter({
       component: () => import('../views/NearusFinance/NearusFinanceAfter.vue')
     },
     {
+      path: '/dashboard-kosku-detail',
+      name: 'DashboardDetailKosku',
+      component: () => import('../views/DetailKoskuDashboard.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }
