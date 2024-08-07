@@ -62,10 +62,10 @@ export default createStore({
             'Authorization': `Bearer ${state.token}`,
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUser', updatedUser);
       } catch (error) {
-        console.error('Error updating user profile:', error);
+        console.error('Error updating user profile:', error.response || error);
         throw error;
       }
     },
@@ -77,10 +77,10 @@ export default createStore({
             'Content-Type': 'multipart/form-data'
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUserProfilePic', updatedUser.photoprofile);
       } catch (error) {
-        console.error('Error updating profile picture:', error);
+        console.error('Error updating profile picture:', error.response || error);
         throw error;
       }
     },
@@ -102,4 +102,3 @@ export default createStore({
     },
   },
 });
-

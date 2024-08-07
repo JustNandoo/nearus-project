@@ -73,7 +73,7 @@ export default {
       }
 
       try {
-        const response = await fetch('https://nearus.id/api/change-password', {
+        const response = await fetch('https://api.nearus.id/api/reset-password', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${store.state.token}`,
