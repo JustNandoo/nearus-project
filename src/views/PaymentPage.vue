@@ -21,7 +21,8 @@
                             Ref Number</div>
                         <div
                             class="text-center text-neutral-900 text-[21.65px] font-medium font-montserrat leading-[29.98px]">
-                            000085752257</div>
+                          {{ paymentDetails.refnumber }}
+                        </div>
                     </div>
                     <div
                         class="w-[494.62px] h-[30px] absolute top-[120.32px] flex justify-start items-start gap-[26.65px] inline-flex">
@@ -30,16 +31,18 @@
                             Payment Time</div>
                         <div
                             class="text-center text-neutral-900 text-[21.65px] font-medium font-montserrat leading-[29.98px]">
-                            25-02-2023, 13:22:16</div>
+                          {{ paymentDetails.payment_time }}
+                        </div>
                     </div>
                     <div
                         class="w-[494.62px] h-[30px] absolute top-[173.63px] flex justify-start items-start gap-[26.65px] inline-flex">
                         <div
                             class="grow shrink basis-0 text-neutral-500 text-[21.65px] font-normal font-montserrat leading-[29.98px]">
-                            Payment Method</div>
+                          Payment Method
+                        </div>
                         <div
                             class="text-center text-neutral-900 text-[21.65px] font-medium font-montserrat leading-[29.98px]">
-                            Bank Transfer</div>
+                          {{ paymentDetails.payment_method }}</div>
                     </div>
                     <div
                         class="w-[494.62px] h-[30px] absolute top-[226.95px] flex justify-start items-start gap-[26.65px] inline-flex">
@@ -97,12 +100,22 @@ import Footer from "@/components/Footer.vue";
 import Nav from "@/components/Nav.vue";
 
 export default {
-    components: {
-        Nav,
-        Footer
-    },
+  components: {
+    Nav,
+    Footer
+  },
+  data() {
+    return {
+      paymentDetails: {}
+    };
+  },
+  mounted() {
+    const storedPaymentDetails = localStorage.getItem('paymentDetails');
+    if (storedPaymentDetails) {
+      this.paymentDetails = JSON.parse(storedPaymentDetails);
+    }
+  }
 };
-
 </script>
 
 <style scoped>
