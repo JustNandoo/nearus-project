@@ -24,7 +24,6 @@
           <section class="flex flex-col w-full">
             <div class="flex items-center mb-6">
               <div class="relative">
-                <!-- Display preview image if available, else display the user's profile picture -->
                 <img id="profile-pic" loading="lazy" :src="profilePicPreview || user.photoprofile" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
                 <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
@@ -87,13 +86,9 @@ export default {
       gender: '',
       photoprofile: '',
     });
-    
-    // Define reactive variable to hold the image preview URL
-    const profilePicPreview = ref(null);
     const selectedProfilePic = ref(null);
 
     onMounted(() => {
-      // Load user data from Vuex store when component is mounted
       if (store.getters.getUser) {
         user.value = { ...store.getters.getUser };
       }
@@ -101,15 +96,15 @@ export default {
 
     const updateUserData = async () => {
       try {
-        // Update profile data
+        // Update user profile data
         await store.dispatch('updateUserProfile', {
           name: user.value.name,
           email: user.value.email,
-          phone: user.value.phone,
-          gender: user.value.gender,
+          phoneNumber: user.value.phone,
+          jenis_kelamin: user.value.gender, // Ensure correct parameter name
         });
 
-        // If a new profile picture is selected, upload it
+        // Update profile picture if selected
         if (selectedProfilePic.value) {
           const formData = new FormData();
           formData.append('photoprofile', selectedProfilePic.value);
@@ -127,14 +122,18 @@ export default {
       const file = event.target.files?.[0];
       if (file) {
         selectedProfilePic.value = file;
-        // Create a preview URL for the uploaded file
-        profilePicPreview.value = URL.createObjectURL(file);
+
+        // Preview the selected image
+        const reader = new FileReader();
+        reader.onload = () => {
+          user.value.photoprofile = reader.result;
+        };
+        reader.readAsDataURL(file);
       }
     };
 
     return {
       user,
-      profilePicPreview,
       updateUserData,
       handleFileChange,
     };

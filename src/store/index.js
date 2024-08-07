@@ -65,7 +65,7 @@ export default createStore({
         const updatedUser = response.data.user;
         commit('updateUser', updatedUser);
       } catch (error) {
-        console.error('Error updating user profile:', error.response || error);
+        console.error('Error updating user profile:', error);
         throw error;
       }
     },
@@ -80,7 +80,7 @@ export default createStore({
         const updatedUser = response.data.user;
         commit('updateUserProfilePic', updatedUser.photoprofile);
       } catch (error) {
-        console.error('Error updating profile picture:', error.response || error);
+        console.error('Error updating profile picture:', error);
         throw error;
       }
     },
