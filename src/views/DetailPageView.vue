@@ -2,7 +2,8 @@
   <div>
     <NavFixed />
     <ProfileCard v-if="showProfileCard" class="profile-card" />
-    <Gallery/>
+    <Gallery :images="product.image" />
+
     <div class="ml-36 mr-36 mt-5 flex justify-between">
       <div class="flex flex-col">
         <div class="flex items-center gap-3">
@@ -21,30 +22,30 @@
       <div class="flex flex-col gap-3 w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-[24px]">Mulai Dari</h1>
-          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / 6 bulan</h1>
+          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} /bulan</h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
-          <button class="rounded-lg border-black border-2 w-20 h-12">
+          <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
             <font-awesome-icon class="text-light-black w-6 h-6" :icon="faMessage" />
           </button>
-          <button class="bg-blue-primary w-full h-12 rounded-lg shadow-lg">
-            <a class="no-underline text-white font-medium" href="">Lihat Kamar</a>
+          <button class="bg-blue-primary w-full h-12 rounded-lg shadow-lg flex items-center justify-center">
+            <a class="no-underline text-white font-medium" href="#">Lihat Kamar</a>
           </button>
         </div>
       </div>
     </div>
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
     <div class="mt-10 mr-32 ml-32 mb-20">
-      <h1 class="font-bold text-[28px]">Fasilitas Bersama</h1>
-      <div v-if="facilities.length">
-        <ul>
-          <li v-for="facility in facilities" :key="facility">{{ facility }}</li>
-        </ul>
+      <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
+      <div v-if="facilities.length" class="flex flex-wrap gap-4">
+        <p v-for="facility in facilities" :key="facility" class="text-black text-lg font-montserrat mr-4 mb-2">
+          {{ facility }}
+        </p>
       </div>
       <p v-else class="empty-message">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
-        <h1 class="font-bold text-[28px]">Lokasi</h1>
+        <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
         <div class="flex gap-8 justify-between">
           <div class="">
             <LeafletMap />
@@ -68,12 +69,7 @@
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <div v-if="rooms.length">
-            <ul>
-              <li v-for="room in rooms" :key="room.id">{{ room.name }} - {{ room.price }}</li>
-            </ul>
-          </div>
-          <RoomList />
+          <RoomList :ownerId="ownerId" />
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -91,7 +87,6 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from 'vue-router';
 import ProfileCard from "@/components/ProfileCard.vue";
 import Gallery from "@/components/Gallery.vue";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import axios from 'axios';
 import LeafletMap from "@/components/LeafletMap.vue";
 import Footer from "@/components/Footer.vue";
@@ -102,15 +97,13 @@ const showProfileCard = ref(false);
 const product = ref({});
 const facilities = ref([]);
 const rooms = ref([]);
-
-const toggleProfileCard = () => {
-  showProfileCard.value = !showProfileCard.value;
-};
+const ownerId = ref(null);
 
 import icon1 from '@/assets/images/school.png';
 import icon2 from '@/assets/images/tempatmakan.png';
 import icon3 from '@/assets/images/tokokelontong.png';
 import icon4 from '@/assets/images/laundry.png';
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const items = ref([
   { id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM' },
@@ -119,45 +112,45 @@ const items = ref([
   { id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM' },
 ]);
 
-console.log('Icon 1:', icon1);
-console.log('Icon 2:', icon2);
-console.log('Icon 3:', icon3);
-console.log('Icon 4:', icon4);
-console.log('Items:', items.value);
+const toggleProfileCard = () => {
+  showProfileCard.value = !showProfileCard.value;
+};
 
-(function() {
-  var d = document, s = d.createElement('script');
-  s.src = 'https://nearus.disqus.com/embed.js';
-  s.setAttribute('data-timestamp', +new Date());
-  (d.head || d.body).appendChild(s);
-})();
-
-onMounted(async () => {
+const fetchProductData = async () => {
   try {
     const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
-    console.log('API Response:', response);
-    const selectedProduct = response.data.data;
+    const selectedProduct = response.data;
 
     if (selectedProduct) {
-      product.value = {
-        productname: selectedProduct.productname,
-        location: selectedProduct.location,
-        category: selectedProduct.category,
-        price: selectedProduct.price,
-        facilities: selectedProduct.fasilitas || [],
-        rooms: selectedProduct.rooms || []
-      };
+      console.log(ownerId.value);
+      product.value = selectedProduct;
       facilities.value = selectedProduct.fasilitas || [];
-      rooms.value = selectedProduct.rooms || [];
+      ownerId.value = selectedProduct.ownerId
+      await fetchRooms(selectedProduct.ownerId);
     } else {
       console.error('Error fetching product data: no data response');
     }
   } catch (error) {
     console.error('Error fetching product data:', error);
   }
-});
+};
 
-onMounted(() => {
+const fetchRooms = async () => {
+  try {
+    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId.value}`);
+    if (response.status === 200 && response.data.data.length > 0) {
+      rooms.value = response.data.data;
+    } else {
+      console.error('No rooms data available for this owner');
+    }
+  } catch (error) {
+    console.error('Error fetching rooms data:', error);
+    console.log(ownerId.value);
+  }
+};
+
+onMounted(async () => {
+  await fetchProductData();
   window.addEventListener('toggle-profile-card', toggleProfileCard);
 });
 
@@ -165,3 +158,23 @@ onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 </script>
+
+<style>
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+.empty-message {
+  color: #666;
+  font-style: italic;
+}
+</style>
+
+<style>
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+.empty-message {
+  color: #666;
+  font-style: italic;
+}
+</style>
