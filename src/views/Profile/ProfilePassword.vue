@@ -25,6 +25,10 @@
             <h2 class="font-bold text-2xl mb-4">Ubah Kata Sandi</h2>
             <form class="space-y-4" @submit.prevent="changePassword">
               <div>
+                <label class="block text-gray-700">Email</label>
+                <input type="email" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="email">
+              </div>
+              <div>
                 <label class="block text-gray-700">Kata Sandi Saat Ini</label>
                 <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="currentPassword">
               </div>
@@ -62,6 +66,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    const email = ref('');
     const currentPassword = ref('');
     const newPassword = ref('');
     const confirmPassword = ref('');
@@ -73,20 +78,21 @@ export default {
       }
 
       try {
-        const response = await fetch('https://api.nearus.id/api/reset-password', {
+        const response = await fetch(`https://api.nearus.id/api/profile/reset-password`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${store.state.token}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            currentPassword: currentPassword.value,
-            newPassword: newPassword.value,
+            email: email.value,
+            current_password: currentPassword.value,
+            new_password: newPassword.value,
           }),
         });
 
         if (!response.ok) {
-          throw new Error('Failed to change password');
+          throw new Error('Gagal mengubah kata sandi');
         }
 
         alert('Kata sandi berhasil diubah');
@@ -97,6 +103,7 @@ export default {
     };
 
     return {
+      email,
       currentPassword,
       newPassword,
       confirmPassword,
@@ -132,6 +139,4 @@ export default {
 .button:hover {
   background-color: #0072b1;
 }
-
-
 </style>
