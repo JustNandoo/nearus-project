@@ -50,7 +50,7 @@ const props = defineProps({
 }
 img {
   object-fit: cover;
-  border-radius: 0.75rem; /* Adjust as needed */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
