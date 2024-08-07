@@ -24,6 +24,7 @@
           <section class="flex flex-col w-full">
             <div class="flex items-center mb-6">
               <div class="relative">
+                <!-- Display preview image if available, else display the user's profile picture -->
                 <img id="profile-pic" loading="lazy" :src="profilePicPreview || user.photoprofile" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
                 <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
@@ -96,15 +97,19 @@ export default {
 
     const updateUserData = async () => {
       try {
-        // Update user profile data
         await store.dispatch('updateUserProfile', {
           name: user.value.name,
           email: user.value.email,
           phonenumber: user.value.phone,
-          jenis_kelamin: user.value.gender, // Ensure correct parameter name
         });
 
-        // Update profile picture if selected
+        // Periksa gender sebelum memanggil aksi
+        if (user.value.gender) {
+          await store.dispatch('updateUserGender', user.value.gender);
+        } else {
+          console.warn('Gender is not defined');
+        }
+
         if (selectedProfilePic.value) {
           const formData = new FormData();
           formData.append('photoprofile', selectedProfilePic.value);
@@ -123,7 +128,6 @@ export default {
       if (file) {
         selectedProfilePic.value = file;
 
-        // Preview the selected image
         const reader = new FileReader();
         reader.onload = () => {
           user.value.photoprofile = reader.result;
@@ -140,6 +144,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 #profile-pic {
