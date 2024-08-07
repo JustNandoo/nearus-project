@@ -96,7 +96,7 @@ onMounted(() => {
 });
 
 const fetchTransactions = () => {
-  axios.get('/orders/user')
+  axios.get('')
     .then(response => {
       if (response.data.success) {
         transactions.value = response.data.data;

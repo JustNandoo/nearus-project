@@ -54,19 +54,19 @@
         <div class="absolute left-0 top-[446px] text-black text-xl font-semibold font-montserrat">
           {{ roomData.price }}
         </div>
-        <img class="absolute left-[321px] top-[183px] w-48 h-[101px] rounded-lg" src="https://via.placeholder.com/192x101" alt="Placeholder image">
+        <img class="absolute left-[321px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
       </div>
       <div class="w-[530px] h-[450px] relative left-[80px]" style="top: 90px;">
-        <div class="w-[218px] h-7 left-0 top-0 absolute text-black text-2xl font-semibold font-['Montserrat'] leading-7">
+        <div class="w-[218px] h-7 left-0 top-0 absolute text-black text-2xl font-semibold font-montserrat leading-7">
           Data Penghuni
         </div>
-        <div class="w-[185px] h-[23px] left-0 top-[54px] absolute text-black text-[13px] font-normal font-['Montserrat'] leading-7" >
+        <div class="w-[185px] h-[23px] left-0 top-[54px] absolute text-black text-[13px] font-normal font-montserrat leading-7">
           {{ user.name }}
         </div>
-        <div class="w-[185px] h-[23px] left-0 top-[81px] absolute text-black text-[13px] font-normal font-['Montserrat'] leading-7">
+        <div class="w-[185px] h-[23px] left-0 top-[81px] absolute text-black text-[13px] font-normal font-montserrat leading-7">
           {{ user.phonenumber }}
         </div>
-        <div class="w-[185px] h-[23px] left-0 top-[108px] absolute text-black text-[13px] font-normal font-['Montserrat'] underline leading-7">
+        <div class="w-[185px] h-[23px] left-0 top-[108px] absolute text-black text-[13px] font-normal font-montserrat underline leading-7">
           {{ user.email }}
         </div>
         <div class="border-b border-slate-400/opacity-90 absolute left-0 top-[150px] w-full"></div>
@@ -85,6 +85,7 @@
 import Footer from "@/components/Footer.vue";
 import Nav from "@/components/Nav.vue";
 import axios from "axios";
+import { mapGetters } from 'vuex';
 import router from "@/router/index.js";
 
 export default {
@@ -95,21 +96,20 @@ export default {
   data() {
     return {
       isEditing: false,
-      selectedDate: "2024-04-24",
-      // Use dummy data for the user
-      user: {
-        name: 'John Doe',            // Dummy name
-        phonenumber: '081234567890', // Dummy phone number
-        email: 'johndoe@example.com' // Dummy email
-      },
-      roomData: {
+      selectedDate: new Date().toISOString().split('T')[0],
+      roomData: JSON.parse(localStorage.getItem('roomData')) || {
         roomName: 'Kamar Test',
         productName: 'Produk Test',
-        price: 'Rp 7.200.000/6bln'
+        price: 'Rp 7.200.000/6bln',
+        image: 'https://via.placeholder.com/192x101'
       }
     };
   },
   computed: {
+    ...mapGetters(['getUser']),
+    user() {
+      return this.getUser;
+    },
     formattedDate() {
       return new Date(this.selectedDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
     }
@@ -118,26 +118,25 @@ export default {
     toggleEditing() {
       this.isEditing = !this.isEditing;
     },
-
     async processPayment() {
       try {
         const formattedDate = new Date(this.selectedDate).toISOString().split('T')[0];
         console.log('Payment request data:', {
           name: this.user.name,
           phonenumber: this.user.phonenumber,
-          ownerId: 1,
-          detail: this.roomData.roomName + ' - ' + this.roomData.productName,
+          ownerId: 1, // This should be updated to the actual ownerId if needed
+          detail: `${this.roomData.roomName} - ${this.roomData.productName}`,
           duration: formattedDate,
-          price: 100000
+          price: this.roomData.price
         });
 
         const response = await axios.post('https://api.nearus.id/api/checkout', {
           name: this.user.name,
           phonenumber: this.user.phonenumber,
           ownerId: 1,
-          detail: this.roomData.roomName + ' - ' + this.roomData.productName,
+          detail: `${this.roomData.roomName} - ${this.roomData.productName}`,
           duration: formattedDate,
-          price: 100000
+          price: this.roomData.price
         }, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -147,79 +146,41 @@ export default {
         if (response.data.success) {
           const snapToken = response.data.snapToken;
           window.snap.pay(snapToken, {
-            onSuccess: function(result) {
+            onSuccess: (result) => {
               console.log('Payment Result:', {
                 refnumber: response.data.refnumber,
                 payment_time: result.transaction_time,
                 payment_method: result.payment_type.toUpperCase()
               });
+              localStorage.setItem('paymentDetails', JSON.stringify({
+                refnumber: response.data.refnumber,
+                payment_time: result.transaction_time,
+                payment_method: result.payment_type.toUpperCase()
+              }));
               router.push('/PaymentPage');
             },
-            onPending: function(result) {
+            onPending: (result) => {
               alert("Waiting for your payment!");
               console.log(result);
             },
-            onError: function(result) {
+            onError: (result) => {
               alert("Payment failed!");
               console.log(result);
             },
-            onClose: function() {
-              alert('You closed the popup without finishing the payment');
+            onClose: () => {
+              alert('You closed the popup');
             }
           });
-        } else {
-          console.error('Failed to create order');
         }
       } catch (error) {
-        console.error('Error processing payment:', error);
-        if (error.response) {
-          console.error('Error response data:', error.response.data);
-          console.error('Error response status:', error.response.status);
-          console.error('Error response headers:', error.response.headers);
-        }
+        console.error('Payment processing error:', error);
+        alert('An error occurred during payment processing.');
       }
-    },
-    loadSnapScript() {
-      const script = document.createElement('script');
-      script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
-      script.setAttribute('data-client-key', 'Mid-client-RgPSumJlMsThnpLo');
-      script.async = true;
-      document.body.appendChild(script);
-
-      script.onload = () => {
-        console.log('Snap.js script loaded successfully');
-      };
-
-      script.onerror = () => {
-        console.error('Failed to load the Snap.js script');
-      };
     }
-  },
-  mounted() {
-    const storedRoomData = localStorage.getItem('roomData');
-    if (storedRoomData) {
-      this.roomData = JSON.parse(storedRoomData);
-    }
-    this.loadSnapScript();
   }
 };
 </script>
 
-
 <style scoped>
-.font-montserrat {
-  font-family: 'Montserrat', sans-serif;
-}
-
-.font-poppins {
-  font-family: 'Poppins', sans-serif;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-.outline {
-  outline: 2px solid #00f; /* Ubah warna outline sesuai kebutuhan */
-}
+/* Add any custom styles here */
 </style>

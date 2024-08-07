@@ -96,32 +96,33 @@ export default {
     });
 
     const updateUserData = async () => {
-      try {
-        await store.dispatch('updateUserProfile', {
-          name: user.value.name,
-          email: user.value.email,
-          phonenumber: user.value.phone,
-        });
-
-        // Periksa gender sebelum memanggil aksi
-        if (user.value.gender) {
-          await store.dispatch('updateUserGender', user.value.gender);
-        } else {
-          console.warn('Gender is not defined');
-        }
-
-        if (selectedProfilePic.value) {
-          const formData = new FormData();
-          formData.append('photoprofile', selectedProfilePic.value);
-          await store.dispatch('updateUserProfilePic', formData);
-        }
-
-        alert('Profile updated successfully');
-      } catch (error) {
-        console.error('Error updating user data:', error.response || error);
-        alert('Failed to update profile');
-      }
+  try {
+    const updatedProfileData = {
+      name: user.value.name || null,
+      email: user.value.email || null,
+      phonenumber: user.value.phone || null,
+      jenis_kelamin: user.value.gender || null,
     };
+
+    // Only update the profile if any of the data is provided
+    if (Object.values(updatedProfileData).some(value => value !== null)) {
+      await store.dispatch('updateUserProfile', updatedProfileData);
+    }
+
+    // Update profile picture if a new one has been selected
+    if (selectedProfilePic.value) {
+      const formData = new FormData();
+      formData.append('photoprofile', selectedProfilePic.value);
+      await store.dispatch('updateUserProfilePic', formData);
+    }
+
+    alert('Profile updated successfully');
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    alert('Failed to update profile');
+  }
+};
+
 
     const handleFileChange = (event) => {
       const file = event.target.files?.[0];
