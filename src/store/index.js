@@ -41,10 +41,19 @@ export default createStore({
         state.user.photoprofile = profilePicUrl;
         localStorage.setItem('local', JSON.stringify(state.user));
       }
-    }
+    },
+    updateUserGender(state, gender) {
+      if (state.user) {
+        state.user.gender = gender;
+        localStorage.setItem('local', JSON.stringify(state.user));
+      }
+    },
   },
   actions: {
     async login({ commit }, { email, password }) {
+      if (!email || !password) {
+        throw new Error('Email and password are required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
@@ -56,13 +65,17 @@ export default createStore({
       }
     },
     async updateUserProfile({ commit, state }, updatedProfileData) {
+      const { name, phoneNumber, email } = updatedProfileData;
+      if (!name || !phoneNumber || !email) {
+        throw new Error('Name, phone number, and email are required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/profile/update`, updatedProfileData, {
           headers: {
             'Authorization': `Bearer ${state.token}`,
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUser', updatedUser);
       } catch (error) {
         console.error('Error updating user profile:', error);
@@ -70,6 +83,9 @@ export default createStore({
       }
     },
     async updateUserProfilePic({ commit, state }, formData) {
+      if (!formData || !formData.has('profilePic')) {
+        throw new Error('Profile picture is required.');
+      }
       try {
         const response = await axios.post(`${API_URL}/profile/update`, formData, {
           headers: {
@@ -77,10 +93,30 @@ export default createStore({
             'Content-Type': 'multipart/form-data'
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUserProfilePic', updatedUser.photoprofile);
       } catch (error) {
         console.error('Error updating profile picture:', error);
+        throw error;
+      }
+    },
+    async updateUserGender({ commit, state }, gender) {
+      try {
+        if (!gender) throw new Error('Gender is required');
+        
+        const response = await axios.post(`${API_URL}/profile/add-personal-data`, {
+          jenis_kelamin: gender
+        }, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+          },
+        });
+  
+        // Perbarui data pengguna di store
+        const updatedUser = response.data.user;
+        commit('updateUser', updatedUser);
+      } catch (error) {
+        console.error('Error updating user gender:', error);
         throw error;
       }
     },
@@ -102,4 +138,3 @@ export default createStore({
     },
   },
 });
-

@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white rounded-2xl border border-solid border-slate-400 border-opacity-60 mb-8">
-    <div class="flex gap-5 max-md:flex-col max-md:gap-0">
+  <div v-if="rooms.length" class="bg-white rounded-2xl border border-solid border-slate-400 border-opacity-60 mb-8">
+    <div v-for="room in rooms" :key="room.roomid" class="flex gap-5 max-md:flex-col max-md:gap-0 mb-6">
       <div class="flex flex-col w-[78%] max-md:w-full">
         <div class="grow max-md:mt-6">
           <div class="flex gap-5 max-md:flex-col max-md:gap-0">
@@ -10,11 +10,12 @@
             <div class="flex flex-col ml-5 w-[57%] max-md:ml-0 max-md:w-full">
               <div class="flex flex-col self-stretch px-5 my-auto max-md:mt-10">
                 <div class="text-2xl font-semibold leading-7 text-black">{{ room.name }}</div>
+                <div class="text-sm text-gray-600">{{ room.category }}</div>
                 <div class="flex gap-5 justify-between items-start px-px mt-6 w-full text-black max-md:flex-wrap">
                   <div class="flex gap-2.5 text-xs font-light leading-7 text-center">
-                    <div v-for="feature in room.features" :key="feature"
+                    <div v-for="facility in room.fasilitas.split(',')" :key="facility"
                          class="px-5 py-2 bg-white rounded-md border border-solid border-slate-400 border-opacity-60">
-                      {{ feature }}
+                      {{ facility }}
                     </div>
                   </div>
                   <div class="flex flex-col mt-3.5 text-sm font-medium leading-7">
@@ -24,18 +25,7 @@
                 </div>
                 <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
                 <div class="mt-4">
-                  <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-                    <div v-for="(facility, index) in room.facilities" :key="index"
-                         class="flex flex-col w-[30%] max-md:w-full justify-start">
-                      <div class="flex flex-col text-sm leading-7 text-black whitespace-nowrap">
-                        <div v-for="(item, idx) in facility.items" :key="idx"
-                             class="flex gap-5 mt-6 first:mt-0 items-center">
-                          <img :src="item.icon" alt="Facility Icon" class="shrink-0 w-7 aspect-square" />
-                          <div class="my-auto">{{ item.name }}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <div class="text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
                 </div>
               </div>
             </div>
@@ -43,146 +33,83 @@
         </div>
       </div>
       <div class="flex flex-col ml-5 w-[22%] max-md:ml-0 max-md:w-full">
-        <div
-            class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
+        <div class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
           <div class="shrink-0 mt-1 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
-          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10">{{ room.price }}</div>
-          <button @click="handleCheckout" class="justify-center items-center px-24 py-5 ml-12 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
+          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10">{{ room.price }} / {{ room.time }}</div>
+          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5 ml-12 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
             Pilih
           </button>
         </div>
       </div>
     </div>
   </div>
+  <div v-else class="text-center text-gray-600">No rooms available.</div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-import bedIcon from '../assets/images/ph_bed-duotone.png';
-import acIcon from '../assets/images/streamline_hotel-air-conditioner.png';
-import deskIcon from '../assets/images/material-symbols-light_table-restaurant-outline.png';
-import socketIcon from '../assets/images/guidance_socket.png';
-import bathroomIcon from '../assets/images/ph_shower-thin.png';
-import toiletIcon from '../assets/images/ph_toilet-thin.png';
-import wardrobeIcon from '../assets/images/mdi_wardrobe-outline.png';
-import mirrorIcon from '../assets/images/mdi_mirror.png';
-import availableIcon from '../assets/images/lets-icons_check-fill.png';
-import roomImage from '../assets/images/image 3.png';
-import router from "@/router/index.js";
-
-const room = ref({
-  name: 'Kamar Test',
-  image: roomImage,
-  features: ['5 X 8 M', 'non-listrik', 'pria'],
-  facilities: [
-    {
-      items: [
-        { icon: bedIcon, name: 'Kasur' },
-        { icon: acIcon, name: 'AC' },
-        { icon: deskIcon, name: 'Meja' },
-      ],
-    },
-    {
-      items: [
-        { icon: socketIcon, name: 'Colokan' },
-        { icon: bathroomIcon, name: 'Kamar Mandi Dalam' },
-        { icon: toiletIcon, name: 'Kloset Duduk' },
-      ],
-    },
-    {
-      items: [
-        { icon: wardrobeIcon, name: 'Lemari Baju' },
-        { icon: mirrorIcon, name: 'Cermin' },
-      ],
-    },
-  ],
-  price: 'Rp 7.200.000/6bln',
-  availabilityIcon: availableIcon,
-  ownerId: ''
+const props = defineProps({
+  ownerId: {
+    type: [String, Number],
+    required: true,
+  },
 });
 
-const user = ref({
-  name: '',
-  phonenumber: '',
-  email: ''
+const rooms = ref([]);
+const router = useRouter();
 
-});
-
-const product = ref({
-  productname: '',
-});
-
-const fetchUserData = async () => {
+const fetchRooms = async (ownerId) => {
   try {
-    const response = await axios.get('https://api.nearus.id/api/product', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-
-    if (response.status === 200) {
-      user.value = {
-        name: response.data.name,
-        phonenumber: response.data.phonenumber,
-        email: response.data.email
-      };
-      localStorage.setItem('userData', JSON.stringify(user.value));
-    } else {
-      console.error('Failed to fetch user data');
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error);
-  }
-};
-
-const fetchProductData = async () => {
-  try {
-    const response = await axios.get('https://api.nearus.id/api/product');
+    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId}`);
     if (response.status === 200 && response.data.data.length > 0) {
-      const selectedProduct = response.data.data[0];
-      product.value.productname = selectedProduct.productname;
-      room.value.ownerId = selectedProduct.ownerId;
+      rooms.value = response.data.data;
     } else {
-      console.error('No product data available');
+      console.error('No room data available');
     }
   } catch (error) {
-    console.error('Error fetching product data:', error);
+    console.error('Error fetching room data:', error);
   }
 };
-const handleCheckout = async () => {
-  try {
-    await fetchUserData();
 
-    const requestBody = {
-      name: user.value.name,
-      phonenumber: user.value.phonenumber,
-      detail: `${room.value.name} - ${product.value.productname}`,
-      price: 7200000,
-      duration: new Date().toISOString().split('T')[0],
-      ownerId: room.value.ownerId
+const handleCheckout = async (room) => {
+  try {
+    // Contoh data pengguna, sesuaikan dengan implementasi sebenarnya
+    const userData = {
+      name: 'abcd',
+      phonenumber: 12345,
     };
 
+    // Siapkan data permintaan untuk checkout
+    const requestBody = {
+      name: userData.name,
+      phonenumber: userData.phonenumber,
+      detail: `${room.name}`,
+      price: room.price,
+      duration: new Date().toISOString().split('T')[0],
+      ownerId: room.ownerId,
+    };
+
+    // Mengirimkan permintaan ke API checkout
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
     });
 
+    // Memproses respons dari API
     if (response.data.success) {
       console.log('Checkout successful:', response.data.message);
-
+      // Menyimpan data kamar ke localStorage
       localStorage.setItem('roomData', JSON.stringify({
-        roomName: room.value.name,
-        productName: product.value.productname,
-        price: room.value.price,
-        ownerId: room.value.ownerId
+        roomName: room.name,
+        price: room.price,
+        ownerId: room.ownerId
       }));
-
+      // Mengarahkan ke halaman PaymentReview
       router.push('/PaymentReview');
-
     } else {
       console.error('Checkout failed:', response.data.message);
     }
@@ -191,20 +118,18 @@ const handleCheckout = async () => {
   }
 };
 
-
-
-onMounted(async () => {
-  const storedUser = localStorage.getItem('userData');
-  if (storedUser) {
-    user.value = JSON.parse(storedUser);
-  } else {
-    await fetchUserData();
+onMounted(() => {
+  if (props.ownerId) {
+    fetchRooms(props.ownerId);
   }
+});
 
-  await fetchProductData();
+watch(() => props.ownerId, (newOwnerId) => {
+  if (newOwnerId) {
+    fetchRooms(newOwnerId);
+  }
 });
 </script>
-
 
 <style scoped>
 /* Add your styles here */

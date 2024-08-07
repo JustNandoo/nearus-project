@@ -56,6 +56,7 @@ const fetchProducts = async () => {
   }
 };
 
+
 onMounted(() => {
   window.addEventListener('toggle-profile-card', toggleProfileCard);
   fetchProducts();

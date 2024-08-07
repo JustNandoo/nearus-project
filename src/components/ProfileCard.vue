@@ -24,8 +24,8 @@
           <h1 class="font-bold text-[22px]">Pusat Bantuan</h1>
         </div>
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
-          <font-awesome-icon class="text-black w-8 h-8" :icon="faHeadset" />
-          <p class="text-[22px] font-medium">Customer Service</p>
+          <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />
+          <p class="text-[22px] font-medium">Chat</p>
         </div>
         <router-link to="/PrivacyPolicy">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
@@ -45,7 +45,14 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { faHouseUser, faGear, faHeadset, faCircleQuestion, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouseUser,
+  faGear,
+  faHeadset,
+  faCircleQuestion,
+  faRightFromBracket,
+  faComments
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useStore } from 'vuex';
 import imageProfileDefault from '@/assets/images/profile-pic.png';

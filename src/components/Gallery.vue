@@ -1,17 +1,19 @@
 <template>
   <div class="container ml-36 pt-32">
-    <div class="grid grid-cols-5 w-auto">
+    <div class="grid grid-cols-5 gap-4">
+      <!-- Main Image -->
       <div class="col-span-3 row-span-2">
-        <img :src="images[0].url" alt="Image 1" class="w-full h-[560px] object-cover rounded-lg shadow-lg" v-if="images.length > 0">
+        <img :src="images[0]" alt="Main Image" class="w-full h-[560px] object-cover rounded-lg shadow-lg" v-if="images.length > 0">
       </div>
+      <!-- Secondary Images -->
       <div class="col-span-2 flex flex-col gap-4 px-5">
         <div class="flex gap-4">
-          <img :src="images[1].url" alt="Image 2" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 1">
-          <img :src="images[2].url" alt="Image 3" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 2">
+          <img :src="images[1]" alt="Image 2" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 1">
+          <img :src="images[2]" alt="Image 3" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 2">
         </div>
         <div class="flex gap-4">
-          <img :src="images[3].url" alt="Image 4" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 3">
-          <img :src="images[4].url" alt="Image 5" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 4">
+          <img :src="images[3]" alt="Image 4" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 3">
+          <img :src="images[4]" alt="Image 5" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 4">
         </div>
       </div>
     </div>
@@ -19,40 +21,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import axios from 'axios';
+import { defineProps } from 'vue';
 
-const placeholderImages = [
-  { url: 'https://via.placeholder.com/600x400' },
-  { url: 'https://via.placeholder.com/300x200' },
-  { url: 'https://via.placeholder.com/300x200' },
-  { url: 'https://via.placeholder.com/300x200' },
-  { url: 'https://via.placeholder.com/300x200' },
-];
-
-// Get the route to access the id parameter
-const route = useRoute();
-const productId = route.params.id;
-
-// Define a reactive variable to hold the images
-const images = ref([]);
-
-// Fetch data from the API on component mount
-onMounted(async () => {
-  try {
-    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
-    console.log('API Response:', response);
-    const data = response.data.data;
-    if (data && Array.isArray(data.image) && data.image.length > 0) {
-      images.value = data.image;
-    } else {
-      console.error('Error: No image data received from API. Using placeholder images.');
-      images.value = placeholderImages;
-    }
-  } catch (error) {
-    console.error('Error fetching product data:', error);
-    images.value = placeholderImages;
+const props = defineProps({
+  images: {
+    type: Array,
+    default: () => []
   }
 });
 </script>
