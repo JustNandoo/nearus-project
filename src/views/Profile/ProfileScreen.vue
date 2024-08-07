@@ -100,7 +100,7 @@ export default {
         await store.dispatch('updateUserProfile', {
           name: user.value.name,
           email: user.value.email,
-          phoneNumber: user.value.phone,
+          phonenumber: user.value.phone,
           jenis_kelamin: user.value.gender, // Ensure correct parameter name
         });
 
