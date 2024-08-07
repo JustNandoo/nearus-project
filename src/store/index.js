@@ -41,7 +41,13 @@ export default createStore({
         state.user.photoprofile = profilePicUrl;
         localStorage.setItem('local', JSON.stringify(state.user));
       }
-    }
+    },
+    updateUserGender(state, gender) {
+      if (state.user) {
+        state.user.gender = gender;
+        localStorage.setItem('local', JSON.stringify(state.user));
+      }
+    },
   },
   actions: {
     async login({ commit }, { email, password }) {
@@ -69,7 +75,7 @@ export default createStore({
             'Authorization': `Bearer ${state.token}`,
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUser', updatedUser);
       } catch (error) {
         console.error('Error updating user profile:', error);
@@ -87,10 +93,30 @@ export default createStore({
             'Content-Type': 'multipart/form-data'
           },
         });
-        const updatedUser = response.data;
+        const updatedUser = response.data.user;
         commit('updateUserProfilePic', updatedUser.photoprofile);
       } catch (error) {
         console.error('Error updating profile picture:', error);
+        throw error;
+      }
+    },
+    async updateUserGender({ commit, state }, gender) {
+      try {
+        if (!gender) throw new Error('Gender is required');
+        
+        const response = await axios.post(`${API_URL}/profile/add-personal-data`, {
+          jenis_kelamin: gender
+        }, {
+          headers: {
+            'Authorization': `Bearer ${state.token}`,
+          },
+        });
+  
+        // Perbarui data pengguna di store
+        const updatedUser = response.data.user;
+        commit('updateUser', updatedUser);
+      } catch (error) {
+        console.error('Error updating user gender:', error);
         throw error;
       }
     },

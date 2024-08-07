@@ -13,7 +13,7 @@
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
-              <router-link to="/passworddata" class="sidebar-option">Change password</router-link>
+              <router-link to="/passworddata/:id" class="sidebar-option">Change password</router-link>
               <p class="text-sm text-gray-600">Changes your account Password</p>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md mt-4">
@@ -24,10 +24,11 @@
           <section class="flex flex-col w-full">
             <div class="flex items-center mb-6">
               <div class="relative">
-                <img id="profile-pic" loading="lazy" :src="profilePicSrc" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
+                <!-- Display preview image if available, else display the user's profile picture -->
+                <img id="profile-pic" loading="lazy" :src="profilePicPreview || user.photoprofile" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
                 <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
-                  <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="updateProfilePic">
+                  <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="handleFileChange">
                 </label>
               </div>
               <div class="ml-4">
@@ -71,10 +72,9 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/NavFixed.vue';
-import imageProfileDefault from '@/assets/images/profile-pic.png';
 
 export default {
   components: { NavFixed },
@@ -87,86 +87,64 @@ export default {
       gender: '',
       photoprofile: '',
     });
-
-    const profilePicSrc = computed(() => {
-      return user.value.photoprofile || imageProfileDefault;
-    });
-
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('https://api.nearus.id/api/profile', {
-          headers: {
-            'Authorization': `Bearer ${store.state.token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-
-        const data = await response.json();
-        user.value = {
-          name: data.name,
-          email: data.email,
-          phone: data.phone || '',
-          gender: data.gender || 'other',
-          photoprofile: data.photoprofile,
-        };
-        store.commit('updateUser', user.value);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
+    const selectedProfilePic = ref(null);
 
     onMounted(() => {
-      const storedUser = store.state.user;
-      if (storedUser) {
-        user.value = storedUser;
-      } else {
-        fetchUserData();
+      if (store.getters.getUser) {
+        user.value = { ...store.getters.getUser };
       }
     });
-
-    const updateProfilePic = async (event) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append('photoprofile', file);
-
-        try {
-          await store.dispatch('updateUserProfilePic', formData);
-          user.value.photoprofile = URL.createObjectURL(file);
-          store.commit('updateUser', user.value);
-        } catch (error) {
-          console.error('Error uploading profile picture:', error);
-        }
-      }
-    };
 
     const updateUserData = async () => {
       try {
         await store.dispatch('updateUserProfile', {
           name: user.value.name,
           email: user.value.email,
-          phone: user.value.phone,
-          gender: user.value.gender,
+          phonenumber: user.value.phone,
         });
-        store.commit('updateUser', user.value);
-        console.log('User data updated successfully');
+
+        // Periksa gender sebelum memanggil aksi
+        if (user.value.gender) {
+          await store.dispatch('updateUserGender', user.value.gender);
+        } else {
+          console.warn('Gender is not defined');
+        }
+
+        if (selectedProfilePic.value) {
+          const formData = new FormData();
+          formData.append('photoprofile', selectedProfilePic.value);
+          await store.dispatch('updateUserProfilePic', formData);
+        }
+
+        alert('Profile updated successfully');
       } catch (error) {
-        console.error('Error updating user data:', error);
+        console.error('Error updating user data:', error.response || error);
+        alert('Failed to update profile');
+      }
+    };
+
+    const handleFileChange = (event) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        selectedProfilePic.value = file;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          user.value.photoprofile = reader.result;
+        };
+        reader.readAsDataURL(file);
       }
     };
 
     return {
       user,
-      profilePicSrc,
-      updateProfilePic,
       updateUserData,
+      handleFileChange,
     };
   },
 };
 </script>
+
 
 <style scoped>
 #profile-pic {
