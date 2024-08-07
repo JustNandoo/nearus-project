@@ -59,8 +59,8 @@ onMounted(async () => {
 
 <style scoped>
 .container {
-  margin-left: 9rem; /* Adjust as needed */
-  padding-top: 8rem; /* Adjust as needed */
+  margin-left: 9rem;
+  padding-top: 8rem;
 }
 .grid {
   width: auto;
@@ -76,7 +76,7 @@ onMounted(async () => {
 }
 img {
   object-fit: cover;
-  border-radius: 0.75rem; /* Adjust as needed */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adjust as needed */
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>

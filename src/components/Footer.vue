@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-blue-primary w-full h-[400px] text-white mt-32">
+  <footer class="bg-blue-primary w-full h-[340px] text-white mt-32">
     <div class="py-8 border-b-2 border-white mx-10">
       <img class="w-[200px] h-full" :src="logowhite" alt="Logo">
     </div>
