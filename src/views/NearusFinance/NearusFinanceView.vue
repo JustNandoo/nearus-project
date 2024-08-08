@@ -71,11 +71,12 @@
       </div>
     </div>
     <Footer />
+    <ProfileCard v-if="showProfileCard" />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import Nav from '@/components/Pages/Nav.vue';
 import Footer from '@/components/Pages/Footer.vue';
@@ -88,12 +89,10 @@ import toiletImage from '@/assets/images2/ph_toilet-thin.png';
 import finance1 from '@/assets/images/finance1.png';
 import finance2 from '@/assets/images/finance2.png';
 import finance3 from '@/assets/images/finance3.png';
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 const transactions = ref([]);
-
-onMounted(() => {
-  fetchTransactions();
-});
+const showProfileCard = ref(false);
 
 const fetchTransactions = () => {
   axios.get('https://api.nearus.id/api/orders/user', {
@@ -114,7 +113,21 @@ const fetchTransactions = () => {
 const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
+
+const toggleProfileCard = () => {
+  showProfileCard.value = !showProfileCard.value;
+};
+
+onMounted(() => {
+  fetchTransactions();
+  window.addEventListener('toggle-profile-card', toggleProfileCard);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('toggle-profile-card', toggleProfileCard);
+});
 </script>
+
 
 <style>
 /* Add any custom styles here */
