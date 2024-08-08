@@ -22,25 +22,18 @@
           </div>
           <!-- Main Content -->
           <section class="flex flex-col w-full bg-white p-6 rounded-lg shadow-md">
-            <h2 class="font-bold text-2xl mb-4">Ubah Kata Sandi</h2>
-            <form class="space-y-4" @submit.prevent="changePassword">
-              <div>
-                <label class="block text-gray-700">Kata Sandi Saat Ini</label>
-                <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="currentPassword">
-              </div>
-              <div>
-                <label class="block text-gray-700">Kata Sandi Baru</label>
-                <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="newPassword">
-              </div>
-              <div>
-                <label class="block text-gray-700">Ulangi Kata Sandi Baru</label>
-                <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="confirmPassword">
-              </div>
-              <div class="mt-4">
-                <p class="text-gray-600 text-sm">Minimal menggunakan 1 huruf kapital, 8 karakter, dan 1 simbol atau angka.</p>
-              </div>
-              <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 button">Simpan</button>
-            </form>
+            <!-- Reset Password Section -->
+            <section class="mt-12">
+              <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
+              <form class="space-y-4" @submit.prevent="resetPassword">
+                <div>
+                  <label class="block text-gray-700">Email</label>
+                  <input type="email" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="email">
+                  <p v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</p>
+                </div>
+                <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg mt-6 button">Reset Password</button>
+              </form>
+            </section>
           </section>
         </div>
       </section>
@@ -52,8 +45,10 @@
 <script>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import NavFixed from '@/components/NavFixed.vue';
-import Footer from '@/components/Footer.vue';
+import NavFixed from '@/components/Pages/NavFixed.vue';
+import Footer from '@/components/Pages/Footer.vue';
+import axios from 'axios';
+import { API_URL } from '@/constants';
 
 export default {
   components: {
@@ -65,6 +60,8 @@ export default {
     const currentPassword = ref('');
     const newPassword = ref('');
     const confirmPassword = ref('');
+    const email = ref('');
+    const emailError = ref('');
 
     const changePassword = async () => {
       if (newPassword.value !== confirmPassword.value) {
@@ -73,7 +70,7 @@ export default {
       }
 
       try {
-        const response = await fetch('https://api.nearus.id/api/reset-password', {
+        const response = await fetch(`${API_URL}/profile/reset-password`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${store.state.token}`,
@@ -86,7 +83,7 @@ export default {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to change password');
+          throw new Error('Gagal mengubah kata sandi');
         }
 
         alert('Kata sandi berhasil diubah');
@@ -96,11 +93,37 @@ export default {
       }
     };
 
+    const resetPassword = async () => {
+      if (!email.value) {
+        emailError.value = 'Email harus diisi'; 
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!emailRegex.test(email.value)) {
+        emailError.value = 'Format email tidak valid'; 
+        return;
+      }
+      
+      emailError.value = '';
+
+      try {
+        const response = await axios.post(`${API_URL}/reset-password`, { email: email.value });
+        alert(response.data.message);
+      } catch (error) {
+        alert(error.response.data.message || 'Terjadi kesalahan saat mereset kata sandi');
+      }
+    };
+
     return {
       currentPassword,
       newPassword,
       confirmPassword,
+      email,
+      emailError,
       changePassword,
+      resetPassword,
     };
   },
 };
@@ -132,6 +155,4 @@ export default {
 .button:hover {
   background-color: #0072b1;
 }
-
-
 </style>
