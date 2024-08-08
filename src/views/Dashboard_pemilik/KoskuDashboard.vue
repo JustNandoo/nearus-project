@@ -10,7 +10,7 @@
               <div class="flex items-center gap-4">
                 <img class="w-20 h-20 rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
                 <div>
-                  <h3 class="text-lg font-medium">{{ product.productname }}</h3>
+                  <a href="/dashboard-kosku-detail-product" class="text-lg font-medium">{{ product.productname }}</a>
                   <p class="text-gray-500">{{ product.location }}</p>
                 </div>
               </div>
@@ -20,7 +20,6 @@
                   @click="toggleMenu(product.id)"
               />
               <div v-if="showMenu === product.id" class="absolute right-0 mt-8 bg-white shadow-md rounded-lg p-2">
-                <div class="cursor-pointer p-2" @click="openEditModal(product)">Edit</div>
                 <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.id)">Delete</div>
               </div>
             </div>

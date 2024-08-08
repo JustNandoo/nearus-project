@@ -155,6 +155,11 @@ const router = createRouter({
       component: () => import('../views/Dashboard_pemilik/DetailKoskuDashboard.vue')
     },
     {
+      path: '/dashboard-kosku-detail-product',
+      name: 'DetailProduct',
+      component: () => import('../views/DetailProduct.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }
