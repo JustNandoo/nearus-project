@@ -37,7 +37,7 @@ import Nav from '@/components/Pages/Nav.vue';
 
 const currentIndex = ref(0);
 const items = [
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 1', text: 'Berong-Kost 2' },
+  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 1', text: 'Reftalia Kost ' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 2', text: 'Text for Slide 2' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 3', text: 'Text for Slide 3' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 4', text: 'Text for Slide 4' },

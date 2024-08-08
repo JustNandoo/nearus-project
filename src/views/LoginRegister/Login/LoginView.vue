@@ -107,10 +107,20 @@ export default {
           password: this.password,
           remember: this.rememberMe,
         });
+
+        // Retrieve the user role from Vuex
+        const role = this.$store.getters.getRole;
+
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
-          this.$router.push('/home');
+
+          // Redirect based on the role
+          if (role === 'Owner') {
+            this.$router.push('/dashboard');
+          } else {
+            this.$router.push('/home');
+          }
         }, 1000);
       } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error.message);
@@ -119,6 +129,9 @@ export default {
           this.gagalLogin = false;
         }, 5000);
       }
+    },
+    focusEmailInput() {
+      this.$refs.emailInput.focus();
     },
   },
 };
