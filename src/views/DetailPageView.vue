@@ -36,13 +36,13 @@
     </div>
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
     <div class="mt-10 mr-32 ml-32 mb-20">
-      <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
-      <div v-if="facilities.length" class="flex flex-wrap gap-4">
-        <p v-for="facility in facilities" :key="facility" class="text-black text-lg font-montserrat mr-4 mb-2">
-          {{ facility }}
-        </p>
+      <h1 class="font-bold text-2xl mb-6">Fasilitas Kost</h1>
+      <div v-if="facilities.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="(facility, index) in facilities" :key="index" class="bg-white border rounded-lg shadow-lg p-4">
+          <p class="text-black text-lg font-montserrat">{{ facility }}</p>
+        </div>
       </div>
-      <p v-else class="empty-message">Belum ada data fasilitas</p>
+      <p v-else class="text-gray-500">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
         <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
@@ -83,7 +83,7 @@
 import RoomList from "@/components/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import { useRoute } from 'vue-router';
 import ProfileCard from "@/components/ProfileCard.vue";
 import Gallery from "@/components/Gallery.vue";
@@ -149,6 +149,11 @@ const fetchRooms = async () => {
   }
 };
 
+// Computed property to format facilities
+const formattedFacilities = computed(() => {
+  return facilities.value.map(facility => facility.trim());
+});
+
 onMounted(async () => {
   await fetchProductData();
   window.addEventListener('toggle-profile-card', toggleProfileCard);
@@ -159,15 +164,6 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style>
-.font-montserrat {
-  font-family: 'Montserrat', sans-serif;
-}
-.empty-message {
-  color: #666;
-  font-style: italic;
-}
-</style>
 
 <style>
 .font-montserrat {
@@ -178,3 +174,5 @@ onBeforeUnmount(() => {
   font-style: italic;
 }
 </style>
+
+
