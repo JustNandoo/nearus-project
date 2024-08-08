@@ -66,10 +66,10 @@
 
 <script>
 import { mapActions } from 'vuex';
-import NotifBerhasilLogin from '@/components/NotifBerhasilLogin.vue';
-import NotifGagalLogin from '@/components/NotifGagalLogin.vue';
-import logo from '../assets/images/nearus.png';
-import background from '../assets/images/bg-loginPage.png';
+import NotifBerhasilLogin from '@/components/LoginRegister/NotifBerhasilLogin.vue';
+import NotifGagalLogin from '@/components/LoginRegister/NotifGagalLogin.vue';
+import logo from '../../../assets/images/nearus.png';
+import background from '../../../assets/images/bg-loginPage.png';
 
 export default {
   components: {

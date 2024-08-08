@@ -74,8 +74,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import NavFixed from '@/components/NavFixed.vue';
-import Sidebar from "@/components/sidebar.vue";
+import NavFixed from '@/components/Pages/NavFixed.vue';
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 
 const placeholderImage = 'https://via.placeholder.com/150';
 const store = useStore();

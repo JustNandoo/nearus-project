@@ -13,13 +13,13 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import AboutUsCard from "@/components/AboutUsCard.vue";
-import CardProductAboutUs from "@/components/CardProductAboutUs.vue";
-import AboutUsText from "@/components/AboutUsText.vue";
-import CariKosSeakrang from "@/components/CariKosSekarang.vue";
-import AboutUsDokumentasi from "@/components/AboutUsDokumentasi.vue"; 
-import Footer from "@/components/Footer.vue";
-import ProfileCard from "@/components/ProfileCard.vue";
+import AboutUsCard from "@/components/AboutUs/AboutUsCard.vue";
+import CardProductAboutUs from "@/components/AboutUs/CardProductAboutUs.vue";
+import AboutUsText from "@/components/AboutUs/AboutUsText.vue";
+import CariKosSeakrang from "@/components/Home/CariKosSekarang.vue";
+import AboutUsDokumentasi from "@/components/AboutUs/AboutUsDokumentasi.vue";
+import Footer from "@/components/Pages/Footer.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 
 export default {

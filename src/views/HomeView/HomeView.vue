@@ -34,12 +34,12 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
-import CarouselHome from "@/components/CarouselHome.vue";
-import ProductCard from "@/components/ProductCard.vue";
-import PriceSortCard from "@/components/PriceSortCard.vue";
-import ProfileCard from "@/components/ProfileCard.vue";
-import FooterComponent from "@/components/Footer.vue";
-import Chatbot from "@/components/ChatBot.vue";
+import CarouselHome from "@/components/Home/CarouselHome.vue";
+import ProductCard from "@/components/Home/ProductCard.vue";
+import PriceSortCard from "@/components/Home/PriceSortCard.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
+import FooterComponent from "@/components/Pages/Footer.vue";
+import Chatbot from "@/components/Chat/ChatBot.vue";
 
 const showProfileCard = ref(false);
 const products = ref([]);

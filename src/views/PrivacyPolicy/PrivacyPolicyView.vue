@@ -132,10 +132,10 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
-import NavFixed from '@/components/NavFixed.vue';
-import Footer from '@/components/Footer.vue';
-import ProfileCard from '@/components/ProfileCard.vue';
-import FooterComponent from "@/components/Footer.vue";
+import NavFixed from '@/components/Pages/NavFixed.vue';
+import Footer from '@/components/Pages/Footer.vue';
+import ProfileCard from '@/components/Profile/ProfileCard.vue';
+import FooterComponent from "@/components/Pages/Footer.vue";
 
 export default {
   name: 'TermsAndConditions',

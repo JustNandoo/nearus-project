@@ -58,15 +58,15 @@
 
 <script setup>
 import { ref } from 'vue';
-import logowhite from '../assets/images/logowhite.png';
-import logophone from '../assets/images/phone.png';
-import logogmail from '../assets/images/gmail.png';
-import logogram from '../assets/images/gram.png';
-import logotwit from '../assets/images/twit.png';
-import logofb from '../assets/images/fb.png';
-import logogram2 from '../assets/images/gram2.png';
-import logotwit2 from '../assets/images/twit2.png';
-import logofb2 from '../assets/images/fb2.png';
+import logowhite from '../../assets/images/logowhite.png';
+import logophone from '../../assets/images/phone.png';
+import logogmail from '../../assets/images/gmail.png';
+import logogram from '../../assets/images/gram.png';
+import logotwit from '../../assets/images/twit.png';
+import logofb from '../../assets/images/fb.png';
+import logogram2 from '../../assets/images/gram2.png';
+import logotwit2 from '../../assets/images/twit2.png';
+import logofb2 from '../../assets/images/fb2.png';
 
 const hoveringInstagram = ref(false);
 const hoveringTwitter = ref(false);

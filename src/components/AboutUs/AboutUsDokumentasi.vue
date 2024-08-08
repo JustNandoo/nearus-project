@@ -27,10 +27,10 @@
 
 
 <script setup>
-import furnishImage from '../assets/images/furnish.webp';
-import amanImage from '../assets/images/aman.jpg';
-import layananImage from '../assets/images/layanan.webp';
-import bayarImage from '../assets/images/bayar.webp';
+import furnishImage from '../../assets/images/furnish.webp';
+import amanImage from '../../assets/images/aman.jpg';
+import layananImage from '../../assets/images/layanan.webp';
+import bayarImage from '../../assets/images/bayar.webp';
 </script>
 
 

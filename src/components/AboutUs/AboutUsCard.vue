@@ -19,12 +19,12 @@
 </template>
 
 <script>
-import NavFixed from './NavFixed.vue';
-import imageLaptop from '../assets/images/laptop.png';
-import imageMedali from '../assets/images/medali.png';
-import imageOrang from '../assets/images/orang.png';
-import imagePenthouse from '../assets/images/penthouse.png';
-import imageRating from '../assets/images/rating.png';
+import NavFixed from '../Pages/NavFixed.vue';
+import imageLaptop from '../../assets/images/laptop.png';
+import imageMedali from '../../assets/images/medali.png';
+import imageOrang from '../../assets/images/orang.png';
+import imagePenthouse from '../../assets/images/penthouse.png';
+import imageRating from '../../assets/images/rating.png';
 
 export default {
   components: {

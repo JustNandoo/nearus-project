@@ -50,7 +50,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import Sidebar from "@/components/sidebar.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 
 const account = ref({
   username: '',

@@ -10,8 +10,8 @@
 </template>
 
 <script setup>
-import Sidebar from "@/components/sidebar.vue";
-import ChatComponent from "@/components/ChatComponent.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
+import ChatComponent from "@/components/Chat/ChatComponent.vue";
 </script>
 
 <style scoped>

@@ -86,9 +86,9 @@
 import { mapActions, mapState } from 'vuex';
 import axios from 'axios';
 import { API_URL } from '@/constants';
-import NavFixed from "@/components/NavFixed.vue";
-import Footer from '@/components/Footer.vue';
-import SelectionProfile from '@/components/SelectionProfile.vue';
+import NavFixed from "@/components/Pages/NavFixed.vue";
+import Footer from '@/components/Pages/Footer.vue';
+import SelectionProfile from '@/components/Profile/SelectionProfile.vue';
 
 export default {
   components: {

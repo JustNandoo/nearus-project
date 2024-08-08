@@ -14,10 +14,10 @@
 
 <script>
 import axios from 'axios';
-import { API_URL } from '@/constants';
-import imageVerif from '../assets/images/verif-email.png';
-import imageCloud1 from '../assets/images/cloud-1.png';
-import imageCloud2 from '../assets/images/cloud-2.png';
+import { API_URL } from '@/constants.js';
+import imageVerif from '../../../assets/images/verif-email.png';
+import imageCloud1 from '../../../assets/images/cloud-1.png';
+import imageCloud2 from '../../../assets/images/cloud-2.png';
 export default {
   data() {
     return {

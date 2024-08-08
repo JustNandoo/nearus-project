@@ -77,9 +77,9 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import Nav from '@/components/Nav.vue';
-import Footer from '@/components/Footer.vue';
-import NoData from '@/components/NoData.vue';
+import Nav from '@/components/Pages/Nav.vue';
+import Footer from '@/components/Pages/Footer.vue';
+import NoData from '@/components/NearusFinance/NoData.vue';
 import checkmark from '@/assets/images2/lets-icons_check-fill.png';
 import acImage from '@/assets/images2/streamline_hotel-air-conditioner.png';
 import deskImage from '@/assets/images2/material-symbols-light_table-restaurant-outline.png';

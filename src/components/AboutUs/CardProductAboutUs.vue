@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import imageNearusMini from '../assets/images/nearusmini.png';
+import imageNearusMini from '../../assets/images/nearusmini.png';
 
 export default {
   name: 'CardProductAboutUs',

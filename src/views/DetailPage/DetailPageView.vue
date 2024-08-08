@@ -80,16 +80,16 @@
 </template>
 
 <script setup>
-import RoomList from "@/components/RoomList.vue";
+import RoomList from "@/components/Detail/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
-import NavFixed from "@/components/NavFixed.vue";
+import NavFixed from "@/components/Pages/NavFixed.vue";
 import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import { useRoute } from 'vue-router';
-import ProfileCard from "@/components/ProfileCard.vue";
-import Gallery from "@/components/Gallery.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
+import Gallery from "@/components/Detail/Gallery.vue";
 import axios from 'axios';
-import LeafletMap from "@/components/LeafletMap.vue";
-import Footer from "@/components/Footer.vue";
+import LeafletMap from "@/components/Detail/LeafletMap.vue";
+import Footer from "@/components/Pages/Footer.vue";
 
 const route = useRoute();
 const productId = route.params.id;

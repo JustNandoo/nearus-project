@@ -81,7 +81,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import Sidebar from "@/components/sidebar.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import axios from 'axios';
 
 const data = ref([]);

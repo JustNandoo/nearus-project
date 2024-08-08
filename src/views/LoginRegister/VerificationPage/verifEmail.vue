@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import imageLogo from '../assets/images/nearus.png'
-import imageMail from '../assets/images/icon-mail.png'
+import imageLogo from '../../../assets/images/nearus.png'
+import imageMail from '../../../assets/images/icon-mail.png'
 export default {
   data() {
     return {

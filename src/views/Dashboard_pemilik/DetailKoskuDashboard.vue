@@ -38,10 +38,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import Sidebar from "@/components/sidebar.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import RoomCard from "@/components/RoomCard.vue";
+import RoomCard from "@/components/Home/RoomCard.vue";
 import axios from 'axios';
 
 const route = useRoute();

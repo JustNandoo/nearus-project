@@ -102,7 +102,7 @@
 import axios from 'axios';
 import imagePath from '@/assets/images/bg-loginPage.png';
 import imageLogo from '@/assets/images/nearus.png';
-import PopUpSuccess from '@/components/PopUpSuccess.vue';
+import PopUpSuccess from '@/components/LoginRegister/PopUpSuccess.vue';
 import { API_URL } from '@/constants.js';
 
 export default {

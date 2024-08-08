@@ -166,9 +166,9 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEllipsisV, faPlus, faTimes, faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import Sidebar from "@/components/sidebar.vue";
-import KoskuCard from "@/components/KoskuCard.vue";
-import Gallery from "@/components/Gallery.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
+import KoskuCard from "@/components/DashboardPemilik/KoskuCard.vue";
+import Gallery from "@/components/Detail/Gallery.vue";
 
 
 const products = ref([]);

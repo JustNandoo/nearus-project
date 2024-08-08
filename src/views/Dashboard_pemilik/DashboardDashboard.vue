@@ -59,11 +59,11 @@
 </template>
 
 <script setup>
-import Sidebar from "@/components/sidebar.vue";
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 import { faArrowUp, faMoneyBill, faDoorClosed, faUser } from '@fortawesome/free-solid-svg-icons';
 import {onMounted} from "vue";
-import ChartStatistik from "@/components/ChartStatistik.vue";
+import ChartStatistik from "@/components/DashboardPemilik/ChartStatistik.vue";
 import {computed, ref} from "vue";
 import imageProfileDefault from "@/assets/images/profile-pic.png";
 import {useStore} from "vuex";

@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import Footer from "@/components/Footer.vue";
-import Nav from "@/components/Nav.vue";
+import Footer from "@/components/Pages/Footer.vue";
+import Nav from "@/components/Pages/Nav.vue";
 import axios from "axios";
 import { mapGetters } from 'vuex';
 import router from "@/router/index.js";

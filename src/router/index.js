@@ -16,47 +16,47 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('../views/LoginRegister/Login/LoginView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/reset-password',
-      component: () => import('../views/resetpass.vue'),
+      component: () => import('../views/LoginRegister/ResetPassword/resetpass.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/RegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/user-register',
       name: 'user-register',
-      component: () => import('../views/UserRegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/UserRegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/mitra-register',
       name: 'mitra-register',
-      component: () => import('../views/MitraRegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/MitraRegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/RegistKost',
       name: 'RegistKost',
-      component: () => import('../views/RegisterKosView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/RegisterKosView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/verif',
       name: 'verif',
-      component: () => import('../views/verifEmail.vue')
+      component: () => import('../views/LoginRegister/VerificationPage/verifEmail.vue')
     },
     {
       path: '/verify-email/:token/:email',
       name: 'emails.verify',
-      component: () => import('../views/emailverification.vue'),
+      component: () => import('../views/LoginRegister/VerificationPage/emailverification.vue'),
       props: true
     },
     {
@@ -81,13 +81,13 @@ const router = createRouter({
     {
       path: '/detail-kost/:id',
       name: 'detailkost',
-      component: () => import('../views/DetailPageView.vue'),
+      component: () => import('../views/DetailPage/DetailPageView.vue'),
       props: true
     },
     {
       path: '/AboutUs',
       name: 'AboutUs',
-      component: () => import('../views/AboutUsView.vue')
+      component: () => import('../views/AboutUs/AboutUsView.vue')
     },
     {
       path: '/dashboard-data',
@@ -122,17 +122,17 @@ const router = createRouter({
     {
       path: '/PrivacyPolicy',
       name: 'PrivacyPolicy',
-      component: () => import('../views/PrivacyPolicyView.vue')
+      component: () => import('../views/PrivacyPolicy/PrivacyPolicyView.vue')
     },
     {
       path: '/PaymentReview',
       name: 'PaymentReview',
-      component: () => import('../views/PaymentReview.vue')
+      component: () => import('../views/Payment/PaymentReview.vue')
     },
     {
       path: '/PaymentPage',
       name: 'PaymentPage',
-      component: () => import('../views/PaymentPage.vue')
+      component: () => import('../views/Payment/PaymentPage.vue')
     },
     {
       path: '/dashboard-chat',

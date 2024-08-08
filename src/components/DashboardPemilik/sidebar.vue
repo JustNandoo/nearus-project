@@ -59,7 +59,7 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import logo from '../assets/images/nearus.png';
+import logo from '../../assets/images/nearus.png';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import {
   faHouse,
@@ -70,7 +70,7 @@ import {
   faHouseUser,
   faMessage
 } from '@fortawesome/free-solid-svg-icons';
-import Modal from '@/components/Modal.vue';
+import Modal from '@/components/LoginRegister/Modal.vue';
 
 const store = useStore();
 const router = useRouter();

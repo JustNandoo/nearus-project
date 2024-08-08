@@ -31,9 +31,9 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import HeroText from '@/components/HeroText.vue';
-import SearchBar from '@/components/SearchBar.vue';
-import Nav from '@/components/Nav.vue';
+import HeroText from '@/components/Home/HeroText.vue';
+import SearchBar from '@/components/Home/SearchBar.vue';
+import Nav from '@/components/Pages/Nav.vue';
 
 const currentIndex = ref(0);
 const items = [

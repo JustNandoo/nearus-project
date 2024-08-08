@@ -24,7 +24,7 @@
 
 
 <script setup>
-import kosImage from '../assets/images/image 3.png';
+import kosImage from '../../assets/images/image 3.png';
 </script>
 
 

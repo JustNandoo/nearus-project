@@ -102,8 +102,8 @@
 <script>
 import axios from "axios";
 import { API_URL } from '@/constants.js';
-import RegistrasiBerhasil from "@/components/RegistrasiBerhasil.vue"; 
-import RegistrasiGagal from "@/components/RegistrasiGagal.vue";
+import RegistrasiBerhasil from "@/components/LoginRegister/RegistrasiBerhasil.vue";
+import RegistrasiGagal from "@/components/LoginRegister/RegistrasiGagal.vue";
 import imagePath from '@/assets/images/bg-loginPage.png';
 import imageLogo from '@/assets/images/nearus.png';
 
