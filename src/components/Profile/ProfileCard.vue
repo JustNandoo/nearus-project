@@ -9,10 +9,12 @@
         <img class="mt-5 ml-1 w-[100px] h-[100px] object-cover rounded-full" :src="profilePicture" alt="Profile Picture">
       </div>
       <div>
+        <router-link to="/NearusFinance">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faHouseUser" />
           <p class="text-[22px] font-medium">Kosku</p>
         </div>
+        </router-link>
         <router-link to="/profile">
           <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black mb-7">
             <font-awesome-icon class="text-black w-8 h-8" :icon="faGear" />
