@@ -52,6 +52,7 @@ const props = defineProps({
   height: 270px;
   object-fit: cover;
   border-radius: 0.75rem; /* 12px */
+  border-radius: 0.75rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
