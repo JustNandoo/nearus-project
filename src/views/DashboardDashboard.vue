@@ -20,7 +20,7 @@
                  <h1 class="text-white font-semibold text-[18px]">Pemasukan</h1>
                  <font-awesome-icon :icon="faArrowUp" class="text-white"/>
                </div>
-               <p class="text-white mt-2 font-bold text-[20px]">Rp. 7.200.000</p>
+               <p class="text-white mt-2 font-bold text-[20px]">{{ formattedBalance }}</p>
              </div>
            </div>
            <div class="w-[350px] mx-auto overflow-hidden rounded-lg shadow-lg">
@@ -73,8 +73,28 @@ const userName = computed(() => store.state.user?.name || 'Guest');
 const store = useStore();
 const user = computed(() => store.getters.getUser);
 const router = useRouter();
-
+const balance = ref(0);
+const formattedBalance = computed(() => {
+  return `Rp. ${balance.value.toLocaleString()}`;
+});
+const token = localStorage.getItem('token');
+const fetchBalance = async () => {
+  try {
+    const response = await axios.get('https://api.nearus.id/api/orders/balance', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    const data = response.data;
+    if (data.success) {
+      balance.value = data['Balance Count'];
+    }
+  } catch (error) {
+    console.error('Error fetching balance:', error);
+  }
+};
 onMounted(()=>{
+
   store.dispatch('initializeStore');
 })
 </script>

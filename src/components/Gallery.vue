@@ -17,7 +17,6 @@
       <div class="col-span-3 row-span-2">
         <img :src="images[0]" alt="Main Image" class="w-full h-[560px] object-cover rounded-lg shadow-lg">
       </div>
-      <!-- Secondary Images -->
       <div class="col-span-2 flex flex-col gap-4 px-5">
         <div class="flex gap-4">
           <img :src="images[1]" alt="Image 2" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 1">
