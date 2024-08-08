@@ -42,7 +42,7 @@
           {{ facilities }}
         </p>
       </div>
-      <p v-else class="empty-message">Belum ada data fasilitas</p>
+      <p v-else class="text-gray-500">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
       <div>
         <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
@@ -83,7 +83,7 @@
 import RoomList from "@/components/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, computed } from "vue";
 import { useRoute } from 'vue-router';
 import ProfileCard from "@/components/ProfileCard.vue";
 import Gallery from "@/components/Gallery.vue";
@@ -152,6 +152,11 @@ const fetchRooms = async () => {
   }
 };
 
+// Computed property to format facilities
+const formattedFacilities = computed(() => {
+  return facilities.value.map(facility => facility.trim());
+});
+
 onMounted(async () => {
   await fetchProductData();
   window.addEventListener('toggle-profile-card', toggleProfileCard);
@@ -186,3 +191,5 @@ const formatPrice = (price) => {
   font-style: italic;
 }
 </style>
+
+
