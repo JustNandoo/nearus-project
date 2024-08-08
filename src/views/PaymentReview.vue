@@ -47,7 +47,7 @@
           <div class="text-white text-lg font-semibold font-montserrat text-center">Bayar</div>
         </div>
         <div class="absolute left-0 top-[380px] text-black text-xl font-semibold font-montserrat">
-          {{ roomData.price }}
+          Rp. {{ roomData.price }}
         </div>
         <img class="absolute left-[350px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
       </div>
@@ -179,7 +179,11 @@ export default {
     }
   }
 };
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 </script>
+
 
 <style scoped>
 /* Add any custom styles here */
