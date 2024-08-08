@@ -167,21 +167,47 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!store.state.token;
+  const userRole = store.state.role;
+
+  console.log(`Navigating to: ${to.path}`);
+  console.log(`Is authenticated: ${isAuthenticated}`);
+  console.log(`User role: ${userRole}`);
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
+      // User is not authenticated, redirect to login
       next({ name: 'login' });
     } else {
-      next();
+      // User is authenticated, check for role-based access
+      if (userRole === 'Owner' && to.path === '/home') {
+        // Owners cannot access home
+        console.log('Redirecting owner from /home to /dashboard');
+        next({ name: 'DashboardDashboard' });
+      } else if (userRole !== 'Owner' && to.path.startsWith('/dashboard')) {
+        // Regular users cannot access dashboard
+        console.log('Redirecting user from dashboard to /home');
+        next({ name: 'home' });
+      } else {
+        // Allow access if no restriction applies
+        next();
+      }
     }
   } else if (to.matched.some(record => record.meta.guestOnly)) {
-    if (isAuthenticated()) {
+    if (isAuthenticated) {
+      // Authenticated users should not access guest-only pages
       next({ name: 'home' });
     } else {
+      // Allow access to guest-only pages if not authenticated
       next();
     }
   } else {
+    // Allow access to all other routes
     next();
   }
 });
+
+
+
 
 export default router;
