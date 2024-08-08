@@ -2,9 +2,9 @@
   <div class="flex flex-col justify-between min-h-screen bg-white">
     <Nav />
     <div class="flex justify-center items-center">
-      <div class="w-[523px] h-[480px] relative mb-20" style="top: 130px;">
+      <div class="w-[523px] h-[500px] relative mb-20" style="top: 130px;">
         <div class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
-          <i class="fas fa-arrow-left mr-5"></i> Pesan Kamar
+          <i class="fas fa-arrow-left mr-5 cursor-pointer" @click="goBack"></i> Pesan Kamar
         </div>
         <div class="text-black text-2xl font-semibold font-montserrat absolute left-[1px] top-[85px]">
           Pesanan
@@ -16,7 +16,7 @@
           Kamar kamu
         </div>
         <div class="text-black text-sm font-normal font-montserrat absolute left-[1px] top-[228px]">
-          {{ roomData.roomName }} - {{ roomData.productName }}
+          {{ roomData.roomName }} - {{ produk.name }}
         </div>
 
         <div class="relative">
@@ -35,26 +35,21 @@
           <div class="absolute left-0 top-[21px] w-10 h-[0px] border border-black"></div>
         </div>
 
-        <div class="absolute left-0 top-[171px] w-[516px] h-[0px] border border-slate-400/opacity-60"></div>
         <div class="absolute left-0 top-[296px] w-[516px] h-[0px] border border-slate-400/opacity-60"></div>
-        <div class="absolute left-0 top-[348px] w-[516px] h-[0px] border border-slate-400/opacity-60"></div>
-        <div class="absolute left-0 top-[394px] w-[516px] h-[0px] border border-slate-400/opacity-60"></div>
-
-        <div class="absolute left-[2px] top-[358px] flex items-center">
+        <div class="absolute left-[2px] top-[320px] flex items-center">
           <i class="fas fa-check-circle text-green-500 mr-1"></i>
           <span class="text-black text-xs font-normal font-montserrat leading-7">Tersedia</span>
         </div>
-        <div class="text-slate-400/opacity-60 text-sm font-semibold font-montserrat absolute left-0 top-[407px]">
+        <div class="text-slate-400/opacity-60 text-sm font-semibold font-montserrat absolute left-0 top-[350px]">
           Total
         </div>
-        <div class="absolute left-[263px] top-[425px] w-[260px] h-[55px] bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer" @click="processPayment">
+        <div class="absolute left-[263px] top-[380px] w-[260px] h-[55px] bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer" @click="processPayment">
           <div class="text-white text-lg font-semibold font-montserrat text-center">Bayar</div>
         </div>
-
-        <div class="absolute left-0 top-[446px] text-black text-xl font-semibold font-montserrat">
+        <div class="absolute left-0 top-[380px] text-black text-xl font-semibold font-montserrat">
           {{ roomData.price }}
         </div>
-        <img class="absolute left-[321px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
+        <img class="absolute left-[350px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
       </div>
       <div class="w-[530px] h-[450px] relative left-[80px]" style="top: 90px;">
         <div class="w-[218px] h-7 left-0 top-0 absolute text-black text-2xl font-semibold font-montserrat leading-7">
@@ -70,7 +65,6 @@
           {{ user.email }}
         </div>
         <div class="border-b border-slate-400/opacity-90 absolute left-0 top-[150px] w-full"></div>
-
         <div class="absolute left-[1px] top-[157px] flex items-center">
           <i class="far fa-file-alt text-black mr-3"></i>
           <span class="text-black text-[13px] font-normal font-montserrat leading-7">Tagihan akan dikirimkan ke kontak di atas</span>
@@ -102,7 +96,8 @@ export default {
         productName: 'Produk Test',
         price: 'Rp 7.200.000/6bln',
         image: 'https://via.placeholder.com/192x101'
-      }
+      },
+      produk: JSON.parse(localStorage.getItem('produk'))
     };
   },
   computed: {
@@ -115,6 +110,9 @@ export default {
     }
   },
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     toggleEditing() {
       this.isEditing = !this.isEditing;
     },
@@ -124,19 +122,21 @@ export default {
         console.log('Payment request data:', {
           name: this.user.name,
           phonenumber: this.user.phonenumber,
-          ownerId: 1, // This should be updated to the actual ownerId if needed
-          detail: `${this.roomData.roomName} - ${this.roomData.productName}`,
+          ownerId: this.roomData.ownerId,
+          detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
-          price: this.roomData.price
+          price: this.roomData.price,
+          image: this.roomData.image
         });
 
         const response = await axios.post('https://api.nearus.id/api/checkout', {
           name: this.user.name,
           phonenumber: this.user.phonenumber,
-          ownerId: 1,
-          detail: `${this.roomData.roomName} - ${this.roomData.productName}`,
+          ownerId: this.roomData.ownerId,
+          detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
-          price: this.roomData.price
+          price: this.roomData.price,
+          image: this.roomData.image
         }, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,

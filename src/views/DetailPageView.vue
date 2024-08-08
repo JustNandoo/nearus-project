@@ -2,7 +2,7 @@
   <div>
     <NavFixed />
     <ProfileCard v-if="showProfileCard" class="profile-card" />
-    <Gallery :images="product.image" />
+    <Gallery :images="roomImages" />
 
     <div class="ml-36 mr-36 mt-5 flex justify-between">
       <div class="flex flex-col">
@@ -81,10 +81,10 @@
 
 <script setup>
 import RoomList from "@/components/RoomList.vue";
-import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
+import {faMedal, faPerson, faMessage} from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/NavFixed.vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
-import { useRoute } from 'vue-router';
+import {onBeforeUnmount, onMounted, ref} from "vue";
+import {useRoute} from 'vue-router';
 import ProfileCard from "@/components/ProfileCard.vue";
 import Gallery from "@/components/Gallery.vue";
 import axios from 'axios';
@@ -98,6 +98,7 @@ const product = ref({});
 const facilities = ref([]);
 const rooms = ref([]);
 const ownerId = ref(null);
+const roomImages = ref([]); // Ensure this is an array
 
 import icon1 from '@/assets/images/school.png';
 import icon2 from '@/assets/images/tempatmakan.png';
@@ -106,10 +107,10 @@ import icon4 from '@/assets/images/laundry.png';
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
 const items = ref([
-  { id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM' },
-  { id: 2, icon: icon2, title: 'Tempat Makan MakRU', text: '0.70 KM' },
-  { id: 3, icon: icon3, title: 'Toko Lima', text: '1.25 KM' },
-  { id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM' },
+  {id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM'},
+  {id: 2, icon: icon2, title: 'Tempat Makan MakRU', text: '0.70 KM'},
+  {id: 3, icon: icon3, title: 'Toko Lima', text: '1.25 KM'},
+  {id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM'},
 ]);
 
 const toggleProfileCard = () => {
@@ -122,10 +123,15 @@ const fetchProductData = async () => {
     const selectedProduct = response.data;
 
     if (selectedProduct) {
-      console.log(ownerId.value);
+      localStorage.setItem('produk', JSON.stringify({
+        name : response.data.productname
+      }));
+      console.log(ownerId.value, "kontol");
+      console.log(response.data.productname);
       product.value = selectedProduct;
       facilities.value = selectedProduct.fasilitas || [];
       ownerId.value = selectedProduct.ownerId
+      roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image]; // Ensure roomImages is an array
       await fetchRooms(selectedProduct.ownerId);
     } else {
       console.error('Error fetching product data: no data response');
@@ -140,6 +146,7 @@ const fetchRooms = async () => {
     const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId.value}`);
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
+
     } else {
       console.error('No rooms data available for this owner');
     }
@@ -163,16 +170,7 @@ onBeforeUnmount(() => {
 .font-montserrat {
   font-family: 'Montserrat', sans-serif;
 }
-.empty-message {
-  color: #666;
-  font-style: italic;
-}
-</style>
 
-<style>
-.font-montserrat {
-  font-family: 'Montserrat', sans-serif;
-}
 .empty-message {
   color: #666;
   font-style: italic;

@@ -90,6 +90,7 @@ const handleCheckout = async (room) => {
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
       ownerId: room.ownerId,
+      image: room.image,
     };
 
     // Mengirimkan permintaan ke API checkout
@@ -102,11 +103,12 @@ const handleCheckout = async (room) => {
     // Memproses respons dari API
     if (response.data.success) {
       console.log('Checkout successful:', response.data.message);
-      // Menyimpan data kamar ke localStorage
+
       localStorage.setItem('roomData', JSON.stringify({
         roomName: room.name,
         price: room.price,
-        ownerId: room.ownerId
+        ownerId: room.ownerId,
+        image: room.image
       }));
       // Mengarahkan ke halaman PaymentReview
       router.push('/PaymentReview');
