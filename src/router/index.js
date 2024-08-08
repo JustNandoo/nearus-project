@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView/HomeView.vue')
     },
     {
       path: '/login',
@@ -92,31 +92,31 @@ const router = createRouter({
     {
       path: '/dashboard-data',
       name: 'DataDasboard',
-      component: () => import('../views/DataDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/DataDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard',
       name: 'DashboardDashboard',
-      component: () => import('../views/DashboardDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/DashboardDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-kosku',
       name: 'DashboardKosku',
-      component: () => import('../views/KoskuDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/KoskuDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-settings',
       name: 'DashboardSettings',
-      component: () => import('../views/SettingsDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/SettingsDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-profile',
       name: 'DashboardProfile',
-      component: () => import('../views/ProfileDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/ProfileDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
@@ -137,7 +137,7 @@ const router = createRouter({
     {
       path: '/dashboard-chat',
       name: 'DashboardChat',
-      component: () => import('../views/DashboardChat.vue')
+      component: () => import('../views/Dashboard_pemilik/DashboardChat.vue')
     },
     {
       path: '/NearusFinance',
@@ -152,7 +152,7 @@ const router = createRouter({
     {
       path: '/dashboard-kosku-detail',
       name: 'DashboardDetailKosku',
-      component: () => import('../views/DetailKoskuDashboard.vue')
+      component: () => import('../views/Dashboard_pemilik/DetailKoskuDashboard.vue')
     },
     {
       path: '/',
