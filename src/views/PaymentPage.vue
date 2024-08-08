@@ -6,7 +6,7 @@
             <div class="w-[523px] h-[480px] relative mb-20" style="top: 130px;">
                 <div
                     class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
-                    <i class="fas fa-arrow-left mr-5"></i> Pesan Kamar
+                     Pesan Kamar
                 </div>
                 <div class="text-black text-sm font-semibold font-montserrat absolute left-[1px] top-[47px]">
                     Pesanan anda telah berhasil dilakukan
@@ -44,28 +44,8 @@
                             class="text-center text-neutral-900 text-[21.65px] font-medium font-montserrat leading-[29.98px]">
                           {{ paymentDetails.payment_method }}</div>
                     </div>
-                    <div
-                        class="w-[494.62px] h-[30px] absolute top-[226.95px] flex justify-start items-start gap-[26.65px] inline-flex">
-                        <div
-                            class="grow shrink basis-0 text-neutral-500 text-[21.65px] font-normal font-montserrat leading-[29.98px]">
-                            Sender Name</div>
-                        <div
-                            class="text-center text-neutral-900 text-[21.65px] font-medium font-montserrat leading-[29.98px]">
-                            Edi Haryanto</div>
-                    </div>
                 </div>
             </div>
-
-
-            <div class="w-[304px] h-[263px] relative">
-                <div
-                    class="w-[304px] h-[23px] left-[13px] bottom-[15px] absolute text-black text-sm font-normal font-montserrat leading-7 top-[250px]">
-                    Scan QR untuk unduh bukti pembelian</div>
-                <img class="w-[228px] h-[228px] left-[38px] top-[15px] absolute"
-                    src="https://via.placeholder.com/228x228" />
-            </div>
-
-
             <div class="w-[392px] h-[300px] relative">
                 <div class="w-8 h-8 absolute left-[145px] top-[150px]">
                     <i class="fas fa-check-circle text-green-500 mr-1 text-9xl"></i>
@@ -82,7 +62,7 @@
                 <div
                     class="w-[446px] h-[0px] left-0 top-0 absolute origin-top-left rotate-90 border border-slate-400/opacity-60">
                 </div>
-                <router-link to="/home">
+                <router-link to="/NearusFinance">
                     <div
                         class="w-[375px] h-[55px] pl-[70px] pr-[72px] pt-[17px] pb-[21px] left-[20px] top-[370px] absolute bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer">
                         <div class="text-center text-white text-sm font-semibold font-montserrat">NeaRuS Finance</div>

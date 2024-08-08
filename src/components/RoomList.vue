@@ -4,28 +4,19 @@
       <div class="flex flex-col w-[78%] max-md:w-full">
         <div class="grow max-md:mt-6">
           <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-            <div class="flex flex-col w-[43%] max-md:w-full">
-              <img :src="room.image" alt="Room Image" class="grow w-full aspect-[1.96] max-md:mt-2.5" />
+            <div class="flex flex-col w-[43%] max-md:w-full h-full">
+              <img :src="room.image" alt="Room Image" class="grow w-full h-full object-cover aspect-[1.96] max-md:mt-2.5" />
             </div>
             <div class="flex flex-col ml-5 w-[57%] max-md:ml-0 max-md:w-full">
               <div class="flex flex-col self-stretch px-5 my-auto max-md:mt-10">
-                <div class="text-2xl font-semibold leading-7 text-black">{{ room.name }}</div>
-                <div class="text-sm text-gray-600">{{ room.category }}</div>
-                <div class="flex gap-5 justify-between items-start px-px mt-6 w-full text-black max-md:flex-wrap">
-                  <div class="flex gap-2.5 text-xs font-light leading-7 text-center">
-                    <div v-for="facility in room.fasilitas.split(',')" :key="facility"
-                         class="px-5 py-2 bg-white rounded-md border border-solid border-slate-400 border-opacity-60">
-                      {{ facility }}
-                    </div>
+                <div class="text-2xl font-semibold leading-7 text-black mb-4">{{ room.name }}</div>
+                <div class="text-sm text-gray-600 mb-4">{{ room.category }}</div>
+                <div class="shrink-0 h-px bg-slate-400 border-slate-400 border-opacity-60 mb-4"></div>
+                <div class="flex gap-2.5 flex-wrap">
+                  <div v-for="facility in room.fasilitas.split(',')" :key="facility"
+                       class="px-4 py-2 bg-white rounded-md border border-solid border-slate-400 border-opacity-60 text-sm font-medium text-center">
+                    {{ facility }}
                   </div>
-                  <div class="flex flex-col mt-3.5 text-sm font-medium leading-7">
-                    <div>Lihat Detail</div>
-                    <div class="shrink-0 mt-1 h-px bg-black border border-black"></div>
-                  </div>
-                </div>
-                <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
-                <div class="mt-4">
-                  <div class="text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
                 </div>
               </div>
             </div>
@@ -34,9 +25,10 @@
       </div>
       <div class="flex flex-col ml-5 w-[22%] max-md:ml-0 max-md:w-full">
         <div class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
-          <div class="shrink-0 mt-1 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
-          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10">{{ room.price }} / {{ room.time }}</div>
-          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5 ml-12 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
+          <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
+          <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
+          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10"> Rp. {{ formatPrice(room.price) }} / {{ room.time }}</div>
+          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5  mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
             Pilih
           </button>
         </div>
@@ -76,7 +68,6 @@ const fetchRooms = async (ownerId) => {
 
 const handleCheckout = async (room) => {
   try {
-    // Contoh data pengguna, sesuaikan dengan implementasi sebenarnya
     const userData = {
       name: 'abcd',
       phonenumber: 12345,
@@ -90,23 +81,23 @@ const handleCheckout = async (room) => {
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
       ownerId: room.ownerId,
+      image: room.image,
     };
 
-    // Mengirimkan permintaan ke API checkout
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
     });
 
-    // Memproses respons dari API
     if (response.data.success) {
       console.log('Checkout successful:', response.data.message);
-      // Menyimpan data kamar ke localStorage
+
       localStorage.setItem('roomData', JSON.stringify({
         roomName: room.name,
         price: room.price,
-        ownerId: room.ownerId
+        ownerId: room.ownerId,
+        image: room.image
       }));
       // Mengarahkan ke halaman PaymentReview
       router.push('/PaymentReview');
@@ -129,6 +120,10 @@ watch(() => props.ownerId, (newOwnerId) => {
     fetchRooms(newOwnerId);
   }
 });
+
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 </script>
 
 <style scoped>

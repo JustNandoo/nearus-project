@@ -2,7 +2,7 @@
   <div>
     <NavFixed />
     <ProfileCard v-if="showProfileCard" class="profile-card" />
-    <Gallery :images="product.image" />
+    <Gallery :images="roomImages" />
 
     <div class="ml-36 mr-36 mt-5 flex justify-between">
       <div class="flex flex-col">
@@ -22,7 +22,7 @@
       <div class="flex flex-col gap-3 w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-[24px]">Mulai Dari</h1>
-          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / </h1>
+          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} </h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
           <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
@@ -36,11 +36,11 @@
     </div>
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
     <div class="mt-10 mr-32 ml-32 mb-20">
-      <h1 class="font-bold text-2xl mb-6">Fasilitas Kost</h1>
-      <div v-if="facilities.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div v-for="(facility, index) in facilities" :key="index" class="bg-white border rounded-lg shadow-lg p-4">
-          <p class="text-black text-lg font-montserrat">{{ facility }}</p>
-        </div>
+      <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
+      <div v-if="facilities.length" class="flex flex-wrap gap-4">
+        <p  class="text-black text-lg font-montserrat mr-4 mb-2">
+          {{ facilities }}
+        </p>
       </div>
       <p v-else class="text-gray-500">Belum ada data fasilitas</p>
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
@@ -95,15 +95,16 @@ const route = useRoute();
 const productId = route.params.id;
 const showProfileCard = ref(false);
 const product = ref({});
-const facilities = ref([]);
+const facilities = ref(""); // Initialize as an empty array
 const rooms = ref([]);
 const ownerId = ref(null);
+const roomImages = ref([]); // Ensure this is an array
 
 import icon1 from '@/assets/images/school.png';
 import icon2 from '@/assets/images/tempatmakan.png';
 import icon3 from '@/assets/images/tokokelontong.png';
 import icon4 from '@/assets/images/laundry.png';
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 const items = ref([
   { id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM' },
@@ -122,10 +123,13 @@ const fetchProductData = async () => {
     const selectedProduct = response.data;
 
     if (selectedProduct) {
-      console.log(ownerId.value);
+      localStorage.setItem('produk', JSON.stringify({
+        name: response.data.productname
+      }));
       product.value = selectedProduct;
-      facilities.value = selectedProduct.fasilitas || [];
-      ownerId.value = selectedProduct.ownerId
+      facilities.value = selectedProduct.fasilitas;
+      ownerId.value = selectedProduct.ownerId;
+      roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image];
       await fetchRooms(selectedProduct.ownerId);
     } else {
       console.error('Error fetching product data: no data response');
@@ -145,7 +149,6 @@ const fetchRooms = async () => {
     }
   } catch (error) {
     console.error('Error fetching rooms data:', error);
-    console.log(ownerId.value);
   }
 };
 
@@ -157,18 +160,32 @@ const formattedFacilities = computed(() => {
 onMounted(async () => {
   await fetchProductData();
   window.addEventListener('toggle-profile-card', toggleProfileCard);
+
+  const disqus_config = function () {
+    this.page.url = window.location.href;
+    this.page.identifier = productId;
+  };
+
+  const script = document.createElement('script');
+  script.src = 'https://nearus.disqus.com/embed.js';
+  script.setAttribute('data-timestamp', +new Date());
+  (document.head || document.body).appendChild(script);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
-</script>
 
+const formatPrice = (price) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
+</script>
 
 <style>
 .font-montserrat {
   font-family: 'Montserrat', sans-serif;
 }
+
 .empty-message {
   color: #666;
   font-style: italic;
