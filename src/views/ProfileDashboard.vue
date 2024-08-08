@@ -8,16 +8,8 @@
             <div class="w-full md:w-[344px]">
               <div class="bg-white p-4 rounded-lg shadow-md mb-4">
                 <h2 class="font-bold text-lg mb-2">Account Settings</h2>
-                <router-link to="/profile" class="sidebar-option">Change Profile</router-link>
+                <router-link to="" class="sidebar-option">Change Profile</router-link>
                 <p class="text-sm text-gray-600">Details about your Personal Information</p>
-              </div>
-              <div class="bg-white p-4 rounded-lg shadow-md">
-                <h2 class="font-bold text-lg mb-2">Password & Security</h2>
-                <router-link to="/passworddata/:id" class="sidebar-option">Change password</router-link>
-                <p class="text-sm text-gray-600">Changes your account Password</p>
-              </div>
-              <div class="bg-white p-4 rounded-lg shadow-md mt-4">
-                <router-link to="/login" class="sidebar-option">Logout</router-link>
               </div>
             </div>
             <!-- Main Content -->
