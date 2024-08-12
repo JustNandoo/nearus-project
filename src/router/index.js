@@ -11,52 +11,52 @@ const router = createRouter({
     {
       path: '/home',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView/HomeView.vue')
     },
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: () => import('../views/LoginRegister/Login/LoginView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/reset-password',
-      component: () => import('../views/resetpass.vue'),
+      component: () => import('../views/LoginRegister/ResetPassword/resetpass.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/register',
       name: 'register',
-      component: () => import('../views/RegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/RegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/user-register',
       name: 'user-register',
-      component: () => import('../views/UserRegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/UserRegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/mitra-register',
       name: 'mitra-register',
-      component: () => import('../views/MitraRegisterView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/MitraRegisterView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/RegistKost',
       name: 'RegistKost',
-      component: () => import('../views/RegisterKosView.vue'),
+      component: () => import('../views/LoginRegister/RegisterPages/RegisterKosView.vue'),
       meta: { guestOnly: true }
     },
     {
       path: '/verif',
       name: 'verif',
-      component: () => import('../views/verifEmail.vue')
+      component: () => import('../views/LoginRegister/VerificationPage/verifEmail.vue')
     },
     {
       path: '/verify-email/:token/:email',
       name: 'emails.verify',
-      component: () => import('../views/emailverification.vue'),
+      component: () => import('../views/LoginRegister/VerificationPage/emailverification.vue'),
       props: true
     },
     {
@@ -81,63 +81,63 @@ const router = createRouter({
     {
       path: '/detail-kost/:id',
       name: 'detailkost',
-      component: () => import('../views/DetailPageView.vue'),
+      component: () => import('../views/DetailPage/DetailPageView.vue'),
       props: true
     },
     {
       path: '/AboutUs',
       name: 'AboutUs',
-      component: () => import('../views/AboutUsView.vue')
+      component: () => import('../views/AboutUs/AboutUsView.vue')
     },
     {
       path: '/dashboard-data',
       name: 'DataDasboard',
-      component: () => import('../views/DataDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/DataDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard',
       name: 'DashboardDashboard',
-      component: () => import('../views/DashboardDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/DashboardDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-kosku',
       name: 'DashboardKosku',
-      component: () => import('../views/KoskuDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/KoskuDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-settings',
       name: 'DashboardSettings',
-      component: () => import('../views/SettingsDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/SettingsDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/dashboard-profile',
       name: 'DashboardProfile',
-      component: () => import('../views/ProfileDashboard.vue'),
+      component: () => import('../views/Dashboard_pemilik/ProfileDashboard.vue'),
       meta: { requiresAuth: true }
     },
     {
       path: '/PrivacyPolicy',
       name: 'PrivacyPolicy',
-      component: () => import('../views/PrivacyPolicyView.vue')
+      component: () => import('../views/PrivacyPolicy/PrivacyPolicyView.vue')
     },
     {
       path: '/PaymentReview',
       name: 'PaymentReview',
-      component: () => import('../views/PaymentReview.vue')
+      component: () => import('../views/Payment/PaymentReview.vue')
     },
     {
       path: '/PaymentPage',
       name: 'PaymentPage',
-      component: () => import('../views/PaymentPage.vue')
+      component: () => import('../views/Payment/PaymentPage.vue')
     },
     {
       path: '/dashboard-chat',
       name: 'DashboardChat',
-      component: () => import('../views/DashboardChat.vue')
+      component: () => import('../views/Dashboard_pemilik/DashboardChat.vue')
     },
     {
       path: '/NearusFinance',
@@ -150,9 +150,14 @@ const router = createRouter({
       component: () => import('../views/NearusFinance/NearusFinanceAfter.vue')
     },
     {
-      path: '/dashboard-kosku-detail',
+      path: '/dashboard-kosku-detail/:ownerId',
       name: 'DashboardDetailKosku',
-      component: () => import('../views/DetailKoskuDashboard.vue')
+      component: () => import('../views/Dashboard_pemilik/DetailKoskuDashboard.vue')
+    },
+    {
+      path: '/dashboard-kosku-detail-product',
+      name: 'DetailProduct',
+      component: () => import('../views/DetailProduct.vue')
     },
     {
       path: '/',
@@ -162,21 +167,47 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!store.state.token;
+  const userRole = store.state.role;
+
+  console.log(`Navigating to: ${to.path}`);
+  console.log(`Is authenticated: ${isAuthenticated}`);
+  console.log(`User role: ${userRole}`);
+
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!isAuthenticated()) {
+    if (!isAuthenticated) {
+      // User is not authenticated, redirect to login
       next({ name: 'login' });
     } else {
-      next();
+      // User is authenticated, check for role-based access
+      if (userRole === 'Owner' && to.path === '/home') {
+        // Owners cannot access home
+        console.log('Redirecting owner from /home to /dashboard');
+        next({ name: 'DashboardDashboard' });
+      } else if (userRole !== 'Owner' && to.path.startsWith('/dashboard')) {
+        // Regular users cannot access dashboard
+        console.log('Redirecting user from dashboard to /home');
+        next({ name: 'home' });
+      } else {
+        // Allow access if no restriction applies
+        next();
+      }
     }
   } else if (to.matched.some(record => record.meta.guestOnly)) {
-    if (isAuthenticated()) {
+    if (isAuthenticated) {
+      // Authenticated users should not access guest-only pages
       next({ name: 'home' });
     } else {
+      // Allow access to guest-only pages if not authenticated
       next();
     }
   } else {
+    // Allow access to all other routes
     next();
   }
 });
+
+
+
 
 export default router;

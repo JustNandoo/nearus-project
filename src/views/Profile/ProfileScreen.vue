@@ -81,7 +81,7 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import NavFixed from '@/components/NavFixed.vue';
+import NavFixed from '@/components/Pages/NavFixed.vue';
 
 export default {
   components: { NavFixed },

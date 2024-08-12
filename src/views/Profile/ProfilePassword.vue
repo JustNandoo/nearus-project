@@ -45,8 +45,8 @@
 <script>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import NavFixed from '@/components/NavFixed.vue';
-import Footer from '@/components/Footer.vue';
+import NavFixed from '@/components/Pages/NavFixed.vue';
+import Footer from '@/components/Pages/Footer.vue';
 import axios from 'axios';
 import { API_URL } from '@/constants';
 
