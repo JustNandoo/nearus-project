@@ -112,55 +112,60 @@ export default {
     });
 
     const updateUserData = async () => {
-      try {
-        const updatedProfileData = {
-          name: user.value.name || null,
-          email: user.value.email || null,
-          phonenumber: user.value.phone || null,
-          jenis_kelamin: user.value.gender || null,
-        };
-
-        // Update the profile data if any field has a value
-        if (Object.values(updatedProfileData).some(value => value !== null)) {
-          await store.dispatch('updateUserProfile', updatedProfileData);
-
-          // Update the Vuex store with the latest user data
-          store.commit('setUser', {
-            ...store.getters.getUser,
-            phone: user.value.phone,
-            gender: user.value.gender,
-          });
-        }
-
-        // Update profile picture if a new one has been selected
-        if (selectedProfilePic.value) {
-          const formData = new FormData();
-          formData.append('photoprofile', selectedProfilePic.value);
-          await store.dispatch('updateUserProfilePic', formData);
-        }
-
-        // Trigger success alert
-        alertMessage.value = 'Profile updated successfully';
-        showAlert.value = true;
-      } catch (error) {
-        console.error('Error updating user data:', error);
-        alertMessage.value = 'Failed to update profile';
-        showAlert.value = true;
-      }
+  try {
+    const updatedProfileData = {
+      name: user.value.name || null,
+      email: user.value.email || null,
+      phonenumber: user.value.phone || null,
+      jenis_kelamin: user.value.gender || null,
     };
 
-    const handleFileChange = (event) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        selectedProfilePic.value = file;
+    console.log('Updated Profile Data:', updatedProfileData);
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          profilePicPreview.value = reader.result;
-        };
-        reader.readAsDataURL(file);
-      }
+    if (Object.values(updatedProfileData).some(value => value !== null)) {
+      await store.dispatch('updateUserProfile', updatedProfileData);
+      store.commit('setUser', {
+        ...store.getters.getUser,
+        phone: user.value.phone,
+        gender: user.value.gender,
+      });
+    }
+
+    if (selectedProfilePic.value) {
+      const formData = new FormData();
+      formData.append('photoprofile', selectedProfilePic.value);
+      
+      console.log('Updating Profile Picture with FormData:', formData);
+
+      await store.dispatch('updateUserProfilePic', formData);
+
+      console.log('Profile picture updated successfully');
+    }
+
+    alertMessage.value = 'Profile updated successfully';
+    showAlert.value = true;
+  } catch (error) {
+    console.error('Error updating user data:', error);
+    alertMessage.value = 'Failed to update profile';
+    showAlert.value = true;
+  }
+};
+
+const handleFileChange = (event) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    selectedProfilePic.value = file;
+    
+    console.log('Selected File:', file);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      profilePicPreview.value = reader.result;
+      console.log('Profile Picture Preview:', reader.result);
     };
+    reader.readAsDataURL(file);
+  }
+};
 
     const closeAlert = () => {
       showAlert.value = false;
