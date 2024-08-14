@@ -25,6 +25,7 @@
             <!-- Reset Password Section -->
             <section class="mt-12">
               <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
+              <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
               <form class="space-y-4" @submit.prevent="resetPassword">
                 <div>
                   <label class="block text-gray-700">Email</label>
@@ -47,6 +48,7 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
 import Footer from '@/components/Pages/Footer.vue';
+import PasswordAlert from '@/components/Profile/PasswordAlert.vue'; // Import PasswordAlert component
 import axios from 'axios';
 import { API_URL } from '@/constants';
 
@@ -54,6 +56,7 @@ export default {
   components: {
     NavFixed,
     Footer,
+    PasswordAlert, // Register PasswordAlert component
   },
   setup() {
     const store = useStore();
@@ -62,10 +65,15 @@ export default {
     const confirmPassword = ref('');
     const email = ref('');
     const emailError = ref('');
+    const showAlert = ref(false);
+    const alertMessage = ref('');
+    const alertType = ref('');
 
     const changePassword = async () => {
       if (newPassword.value !== confirmPassword.value) {
-        alert('Kata sandi baru dan konfirmasi kata sandi tidak cocok.');
+        showAlert.value = true;
+        alertMessage.value = 'Kata sandi baru dan konfirmasi kata sandi tidak cocok.';
+        alertType.value = 'error';
         return;
       }
 
@@ -86,10 +94,14 @@ export default {
           throw new Error('Gagal mengubah kata sandi');
         }
 
-        alert('Kata sandi berhasil diubah');
+        showAlert.value = true;
+        alertMessage.value = 'Kata sandi berhasil diubah';
+        alertType.value = 'success';
       } catch (error) {
         console.error('Error changing password:', error);
-        alert('Terjadi kesalahan saat mengubah kata sandi');
+        showAlert.value = true;
+        alertMessage.value = 'Terjadi kesalahan saat mengubah kata sandi';
+        alertType.value = 'error';
       }
     };
 
@@ -110,9 +122,13 @@ export default {
 
       try {
         const response = await axios.post(`${API_URL}/reset-password`, { email: email.value });
-        alert(response.data.message);
+        showAlert.value = true;
+        alertMessage.value = response.data.message;
+        alertType.value = 'success';
       } catch (error) {
-        alert(error.response.data.message || 'Terjadi kesalahan saat mereset kata sandi');
+        showAlert.value = true;
+        alertMessage.value = error.response.data.message || 'Terjadi kesalahan saat mereset kata sandi';
+        alertType.value = 'error';
       }
     };
 
@@ -124,6 +140,9 @@ export default {
       emailError,
       changePassword,
       resetPassword,
+      showAlert,
+      alertMessage,
+      alertType,
     };
   },
 };
