@@ -145,9 +145,11 @@ const router = createRouter({
       component: () => import('../views/NearusFinance/NearusFinanceView.vue')
     },
     {
-      path: '/NearusFinance2',
+      path: '/NearusFinance2/:id',
       name: 'NearusFinance2',
-      component: () => import('../views/NearusFinance/NearusFinanceAfter.vue')
+      component: () => import('../views/NearusFinance/NearusFinanceDetail.vue'),
+      meta: { requiresAuth: true },
+      props: true
     },
     {
       path: '/dashboard-kosku-detail/:ownerId',
