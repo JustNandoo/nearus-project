@@ -13,11 +13,11 @@
         <p class="text-gray-100 text-[18px] mb-2">Hubungi Kami</p>
         <div class="flex items-center gap-4 mb-3">
           <img :src="logophone" alt="">
-          <p class="text-[20px]">+62 895-3263-62332</p>
+          <p class="text-[20px]">+62 813-2828-2288</p>
         </div>
         <div class="flex items-center gap-4">
           <img :src="logogmail" alt="">
-          <p class="text-[20px]">nearuswebsite@gmail.com</p>
+          <p class="text-[20px]">rizqyastiko19@gmail.com</p>
         </div>
       </div>
       <div class="flex-1">
