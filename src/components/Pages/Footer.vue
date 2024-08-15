@@ -17,7 +17,7 @@
         </div>
         <div class="flex items-center gap-4">
           <img :src="logogmail" alt="">
-          <p class="text-[20px]">rizqyastiko19@gmail.com</p>
+          <p class="text-[20px]">nearuswebsite@gmail.com</p>
         </div>
       </div>
       <div class="flex-1">
