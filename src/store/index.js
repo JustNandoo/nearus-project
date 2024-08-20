@@ -16,9 +16,9 @@ export default createStore({
           ...state.user,
           name: user.name || state.user.name,
           email: user.email || state.user.email,
-          phone: user.phone || state.user.phone, // Ensure phone is being set here
-          gender: user.gender || state.user.gender,
-          photoprofile: user.photoprofile || state.user.photoprofile,
+          phone: user.phone || state.user?.phone, // Ensure phone is being set here
+          gender: user.gender || state.user?.gender,
+          photoprofile: user.photoprofile || state.user?.photoprofile,
         };
         localStorage.setItem('local', JSON.stringify(state.user));
         if (user.websiterole) {
@@ -100,6 +100,13 @@ export default createStore({
             },
           }
         );
+        const userData = response.data.data;
+        if (userData) {
+          commit('setUser', userData);
+        } else {
+          console.error('User data is undefined or null:', userData);
+        }
+        console.log('API Response:', response.data);
         commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);

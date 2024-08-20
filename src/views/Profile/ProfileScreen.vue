@@ -62,7 +62,7 @@
                   </select>
                 </div>
               </div>
-              <button type="submit" class="button">Update Profile</button>
+              <button type="submit" class="button" :disabled="loading">{{ loading ? 'Updating...' : 'Update Profile' }}</button>
             </form>
           </section>
         </div>
@@ -73,6 +73,12 @@
       <div class="bg-white p-6 rounded-lg shadow-lg">
         <p>{{ alertMessage }}</p>
         <button @click="closeAlert" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">OK</button>
+      </div>
+    </div>
+    <!-- Loading Indicator -->
+    <div v-if="loading" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <p>Loading...</p>
       </div>
     </div>
   </div>
@@ -98,6 +104,7 @@ export default {
     const profilePicPreview = ref(null);
     const showAlert = ref(false);
     const alertMessage = ref('');
+    const loading = ref(false);
 
     onMounted(() => {
       // Fetch user data from Vuex store
@@ -112,60 +119,52 @@ export default {
     });
 
     const updateUserData = async () => {
-  try {
-    const updatedProfileData = {
-      name: user.value.name || null,
-      email: user.value.email || null,
-      phonenumber: user.value.phone || null,
-      jenis_kelamin: user.value.gender || null,
+      loading.value = true;
+      try {
+        const updatedProfileData = {
+          name: user.value.name || null,
+          email: user.value.email || null,
+          phonenumber: user.value.phone || null,
+          jenis_kelamin: user.value.gender || null,
+        };
+
+        if (Object.values(updatedProfileData).some(value => value !== null)) {
+          await store.dispatch('updateUserProfile', updatedProfileData);
+          store.commit('setUser', {
+            ...store.getters.getUser,
+            phone: user.value.phone,
+            gender: user.value.gender,
+          });
+        }
+
+        if (selectedProfilePic.value) {
+          const formData = new FormData();
+          formData.append('photoprofile', selectedProfilePic.value);
+          await store.dispatch('updateUserProfilePic', formData);
+        }
+
+        alertMessage.value = 'Profile updated successfully';
+        showAlert.value = true;
+      } catch (error) {
+        console.error('Error updating user data:', error);
+        alertMessage.value = 'Failed to update profile';
+        showAlert.value = true;
+      } finally {
+        loading.value = false;
+      }
     };
 
-    console.log('Updated Profile Data:', updatedProfileData);
-
-    if (Object.values(updatedProfileData).some(value => value !== null)) {
-      await store.dispatch('updateUserProfile', updatedProfileData);
-      store.commit('setUser', {
-        ...store.getters.getUser,
-        phone: user.value.phone,
-        gender: user.value.gender,
-      });
-    }
-
-    if (selectedProfilePic.value) {
-      const formData = new FormData();
-      formData.append('photoprofile', selectedProfilePic.value);
-      
-      console.log('Updating Profile Picture with FormData:', formData);
-
-      await store.dispatch('updateUserProfilePic', formData);
-
-      console.log('Profile picture updated successfully');
-    }
-
-    alertMessage.value = 'Profile updated successfully';
-    showAlert.value = true;
-  } catch (error) {
-    console.error('Error updating user data:', error);
-    alertMessage.value = 'Failed to update profile';
-    showAlert.value = true;
-  }
-};
-
-const handleFileChange = (event) => {
-  const file = event.target.files?.[0];
-  if (file) {
-    selectedProfilePic.value = file;
-    
-    console.log('Selected File:', file);
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      profilePicPreview.value = reader.result;
-      console.log('Profile Picture Preview:', reader.result);
+    const handleFileChange = (event) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        selectedProfilePic.value = file;
+        const reader = new FileReader();
+        reader.onload = () => {
+          profilePicPreview.value = reader.result;
+        };
+        reader.readAsDataURL(file);
+      }
     };
-    reader.readAsDataURL(file);
-  }
-};
 
     const closeAlert = () => {
       showAlert.value = false;
@@ -179,6 +178,7 @@ const handleFileChange = (event) => {
       showAlert,
       alertMessage,
       closeAlert,
+      loading,
     };
   },
 };
@@ -241,21 +241,18 @@ const handleFileChange = (event) => {
   z-index: 9999;
 }
 
-.alert-modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  text-align: center;
-  width: 300px;
-}
 
 .alert-modal-content button {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+background-color: #3b82f6;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.alert-modal-content button
+{
+background-color: #2563eb;
 }
 </style>

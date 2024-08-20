@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-screen w-screen">
-   <sidebar/>
+    <sidebar />
     <div class="flex-1 flex flex-col pb-14">
       <main class="flex flex-col items-center px-5 mt-12 w-full">
         <section class="mt-16 w-full max-w-5xl">
@@ -53,8 +53,15 @@
                     </select>
                   </div>
                 </div>
-                <button type="submit" class="button">Update Profile</button>
+                <button type="submit" class="button" :disabled="loading">
+                  <span v-if="loading" class="loader"></span>
+                  <span v-else>Update Profile</span>
+                </button>
               </form>
+              <!-- Debug: Add a div to monitor alertMessage -->
+              <div v-if="alertMessage" class="mt-4">
+                <CustomAlert :message="alertMessage" :type="alertType" @close="alertMessage = ''" />
+              </div>
             </section>
           </div>
         </section>
@@ -66,8 +73,8 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import NavFixed from '@/components/Pages/NavFixed.vue';
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
+import CustomAlert from '@/components/Profile/CustomAlert.vue';
 
 const placeholderImage = 'https://via.placeholder.com/150';
 const store = useStore();
@@ -79,14 +86,19 @@ const user = ref({
   photoprofile: '',
 });
 const selectedProfilePic = ref(null);
+const loading = ref(false);
+const alertMessage = ref('');
+const alertType = ref('success');
 
-onMounted(() => {
+onMounted(async () => {
+  await store.dispatch('fetchUserProfile');
   if (store.getters.getUser) {
     user.value = { ...store.getters.getUser };
   }
 });
 
 const updateUserData = async () => {
+  loading.value = true;
   try {
     const updatedProfileData = {
       name: user.value.name || null,
@@ -105,10 +117,14 @@ const updateUserData = async () => {
       await store.dispatch('updateUserProfilePic', formData);
     }
 
-    alert('Profile updated successfully');
+    alertType.value = 'success';
+    alertMessage.value = 'Profile updated successfully';
   } catch (error) {
     console.error('Error updating user data:', error);
-    alert('Failed to update profile');
+    alertType.value = 'error';
+    alertMessage.value = 'Failed to update profile';
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -166,9 +182,27 @@ const handleFileChange = (event) => {
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.button:hover {
-  background-color: #2563eb;
+.button:disabled {
+  background-color: #a1a1aa;
+  cursor: not-allowed;
+}
+
+.loader {
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #3498db;
+  width: 16px;
+  height: 16px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
