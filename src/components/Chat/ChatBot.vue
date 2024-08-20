@@ -271,7 +271,7 @@ export default {
   gap: 0.5rem;
   justify-items: center; 
   align-items: center; 
-  margin-top: -2  rem; 
+  margin-top: -2rem;
 }
 
 .predefined-questions button {

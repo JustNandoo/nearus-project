@@ -97,7 +97,8 @@ const handleCheckout = async (room) => {
         roomName: room.name,
         price: room.price,
         ownerId: room.ownerId,
-        image: room.image
+        image: room.image,
+        fasilitas: room.fasilitas
       }));
       // Mengarahkan ke halaman PaymentReview
       router.push('/PaymentReview');

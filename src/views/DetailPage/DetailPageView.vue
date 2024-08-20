@@ -124,9 +124,11 @@ const fetchProductData = async () => {
 
     if (selectedProduct) {
       localStorage.setItem('produk', JSON.stringify({
-        name: response.data.productname
+        name: response.data.productname,
+        location: response.data.location
       }));
       product.value = selectedProduct;
+      location.value = selectedProduct.location;
       facilities.value = selectedProduct.fasilitas;
       ownerId.value = selectedProduct.ownerId;
       roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image];

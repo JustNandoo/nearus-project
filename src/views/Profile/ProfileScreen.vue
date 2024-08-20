@@ -68,6 +68,13 @@
         </div>
       </section>
     </main>
+    <!-- Custom Alert Modal -->
+    <div v-if="showAlert" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <p>{{ alertMessage }}</p>
+        <button @click="closeAlert" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">OK</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -88,10 +95,19 @@ export default {
       photoprofile: '',
     });
     const selectedProfilePic = ref(null);
+    const profilePicPreview = ref(null);
+    const showAlert = ref(false);
+    const alertMessage = ref('');
 
     onMounted(() => {
-      if (store.getters.getUser) {
-        user.value = { ...store.getters.getUser };
+      // Fetch user data from Vuex store
+      const userData = store.getters.getUser;
+      if (userData) {
+        user.value.name = userData.name || '';
+        user.value.email = userData.email || '';
+        user.value.phone = userData.phone || '';
+        user.value.gender = userData.gender || '';
+        user.value.photoprofile = userData.photoprofile || '';
       }
     });
 
@@ -104,48 +120,69 @@ export default {
       jenis_kelamin: user.value.gender || null,
     };
 
-    // Only update the profile if any of the data is provided
+    console.log('Updated Profile Data:', updatedProfileData);
+
     if (Object.values(updatedProfileData).some(value => value !== null)) {
       await store.dispatch('updateUserProfile', updatedProfileData);
+      store.commit('setUser', {
+        ...store.getters.getUser,
+        phone: user.value.phone,
+        gender: user.value.gender,
+      });
     }
 
-    // Update profile picture if a new one has been selected
     if (selectedProfilePic.value) {
       const formData = new FormData();
       formData.append('photoprofile', selectedProfilePic.value);
+      
+      console.log('Updating Profile Picture with FormData:', formData);
+
       await store.dispatch('updateUserProfilePic', formData);
+
+      console.log('Profile picture updated successfully');
     }
 
-    alert('Profile updated successfully');
+    alertMessage.value = 'Profile updated successfully';
+    showAlert.value = true;
   } catch (error) {
     console.error('Error updating user data:', error);
-    alert('Failed to update profile');
+    alertMessage.value = 'Failed to update profile';
+    showAlert.value = true;
   }
 };
 
+const handleFileChange = (event) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    selectedProfilePic.value = file;
+    
+    console.log('Selected File:', file);
 
-    const handleFileChange = (event) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        selectedProfilePic.value = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      profilePicPreview.value = reader.result;
+      console.log('Profile Picture Preview:', reader.result);
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          user.value.photoprofile = reader.result;
-        };
-        reader.readAsDataURL(file);
-      }
+    const closeAlert = () => {
+      showAlert.value = false;
     };
 
     return {
       user,
       updateUserData,
       handleFileChange,
+      profilePicPreview,
+      showAlert,
+      alertMessage,
+      closeAlert,
     };
   },
 };
 </script>
-
 
 <style scoped>
 #profile-pic {
@@ -191,5 +228,34 @@ export default {
 
 .button:hover {
   background-color: #2563eb;
+}
+
+/* Custom Alert Styles */
+.alert-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.alert-modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  width: 300px;
+}
+
+.alert-modal-content button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

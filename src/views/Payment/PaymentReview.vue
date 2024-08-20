@@ -126,7 +126,9 @@ export default {
           detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
           price: this.roomData.price,
-          image: this.roomData.image
+          image: this.roomData.image,
+          location: this.produk.location,
+          fasilitas: this.roomData.fasilitas,
         });
 
         const response = await axios.post('https://api.nearus.id/api/checkout', {
@@ -136,7 +138,9 @@ export default {
           detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
           price: this.roomData.price,
-          image: this.roomData.image
+          image: this.roomData.image,
+          fasilitas: this.roomData.fasilitas,
+          location: this.produk.location
         }, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -144,6 +148,8 @@ export default {
         });
 
         if (response.data.success) {
+          console.log(response.data.disorder)
+          console.log(response.data)
           const snapToken = response.data.snapToken;
           window.snap.pay(snapToken, {
             onSuccess: (result) => {

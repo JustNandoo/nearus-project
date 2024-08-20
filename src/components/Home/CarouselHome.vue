@@ -1,10 +1,15 @@
-  <template>
+<template>
   <Nav />
   <div class="head relative overflow-hidden rounded-b-3xl">
     <div class="carousel w-screen relative">
       <transition-group name="slide" tag="div" mode="out-in">
-        <div v-for="(item, index) in items" :key="index" v-show="currentIndex === index" class="w-screen h-min bg-gray-300 flex items-center justify-center slide-item">
-          <img :src="item.image" :alt="item.alt" class="max-h-screen max-w-screen mx-auto" />
+        <div v-for="(item, index) in items" :key="index" v-show="currentIndex === index" class="w-screen h-full bg-gray-300 flex items-center justify-center slide-item">
+          <img
+              :src="item.image"
+              :alt="item.alt"
+              class="h-full w-full object-cover object-center mx-auto"
+              @error="handleImageError(index)"
+          />
         </div>
       </transition-group>
       <div class="herotxt absolute inset-0 flex flex-col items-start justify-center px-6">
@@ -28,7 +33,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import HeroText from '@/components/Home/HeroText.vue';
@@ -36,27 +40,31 @@ import SearchBar from '@/components/Home/SearchBar.vue';
 import Nav from '@/components/Pages/Nav.vue';
 
 const currentIndex = ref(0);
-const items = [
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 1', text: 'Reftalia Kost ' },
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 2', text: 'Text for Slide 2' },
+const items = ref([
+  { image: new URL('@/assets/images/carouselimage1.png', import.meta.url).href, alt: 'Image 1', text: 'Reftalia Kost' },
+  { image: new URL('@/assets/images/carouselimage2.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Rumah kost Malikamila kost' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 3', text: 'Text for Slide 3' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 4', text: 'Text for Slide 4' },
   { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 5', text: 'Text for Slide 5' },
-];
+]);
 
-const text = ref(items[currentIndex.value].text);
+const text = ref(items.value[currentIndex.value].text);
 
 function goToSlide(index) {
   currentIndex.value = index;
-  text.value = items[index].text;
+  text.value = items.value[index].text;
+}
+
+function handleImageError(index) {
+  items.value[index].image = 'https://via.placeholder.com/1920x1080?text=No+Image+Available';
 }
 
 let interval;
 
 onMounted(() => {
   interval = setInterval(() => {
-    currentIndex.value = (currentIndex.value + 1) % items.length;
-    text.value = items[currentIndex.value].text;
+    currentIndex.value = (currentIndex.value + 1) % items.value.length;
+    text.value = items.value[currentIndex.value].text;
   }, 5000);
 });
 
@@ -65,9 +73,9 @@ onUnmounted(() => {
 });
 </script>
 
-
 <style scoped>
 .carousel {
+  height: 500px; /* Fixed height for the carousel */
   display: flex;
   transition: transform 0.3s ease;
 }
@@ -86,6 +94,13 @@ onUnmounted(() => {
   z-index: 10;
 }
 
+.slide-item img {
+  object-fit: cover; /* Ensure images cover the entire carousel area */
+  object-position: center;
+  height: 100%;
+  width: 100%;
+}
+
 .navigation button {
   background-color: white;
   border: none;
@@ -94,16 +109,11 @@ onUnmounted(() => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
 .slide-enter-from, .slide-leave-to {
   opacity: 0;
 }
 
-
 .slide-enter-to, .slide-leave-from {
   opacity: 1;
 }
-
-
 </style>
-
