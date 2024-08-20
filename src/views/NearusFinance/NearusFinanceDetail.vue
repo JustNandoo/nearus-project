@@ -40,7 +40,10 @@
                 {{ transaction.status }}
               </div>
             </div>
-
+            <!-- Remaining Time -->
+            <div class="text-black-500 font-bold text-lg">
+              Kos Disewa Sampai : {{ formattedEndDate }}
+            </div>
             <!-- Facilities Section -->
             <div class="mt-6">
               <h2 class="text-gray-800 text-xl md:text-2xl font-semibold mb-4">Fasilitas</h2>
@@ -102,7 +105,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import NavFixed from "@/components/Pages/NavFixed.vue";
 import imageProfileDefault from '@/assets/images/profile-pic.png';
@@ -112,6 +115,7 @@ import { useRoute } from 'vue-router';
 const isLoading = ref(true);
 const transaction = ref(null);
 const owner = ref({});
+const endDate = ref('');
 const route = useRoute();
 const produk = ref(JSON.parse(localStorage.getItem('produk')));
 
@@ -144,6 +148,7 @@ const fetchTransactionDetail = async () => {
       transaction.value = response.data;
       console.log('Transaction data fetched successfully:', transaction.value);
       fetchOwnerDetail(transaction.value.ownerId);
+      fetchRemainingTime(transaction.value.id);  // Fetch remaining time
     } else {
       console.error('Failed to fetch transaction details. Response:', response.data);
     }
@@ -154,19 +159,49 @@ const fetchTransactionDetail = async () => {
   }
 };
 
+const fetchRemainingTime = async (orderId) => {
+  try {
+    const response = await axios.get(`https://api.nearus.id/api/orders/remaining-time/${orderId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    if (response.data && response.data.success) {
+      const { end } = response.data;
+      endDate.value = new Date(end);
+      console.log('End date fetched successfully:', endDate.value);
+    } else {
+      console.error('Failed to fetch remaining time. Response:', response.data);
+    }
+  } catch (error) {
+    console.error('Error fetching remaining time:', error);
+  }
+};
+
+const formattedEndDate = computed(() => {
+  if (!endDate.value) return '';
+  return endDate.value.toLocaleDateString('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+});
+
 onMounted(() => {
   fetchTransactionDetail();
 });
 
 const sendMessageToOwner = () => {
-  // Implement logic to send message to owner
+  console.log('Message sent to owner:', owner.value);
+  // Implement message sending logic here
 };
 
 const cancelAction = () => {
-  // Implement logic for cancellation action
+  console.log('Cancellation requested');
+  // Implement cancellation logic here
 };
 </script>
 
 <style scoped>
-/* Add any scoped styles here if necessary */
+/* Add custom styles here */
 </style>
