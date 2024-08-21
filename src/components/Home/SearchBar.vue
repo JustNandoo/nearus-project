@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'input1', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan / daerah', value: '' },
+        { id: 'input1', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan', value: '' },
         { id: 'input2', icon: 'fa-regular fa-clock', placeholder: 'Masa Sewa', value: '' },
         { id: 'input3', icon: 'fa-solid fa-venus-mars', placeholder: 'Semua Tipe', value: '' },
       ],

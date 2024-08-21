@@ -20,7 +20,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const options = ['< 1 juta', '1 juta - < 2 juta', '2 juta'];
+const options = ['Pria', 'Wanita', 'Campuran'];
 const selectedOption = ref(options[0]);
 
 function selectOption(option) {
