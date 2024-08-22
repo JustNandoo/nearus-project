@@ -28,7 +28,7 @@
           <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
           <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
           <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10"> Rp. {{ formatPrice(room.price) }} / {{ room.time }}</div>
-          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5  mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
+          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
             Pilih
           </button>
         </div>
@@ -39,9 +39,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import {useStore} from 'vuex';
+import {useRouter} from 'vue-router';
+
+const store = useStore();
 
 const props = defineProps({
   ownerId: {
@@ -68,15 +71,13 @@ const fetchRooms = async (ownerId) => {
 
 const handleCheckout = async (room) => {
   try {
-    const userData = {
-      name: 'abcd',
-      phonenumber: 12345,
-    };
+    // Get user data from Vuex store
+    const user = store.state.user;
 
-    // Siapkan data permintaan untuk checkout
+    // Prepare data for the checkout request
     const requestBody = {
-      name: userData.name,
-      phonenumber: userData.phonenumber,
+      name: user.name,
+      phonenumber: user.phonenumber,
       detail: `${room.name}`,
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
@@ -100,7 +101,7 @@ const handleCheckout = async (room) => {
         image: room.image,
         fasilitas: room.fasilitas
       }));
-      // Mengarahkan ke halaman PaymentReview
+      // Redirect to PaymentReview page
       router.push('/PaymentReview');
     } else {
       console.error('Checkout failed:', response.data.message);
