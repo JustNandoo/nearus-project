@@ -38,7 +38,7 @@
     <div class="mt-10 mr-32 ml-32 mb-20">
       <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
       <div v-if="facilities.length" class="flex flex-wrap gap-4">
-        <p  class="text-black text-lg font-montserrat mr-4 mb-2">
+        <p class="text-black text-lg font-montserrat mr-4 mb-2">
           {{ facilities }}
         </p>
       </div>
@@ -47,7 +47,7 @@
       <div>
         <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
         <div class="flex gap-8 justify-between">
-          <div class="">
+          <div>
             <LeafletMap />
           </div>
           <div class="w-1/2 container mx-auto py-8">
@@ -128,11 +128,10 @@ const fetchProductData = async () => {
         location: response.data.location
       }));
       product.value = selectedProduct;
-      location.value = selectedProduct.location;
       facilities.value = selectedProduct.fasilitas;
       ownerId.value = selectedProduct.ownerId;
       roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image];
-      await fetchRooms(selectedProduct.ownerId);
+      await fetchRooms();
     } else {
       console.error('Error fetching product data: no data response');
     }
@@ -156,7 +155,7 @@ const fetchRooms = async () => {
 
 // Computed property to format facilities
 const formattedFacilities = computed(() => {
-  return facilities.value.map(facility => facility.trim());
+  return facilities.value.split(',').map(facility => facility.trim());
 });
 
 onMounted(async () => {
@@ -193,5 +192,3 @@ const formatPrice = (price) => {
   font-style: italic;
 }
 </style>
-
-

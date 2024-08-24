@@ -28,8 +28,13 @@
           <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
           <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
           <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10"> Rp. {{ formatPrice(room.price) }} / {{ room.time }}</div>
-          <button @click="handleCheckout(room)" class="justify-center items-center px-24 py-5 mt-14 text-base text-center text-white bg-sky-600 rounded-xl shadow-2xl">
-            Pilih
+          <button @click="handleCheckout(room)"
+                  :class="[
+                    'justify-center items-center px-24 py-5 mt-14 text-base text-center rounded-xl shadow-2xl',
+                    room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
+                  ]"
+                  :disabled="room.availability <= 0">
+            {{ room.availability > 0 ? 'Pilih' : 'Tidak Tersedia' }}
           </button>
         </div>
       </div>
@@ -39,12 +44,9 @@
 </template>
 
 <script setup>
-import {ref, onMounted, watch} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
-import {useStore} from 'vuex';
-import {useRouter} from 'vue-router';
-
-const store = useStore();
+import { useRouter } from 'vue-router';
 
 const props = defineProps({
   ownerId: {
@@ -56,25 +58,24 @@ const props = defineProps({
 const rooms = ref([]);
 const router = useRouter();
 
-const fetchRooms = async (ownerId) => {
+const fetchRooms = async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId}`);
+    const response = await axios.get(`https://api.nearus.id/api/rooms/${props.ownerId}`);
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {
-      console.error('No room data available');
+      rooms.value = []; // Set rooms to empty if no data
     }
   } catch (error) {
     console.error('Error fetching room data:', error);
+    rooms.value = []; // Set rooms to empty on error
   }
 };
 
 const handleCheckout = async (room) => {
   try {
-    // Get user data from Vuex store
     const user = store.state.user;
 
-    // Prepare data for the checkout request
     const requestBody = {
       name: user.name,
       phonenumber: user.phonenumber,
@@ -101,7 +102,6 @@ const handleCheckout = async (room) => {
         image: room.image,
         fasilitas: room.fasilitas
       }));
-      // Redirect to PaymentReview page
       router.push('/PaymentReview');
     } else {
       console.error('Checkout failed:', response.data.message);
@@ -111,21 +111,21 @@ const handleCheckout = async (room) => {
   }
 };
 
-onMounted(() => {
-  if (props.ownerId) {
-    fetchRooms(props.ownerId);
-  }
-});
-
 watch(() => props.ownerId, (newOwnerId) => {
   if (newOwnerId) {
-    fetchRooms(newOwnerId);
+    fetchRooms();
   }
 });
 
 const formatPrice = (price) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
+
+onMounted(() => {
+  if (props.ownerId) {
+    fetchRooms();
+  }
+});
 </script>
 
 <style scoped>
