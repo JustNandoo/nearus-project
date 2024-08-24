@@ -47,6 +47,7 @@
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';  // Import the store
 
 const props = defineProps({
   ownerId: {
@@ -57,6 +58,7 @@ const props = defineProps({
 
 const rooms = ref([]);
 const router = useRouter();
+const store = useStore();  // Use the store
 
 const fetchRooms = async () => {
   try {
@@ -79,7 +81,7 @@ const handleCheckout = async (room) => {
     const requestBody = {
       name: user.name,
       phonenumber: user.phonenumber,
-      detail: `${room.name}`,
+      detail: `${room.name}`,  // Use backticks
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
       ownerId: room.ownerId,
@@ -88,7 +90,7 @@ const handleCheckout = async (room) => {
 
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,  // Use backticks
       },
     });
 
