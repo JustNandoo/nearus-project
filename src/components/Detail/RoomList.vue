@@ -44,10 +44,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';  // Import the store
+import { useStore } from 'vuex';
 
 const props = defineProps({
   ownerId: {
@@ -58,7 +58,7 @@ const props = defineProps({
 
 const rooms = ref([]);
 const router = useRouter();
-const store = useStore();  // Use the store
+const store = useStore();
 
 const fetchRooms = async () => {
   try {
@@ -66,22 +66,22 @@ const fetchRooms = async () => {
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {
-      rooms.value = []; // Set rooms to empty if no data
+      rooms.value = [];
     }
   } catch (error) {
     console.error('Error fetching room data:', error);
-    rooms.value = []; // Set rooms to empty on error
+    rooms.value = [];
   }
 };
 
 const handleCheckout = async (room) => {
   try {
-    const user = store.state.user;
+    const userData = store.getters.getUser;
 
     const requestBody = {
-      name: user.name,
-      phonenumber: user.phonenumber,
-      detail: `${room.name}`,  // Use backticks
+      name: userData.name,
+      phonenumber: userData.phone,
+      detail: `${room.name}`,
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
       ownerId: room.ownerId,
@@ -90,13 +90,12 @@ const handleCheckout = async (room) => {
 
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,  // Use backticks
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
       },
     });
 
     if (response.data.success) {
       console.log('Checkout successful:', response.data.message);
-
       localStorage.setItem('roomData', JSON.stringify({
         roomName: room.name,
         price: room.price,
@@ -129,6 +128,7 @@ onMounted(() => {
   }
 });
 </script>
+
 
 <style scoped>
 /* Add your styles here */

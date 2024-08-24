@@ -59,7 +59,7 @@
           {{ user.name }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[81px] absolute text-black text-[13px] font-normal font-montserrat leading-7">
-          {{ user.phonenumber }}
+          {{ user.phone }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[108px] absolute text-black text-[13px] font-normal font-montserrat underline leading-7">
           {{ user.email }}
@@ -121,7 +121,7 @@ export default {
         const formattedDate = new Date(this.selectedDate).toISOString().split('T')[0];
         console.log('Payment request data:', {
           name: this.user.name,
-          phonenumber: this.user.phonenumber,
+          phonenumber: this.user.phone,
           ownerId: this.roomData.ownerId,
           detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
@@ -133,7 +133,7 @@ export default {
 
         const response = await axios.post('https://api.nearus.id/api/checkout', {
           name: this.user.name,
-          phonenumber: this.user.phonenumber,
+          phonenumber: this.user.phone,
           ownerId: this.roomData.ownerId,
           detail: `${this.roomData.roomName} - ${this.produk.name}`,
           duration: formattedDate,
