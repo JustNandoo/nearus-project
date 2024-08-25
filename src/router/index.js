@@ -162,6 +162,11 @@ const router = createRouter({
       component: () => import('../views/DetailProduct.vue')
     },
     {
+      path: '/chat-user',
+      name: 'ChatUser',
+      component: () => import('../views/HomeView/ChatUser.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }

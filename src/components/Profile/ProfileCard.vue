@@ -25,10 +25,12 @@
         <div class="mt-5 ml-2">
           <h1 class="font-bold text-[22px]">Pusat Bantuan</h1>
         </div>
+        <router-link to="/chat-user">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />
           <p class="text-[22px] font-medium">Chat</p>
         </div>
+        </router-link>
         <router-link to="/PrivacyPolicy">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />

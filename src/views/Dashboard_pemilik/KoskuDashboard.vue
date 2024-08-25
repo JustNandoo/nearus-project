@@ -287,7 +287,6 @@ const addProduct = async () => {
     formData.append('linklocation', newProduct.value.linklocation);
     formData.append('price', newProduct.value.price);
     formData.append('fasilitas', newProduct.value.fasilitas.split(',').map(f => f.trim()).join(','));
-    formData.append('roomid', newProduct.value.roomid);
     formData.append('about', newProduct.value.about);
     formData.append('duration', newProduct.value.duration);
 
@@ -309,6 +308,7 @@ const addProduct = async () => {
     }
   }
 };
+
 
 
 
