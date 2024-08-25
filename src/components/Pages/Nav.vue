@@ -69,6 +69,7 @@ onBeforeUnmount(() => {
 .header {
   z-index: 1000;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, margin-top 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Default shadow */
 }
 
 .bg-blue-primary {
@@ -79,14 +80,19 @@ onBeforeUnmount(() => {
   color: white;
 }
 
-/* Tambahkan media query di sini */
+/* Box shadow when scrolled */
+.bg-blue-primary.shadow-lg {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Media query adjustments */
 @media (max-width: 768px) {
   .header nav {
     padding: 0 20px;
   }
 
   .header .gap-10 {
-    display: none; 
+    display: none;
   }
 }
 
@@ -96,17 +102,17 @@ onBeforeUnmount(() => {
 }
 
 .login-button {
-  background-color: #3490dc; 
+  background-color: #3490dc;
   color: white;
   padding: 0.5rem 1rem;
 }
 
 .login-button:hover {
-  background-color: #2779bd; 
+  background-color: #2779bd;
 }
 
 .register-button {
-  background-color: #3490dc; 
+  background-color: #3490dc;
   color: white;
   padding: 0.5rem 1rem;
 }
@@ -116,3 +122,4 @@ onBeforeUnmount(() => {
   color: #3490dc;
 }
 </style>
+

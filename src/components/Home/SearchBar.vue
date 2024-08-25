@@ -2,9 +2,9 @@
   <div class="flex items-center mt-4 pl-8 p-4 bg-white rounded-[50px] shadow-lg w-[1350px]">
     <div class="flex items-center space-x-8">
       <div v-for="(input, index) in inputs" :key="index" class="flex items-center space-x-2 text-[18px]">
-          <span v-if="input.icon" :class="input.icon"></span>
-          <span>{{ input.label }}</span>
-        <div class="flex items-center px-3 py-2  rounded-md bg-white mr-20">
+        <span v-if="input.icon" :class="input.icon"></span>
+        <span>{{ input.label }}</span>
+        <div v-if="input.type === 'text'" class="flex items-center px-3 py-2 rounded-md bg-white mr-20">
           <input
               :id="input.id"
               type="text"
@@ -12,6 +12,19 @@
               class="bg-transparent focus:outline-none"
               :placeholder="input.placeholder"
           />
+        </div>
+        <div v-else-if="input.type === 'select'" class="relative flex items-center px-3 py-2 rounded-md bg-white mr-20">
+          <select
+              :id="input.id"
+              v-model="input.value"
+              class="bg-transparent focus:outline-none appearance-none w-full text-gray-700"
+          >
+            <option disabled value="" selected hidden>{{ input.placeholder }}</option>
+            <option v-for="option in input.options" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+          <i class="fa-solid fa-chevron-down text-gray-400 absolute right-4"></i>
         </div>
       </div>
     </div>
@@ -27,9 +40,9 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'input1', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan', value: '' },
-        { id: 'input2', icon: 'fa-regular fa-clock', placeholder: 'Masa Sewa', value: '' },
-        { id: 'input3', icon: 'fa-solid fa-venus-mars', placeholder: 'Semua Tipe', value: '' },
+        { id: 'input1', type: 'text', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan', value: '' },
+        { id: 'input2', type: 'text', icon: 'fa-regular fa-clock', placeholder: 'Masa Sewa', value: '' },
+        { id: 'input3', type: 'select', icon: 'fa-solid fa-venus-mars', placeholder: 'Semua Tipe', value: '', options: ['Pria', 'Wanita', 'Campuran'] },
       ],
     };
   },
@@ -41,6 +54,6 @@ export default {
 };
 </script>
 
-<style>
-/* Add any additional styling if needed */
+<style scoped>
+/* Add any additional scoped styles here */
 </style>
