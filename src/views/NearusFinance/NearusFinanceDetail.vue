@@ -62,40 +62,34 @@
 
         <!-- Owner Details -->
         <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mt-10">
-          <h2 class="text-gray-800 text-xl md:text-2xl font-semibold mb-4">Hubungi Pemilik</h2>
+          <h2 class="text-gray-800 text-xl md:text-2xl font-semibold mb-6">Hubungi Pemilik</h2>
           <div class="flex flex-col md:flex-row items-center mb-6">
             <img
                 class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg"
                 :src="owner.image || imageProfileDefault"
                 alt="Owner Profile"
             />
-            <div class="md:ml-4 mt-4 md:mt-0">
-              <h3 class="text-gray-800 text-lg md:text-xl font-bold">{{ owner.name }}</h3>
+            <div class="md:ml-4 mt-4 md:mt-0 text-center md:text-left">
+              <h3 class="text-gray-800 text-lg md:text-xl font-bold mb-1">{{ owner.name }}</h3>
               <p class="text-gray-600 text-base md:text-lg font-medium">{{ owner.email }}</p>
             </div>
           </div>
           <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-            <a
-                :href="`https://wa.me/${owner.phonenumber}`"
-                target="_blank"
+            <button
+                @click="extendRental"
                 class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
             >
               Ajukan perpanjangan sewa
-            </a>
+            </button>
             <button
                 @click="sendMessageToOwner"
                 class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
             >
               <i class="fas fa-comments mr-2"></i> Kirim Pesan
             </button>
-            <button
-                @click="cancelAction"
-                class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
-            >
-              Ajukan Pembatalan
-            </button>
           </div>
         </div>
+
       </div>
     </main>
 
@@ -145,10 +139,14 @@ const fetchTransactionDetail = async () => {
       },
     });
     if (response.data) {
+      localStorage.setItem('detailfinance', response.data.id);
       transaction.value = response.data;
       console.log('Transaction data fetched successfully:', transaction.value);
+
+      // Set the end date from the duration field
+      endDate.value = new Date(transaction.value.duration);
+
       fetchOwnerDetail(transaction.value.ownerId);
-      fetchRemainingTime(transaction.value.id);  // Fetch remaining time
     } else {
       console.error('Failed to fetch transaction details. Response:', response.data);
     }
@@ -156,25 +154,6 @@ const fetchTransactionDetail = async () => {
     console.error('Error fetching transaction details:', error);
   } finally {
     isLoading.value = false;
-  }
-};
-
-const fetchRemainingTime = async (orderId) => {
-  try {
-    const response = await axios.get(`https://api.nearus.id/api/orders/remaining-time/${orderId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    if (response.data && response.data.success) {
-      const { end } = response.data;
-      endDate.value = new Date(end);
-      console.log('End date fetched successfully:', endDate.value);
-    } else {
-      console.error('Failed to fetch remaining time. Response:', response.data);
-    }
-  } catch (error) {
-    console.error('Error fetching remaining time:', error);
   }
 };
 
@@ -186,6 +165,45 @@ const formattedEndDate = computed(() => {
     day: 'numeric',
   });
 });
+
+const extendRental = async () => {
+  const detailfinanceId = localStorage.getItem('detailfinance');
+
+  try {
+    const response = await axios.post(
+        `https://api.nearus.id/api/orders/extend/${detailfinanceId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+    );
+
+    if (response.data.snapToken) {
+      // Call Midtrans Snap to show the payment popup
+      window.snap.pay(response.data.snapToken, {
+        onSuccess: function (result) {
+          alert("Pembayaran berhasil!"); // Handle success logic here
+          location.reload(); // Reload the page to update the rental duration
+        },
+        onPending: function (result) {
+          alert("Pembayaran tertunda!"); // Handle pending payment logic here
+        },
+        onError: function (result) {
+          alert("Pembayaran gagal!"); // Handle payment failure here
+        },
+        onClose: function () {
+          alert("Pembayaran tidak diselesaikan, transaksi dibatalkan!"); // Handle when the user closes the payment popup
+        }
+      });
+    } else {
+      console.error('Failed to get Snap token:', response.data);
+    }
+  } catch (error) {
+    console.error('Error during the extension request:', error);
+  }
+};
 
 onMounted(() => {
   fetchTransactionDetail();
