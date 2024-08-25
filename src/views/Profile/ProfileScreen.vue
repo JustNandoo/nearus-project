@@ -88,6 +88,7 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script>
@@ -95,9 +96,10 @@ import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
 import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
+import Footer from '@/components/Pages/Footer.vue';
 
 export default {
-  components: { NavFixed, LogoutConfirmation},
+  components: { NavFixed, Footer, LogoutConfirmation},
   setup() {
 
     const store = useStore();
