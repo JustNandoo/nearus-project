@@ -43,7 +43,7 @@
       <div
           @click="showLogoutConfirmation"
           :class="[
-          'flex gap-1 items-center rounded-lg mx-4 py-2 cursor-pointer transition',
+          'flex gap-1 items-center rounded-lg mx-4  py-2 cursor-pointer transition',
           activeItem === 'Logout' ? 'bg-[#F6F6F6] text-black font-bold' : 'text-neutral-500 font-medium hover:bg-[#E0E0E0] hover:text-black'
         ]"
       >
