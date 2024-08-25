@@ -9,12 +9,10 @@
             <div class="bg-white p-4 rounded-lg shadow-md mb-4">
               <h2 class="font-bold text-lg mb-2">Account Setting</h2>
               <router-link to="/profile" class="sidebar-option">Change Profile</router-link>
-              <p class="text-sm text-gray-600">Details about your Personal Information</p>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
               <router-link to="/change-password" class="sidebar-option">Change Password</router-link>
-              <p class="text-sm text-gray-600">Change your account password</p>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md mt-4">
               <router-link to="/login" class="sidebar-option">Logout</router-link>
@@ -25,6 +23,7 @@
             <!-- Reset Password Section -->
             <section class="mt-12">
               <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
+              <p class="text-sm text-gray-600">Change your account password</p>
               <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
               <form class="space-y-4" @submit.prevent="resetPassword">
                 <div>

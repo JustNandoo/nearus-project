@@ -3,17 +3,10 @@
     <sidebar />
     <div class="flex-1 flex flex-col pb-14">
       <main class="flex flex-col items-center px-5 mt-12 w-full">
-        <section class="mt-16 w-full max-w-5xl">
-          <div class="flex gap-5 max-md:flex-col max-md:gap-5">
-            <div class="w-full md:w-[344px]">
-              <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-                <h2 class="font-bold text-lg mb-2">Account Settings</h2>
-                <router-link to="" class="sidebar-option">Change Profile</router-link>
-                <p class="text-sm text-gray-600">Details about your Personal Information</p>
-              </div>
-            </div>
+        <section class="mt-16 w-full max-w-5xl mx-auto">
+          <div class="flex justify-center">
             <!-- Main Content -->
-            <section class="flex flex-col w-full">
+            <section class="flex flex-col w-full max-w-3xl">
               <div class="flex items-center mb-6">
                 <div class="relative">
                   <img id="profile-pic" loading="lazy" :src="user.photoprofile || placeholderImage" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
@@ -28,6 +21,7 @@
                 </div>
               </div>
               <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
+              <p class="text-sm text-gray-600">Details about your Personal Information</p>
               <form class="space-y-4" @submit.prevent="updateUserData">
                 <div class="grid grid-cols-2 gap-4">
                   <div>
@@ -58,7 +52,6 @@
                   <span v-else>Update Profile</span>
                 </button>
               </form>
-              <!-- Debug: Add a div to monitor alertMessage -->
               <div v-if="alertMessage" class="mt-4">
                 <CustomAlert :message="alertMessage" :type="alertType" @close="alertMessage = ''" />
               </div>
@@ -71,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import CustomAlert from '@/components/Profile/CustomAlert.vue';
@@ -90,13 +83,23 @@ const loading = ref(false);
 const alertMessage = ref('');
 const alertType = ref('success');
 
-onMounted(async () => {
-  await store.dispatch('fetchUserProfile');
-  if (store.getters.getUser) {
-    user.value = { ...store.getters.getUser };
+// Load user data from the store when the component is mounted
+onMounted(() => {
+  store.dispatch('initializeStore'); // Ensure local storage data is loaded
+  const userData = store.getters.getUser;
+  if (userData) {
+    user.value = { ...userData };
+  } else {
+    console.warn('User data is undefined or not loaded correctly.');
   }
 });
 
+// Watch the user object and update the Vuex store whenever it changes
+watch(user, (newUser) => {
+  store.commit('updateUser', newUser);
+}, { deep: true });
+
+// Function to update user profile data
 const updateUserData = async () => {
   loading.value = true;
   try {
@@ -128,6 +131,7 @@ const updateUserData = async () => {
   }
 };
 
+// Function to handle file selection for profile picture update
 const handleFileChange = (event) => {
   const file = event.target.files?.[0];
   if (file) {

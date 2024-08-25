@@ -9,12 +9,10 @@
             <div class="bg-white p-4 rounded-lg shadow-md mb-4">
               <h2 class="font-bold text-lg mb-2">Account Settings</h2>
               <router-link to="/profile" class="sidebar-option">Change Profile</router-link>
-              <p class="text-sm text-gray-600">Details about your Personal Information</p>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
               <router-link to="/passworddata/:id" class="sidebar-option">Change password</router-link>
-              <p class="text-sm text-gray-600">Changes your account Password</p>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md mt-4">
               <router-link to="/login" class="sidebar-option">Logout</router-link>
@@ -37,6 +35,7 @@
               </div>
             </div>
             <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
+            <p class="text-sm text-gray-600">Details about your Personal Information</p>
             <form class="space-y-4" @submit.prevent="updateUserData">
               <div class="grid grid-cols-2 gap-4">
                 <div>
@@ -68,6 +67,13 @@
         </div>
       </section>
     </main>
+        <!-- Custom Alert Modal -->
+    <LogoutConfirmation
+      :show="showLogoutConfirmation"
+      @confirm="logout"
+      @cancel="showLogoutConfirmation = false"
+    />
+
     <!-- Custom Alert Modal -->
     <div v-if="showAlert" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg">
@@ -88,10 +94,12 @@
 import { ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
+import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
 
 export default {
-  components: { NavFixed },
+  components: { NavFixed, LogoutConfirmation},
   setup() {
+
     const store = useStore();
     const user = ref({
       name: '',
@@ -105,6 +113,7 @@ export default {
     const showAlert = ref(false);
     const alertMessage = ref('');
     const loading = ref(false);
+    const showLogoutConfirmation = ref(false);
 
     onMounted(() => {
       // Fetch user data from Vuex store
@@ -115,7 +124,9 @@ export default {
         user.value.phone = userData.phone || '';
         user.value.gender = userData.gender || '';
         user.value.photoprofile = userData.photoprofile || '';
-      }
+      } else {
+    console.error('User data is not available in Vuex store');
+  }
     });
 
     const updateUserData = async () => {
@@ -170,6 +181,11 @@ export default {
       showAlert.value = false;
     };
 
+    const logout = () => {
+      showLogoutConfirmation.value = false;
+      this.$router.push('/login');
+    };
+
     return {
       user,
       updateUserData,
@@ -179,6 +195,8 @@ export default {
       alertMessage,
       closeAlert,
       loading,
+      showLogoutConfirmation,
+      logout,
     };
   },
 };
