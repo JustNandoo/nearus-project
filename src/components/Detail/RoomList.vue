@@ -25,17 +25,18 @@
       </div>
       <div class="flex flex-col ml-5 w-[22%] max-md:ml-0 max-md:w-full">
         <div class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
-          <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability }}</div>
+          <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }}</div>
           <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
           <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10"> Rp. {{ formatPrice(room.price) }} / {{ room.time }}</div>
           <button @click="handleCheckout(room)"
                   :class="[
-                    'justify-center items-center px-24 py-5 mt-14 text-base text-center rounded-xl shadow-2xl',
-                    room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
-                  ]"
+          'justify-center items-center px-24 py-5 mt-14 text-base text-center rounded-xl shadow-2xl',
+          room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
+        ]"
                   :disabled="room.availability <= 0">
             {{ room.availability > 0 ? 'Pilih' : 'Tidak Tersedia' }}
           </button>
+
         </div>
       </div>
     </div>
@@ -75,6 +76,11 @@ const fetchRooms = async () => {
 };
 
 const handleCheckout = async (room) => {
+  if (room.availability <= 0) {
+    console.warn('Kamar tidak tersedia untuk checkout.');
+    return;
+  }
+
   try {
     const userData = store.getters.getUser;
 
@@ -95,7 +101,7 @@ const handleCheckout = async (room) => {
     });
 
     if (response.data.success) {
-      console.log('Checkout successful:', response.data.message);
+      console.log('Checkout berhasil:', response.data.message);
       localStorage.setItem('roomData', JSON.stringify({
         roomName: room.name,
         price: room.price,
@@ -105,12 +111,13 @@ const handleCheckout = async (room) => {
       }));
       router.push('/PaymentReview');
     } else {
-      console.error('Checkout failed:', response.data.message);
+      console.error('Checkout gagal:', response.data.message);
     }
   } catch (error) {
-    console.error('Error during checkout:', error);
+    console.error('Error saat checkout:', error);
   }
 };
+
 
 watch(() => props.ownerId, (newOwnerId) => {
   if (newOwnerId) {

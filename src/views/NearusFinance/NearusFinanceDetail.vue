@@ -63,33 +63,35 @@
         <!-- Owner Details -->
         <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mt-10">
           <h2 class="text-gray-800 text-xl md:text-2xl font-semibold mb-6">Hubungi Pemilik</h2>
-          <div class="flex flex-col md:flex-row items-center mb-6">
+          <div class="flex items-center mb-6">
             <img
                 class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg"
                 :src="owner.image || imageProfileDefault"
                 alt="Owner Profile"
             />
-            <div class="md:ml-4 mt-4 md:mt-0 text-center md:text-left">
+            <div class="ml-4 text-center md:text-left">
               <h3 class="text-gray-800 text-lg md:text-xl font-bold mb-1">{{ owner.name }}</h3>
               <p class="text-gray-600 text-base md:text-lg font-medium">{{ owner.email }}</p>
             </div>
-          </div>
-          <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-            <button
-                @click="extendRental"
-                class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
-            >
-              Ajukan perpanjangan sewa
-            </button>
-            <button
-                @click="sendMessageToOwner"
-                class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
-            >
-              <i class="fas fa-comments mr-2"></i> Kirim Pesan
-            </button>
+            <div class="ml-auto flex space-x-4">
+              <button
+                  @click="extendRental"
+                  class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
+              >
+                Ajukan perpanjangan sewa
+              </button>
+              <button
+                  @click="sendMessageToOwner"
+                  class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
+              >
+                <i class="fas fa-comments mr-2"></i> Kirim Pesan
+              </button>
+            </div>
           </div>
         </div>
 
+        <!-- Alert Component -->
+        <Alert ref="alertPopup" />
       </div>
     </main>
 
@@ -105,6 +107,7 @@ import NavFixed from "@/components/Pages/NavFixed.vue";
 import imageProfileDefault from '@/assets/images/profile-pic.png';
 import Footer from "@/components/Pages/Footer.vue";
 import { useRoute } from 'vue-router';
+import Alert from '@/components/NearusFinance/Alert.vue';
 
 const isLoading = ref(true);
 const transaction = ref(null);
@@ -112,7 +115,9 @@ const owner = ref({});
 const endDate = ref('');
 const route = useRoute();
 const produk = ref(JSON.parse(localStorage.getItem('produk')));
+const alertPopup = ref(null);
 
+// Fetch owner details
 const fetchOwnerDetail = async (ownerId) => {
   try {
     const response = await axios.get(`https://api.nearus.id/api/owner/${ownerId}`, {
@@ -131,6 +136,7 @@ const fetchOwnerDetail = async (ownerId) => {
   }
 };
 
+// Fetch transaction details
 const fetchTransactionDetail = async () => {
   try {
     const response = await axios.get(`https://api.nearus.id/api/orders/detail/${route.params.id}`, {
@@ -157,6 +163,7 @@ const fetchTransactionDetail = async () => {
   }
 };
 
+// Format end date
 const formattedEndDate = computed(() => {
   if (!endDate.value) return '';
   return endDate.value.toLocaleDateString('id-ID', {
@@ -166,6 +173,7 @@ const formattedEndDate = computed(() => {
   });
 });
 
+// Extend rental
 const extendRental = async () => {
   const detailfinanceId = localStorage.getItem('detailfinance');
 
@@ -194,7 +202,7 @@ const extendRental = async () => {
           alert("Pembayaran gagal!"); // Handle payment failure here
         },
         onClose: function () {
-          alert("Pembayaran tidak diselesaikan, transaksi dibatalkan!"); // Handle when the user closes the payment popup
+          alertPopup.value.open(); // Show the alert popup
         }
       });
     } else {
@@ -205,21 +213,16 @@ const extendRental = async () => {
   }
 };
 
+// Send message to owner
+const sendMessageToOwner = () => {
+  // Implement message sending functionality here
+};
+
 onMounted(() => {
   fetchTransactionDetail();
 });
-
-const sendMessageToOwner = () => {
-  console.log('Message sent to owner:', owner.value);
-  // Implement message sending logic here
-};
-
-const cancelAction = () => {
-  console.log('Cancellation requested');
-  // Implement cancellation logic here
-};
 </script>
 
 <style scoped>
-/* Add custom styles here */
+/* Add any scoped styles for your component here */
 </style>
