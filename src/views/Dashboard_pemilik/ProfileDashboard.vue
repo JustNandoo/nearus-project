@@ -96,7 +96,7 @@ onMounted(() => {
 
 // Watch the user object and update the Vuex store whenever it changes
 watch(user, (newUser) => {
-  store.commit('updateUser', newUser);
+  store.commit('setUser', newUser); // Menggunakan 'setUser' sebagai mutasi yang benar
 }, { deep: true });
 
 // Function to update user profile data
