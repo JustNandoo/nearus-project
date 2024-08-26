@@ -48,6 +48,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import Nav from "@/components/Pages/Nav.vue";
 import NavFixed from "@/components/Pages/NavFixed.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 const LOCAL_STORAGE_KEY = 'chatAppData';
 

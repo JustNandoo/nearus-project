@@ -43,9 +43,9 @@ const currentIndex = ref(0);
 const items = ref([
   { image: new URL('@/assets/images/carouselimage1.png', import.meta.url).href, alt: 'Image 1', text: 'Reftalia Kost' },
   { image: new URL('@/assets/images/carouselimage2.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Rumah kost Malikamila kost' },
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 3', text: 'Text for Slide 3' },
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 4', text: 'Text for Slide 4' },
-  { image: new URL('@/assets/images/carouseltesimg2.png', import.meta.url).href, alt: 'Image 5', text: 'Text for Slide 5' },
+  { image: new URL('@/assets/images/carouselimage3.jpeg', import.meta.url).href, alt: 'Image 3', text: 'Text for Slide 3' },
+  { image: new URL('@/assets/images/carouselimage4.jpeg', import.meta.url).href, alt: 'Image 4', text: 'Text for Slide 4' },
+  { image: new URL('@/assets/images/carouselimage5.jpeg', import.meta.url).href, alt: 'Image 5', text: 'Text for Slide 5' },
 ]);
 
 const text = ref(items.value[currentIndex.value].text);

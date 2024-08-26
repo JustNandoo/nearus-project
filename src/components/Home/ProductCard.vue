@@ -13,7 +13,7 @@
         <h1 class="font-normal text-[15px]">{{ product.location }}</h1>
       </div>
       <div class="mt-3">
-        <h1 class="font-normal text-[15px]">Mulai dari <span class="font-bold">{{ product.price }}</span>/Bulan</h1>
+        <h1 class="font-normal text-[15px]">Mulai dari <span class="font-bold">{{product.price}}</span>/ {{product.duration}}</h1>
       </div>
     </div>
   </router-link>

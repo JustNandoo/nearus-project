@@ -1,5 +1,5 @@
 <template>
-  <header class="header bg-transparent font-montserrat fixed top-0 w-screen h-20 pt-3 pb-3 items-center z-[1000]"
+  <header class="header bg-white font-montserrat fixed top-0 w-screen h-20 pt-3 pb-3 items-center z-[1000]"
           :class="{'bg-blue-primary': scrolled, 'shadow-lg': scrolled}">
     <nav class="flex justify-between items-center w-full px-8">
       <div>
