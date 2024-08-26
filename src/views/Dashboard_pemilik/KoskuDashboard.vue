@@ -10,7 +10,9 @@
               <div class="flex items-center gap-4">
                 <img class="w-20 h-20 rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
                 <div>
-                  <a href="/dashboard-kosku-detail-product" class="text-lg font-medium">{{ product.productname }}</a>
+                  <router-link :to="{ name: 'DetailProduct', params: { id: product.id } }" class="text-lg font-medium">
+                    {{ product.productname }}
+                  </router-link>
                   <p class="text-gray-500">{{ product.location }}</p>
                 </div>
               </div>
@@ -79,6 +81,10 @@
           <input type="number" v-model="newProduct.price" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter price">
         </div>
         <div class="mb-4">
+          <label class="block text-gray-700">Duration</label>
+          <input type="text" v-model="newProduct.duration" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter duration">
+        </div>
+        <div class="mb-4">
           <label class="block text-gray-700">Fasilitas</label>
           <input type="text" v-model="newProduct.fasilitas" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter facilities, separated by commas">
         </div>
@@ -96,63 +102,6 @@
         <div class="flex justify-end">
           <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" @click="closeAddModal">Cancel</button>
           <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Add Product</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl relative">
-      <button class="absolute top-2 right-2 text-gray-500" @click="closeEditModal">
-        <font-awesome-icon :icon="faTimes" class="w-6 h-6"/>
-      </button>
-      <h2 class="text-2xl font-bold mb-4">Edit Data Kamar</h2>
-      <form @submit.prevent="editProduct">
-        <div class="mb-4">
-          <label class="block text-gray-700">Nama Kamar</label>
-          <input type="text" v-model="editedProduct.productname" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter room name">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Lokasi</label>
-          <input type="text" v-model="editedProduct.location" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter location">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Category</label>
-          <select v-model="editedProduct.category" class="w-full p-2 border border-gray-300 rounded mt-1">
-            <option value="">Select Category</option>
-            <option value="pria">Pria</option>
-            <option value="wanita">Wanita</option>
-            <option value="campuran">Campuran</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Link Location</label>
-          <div class="flex">
-            <input type="text" v-model="editedProduct.linklocation" class="w-full p-2 border border-gray-300 rounded mt-1 mr-2" placeholder="Enter or get current location">
-            <button type="button" class="bg-gray-200 border border-gray-300 rounded p-2" @click="getCurrentLocation">
-              <font-awesome-icon class="w-5 h-5" :icon="faLocationDot"/>
-            </button>
-          </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Harga</label>
-          <input type="number" v-model="editedProduct.price" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter price">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Fasilitas</label>
-          <input type="text" v-model="editedProduct.fasilitas" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter facilities, separated by commas">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">About</label>
-          <textarea v-model="editedProduct.about" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter description"></textarea>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Image</label>
-          <input type="file" @change="handleFileUpload" class="w-full p-2 border border-gray-300 rounded mt-1">
-        </div>
-        <div class="flex justify-end">
-          <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded mr-2" @click="closeEditModal">Cancel</button>
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save Changes</button>
         </div>
       </form>
     </div>
@@ -310,67 +259,6 @@ const addProduct = async () => {
 };
 
 
-
-
-const editProduct = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in localStorage');
-      return;
-    }
-    if (!editedProduct.value.productname || !editedProduct.value.location || !editedProduct.value.category || !editedProduct.value.linklocation || !editedProduct.value.price || !editedProduct.value.fasilitas || !editedProduct.value.about) {
-      alert('Please fill out all required fields.');
-      return;
-    }
-
-    if (isNaN(editedProduct.value.price)) {
-      alert('Price must be a number.');
-      return;
-    }
-
-    let fasilitasArray = [];
-    if (typeof editedProduct.value.fasilitas === 'string') {
-      fasilitasArray = editedProduct.value.fasilitas.split(',').map(f => f.trim());
-    } else if (Array.isArray(editedProduct.value.fasilitas)) {
-      fasilitasArray = editedProduct.value.fasilitas;
-    } else {
-      fasilitasArray = [];
-    }
-
-    const formData = new FormData();
-    formData.append('image', editedProduct.value.image);
-    formData.append('productname', editedProduct.value.productname);
-    formData.append('ownerId', editedProduct.value.ownerId);
-    formData.append('location', editedProduct.value.location);
-    formData.append('category', editedProduct.value.category);
-    formData.append('linklocation', editedProduct.value.linklocation);
-    formData.append('price', editedProduct.value.price);
-    formData.append('fasilitas', fasilitasArray.join(','));
-    formData.append('roomid', editedProduct.value.roomid);
-    formData.append('about', editedProduct.value.about);
-    formData.append('duration',  newProduct.value.duration);
-
-    const response = await axios.post(`https://api.nearus.id/api/product/${editedProduct.value.id}/edit`, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    const index = products.value.findIndex(p => p.id === editedProduct.value.id);
-    if (index !== -1) {
-      products.value[index] = response.data.data;
-    }
-    showEditModal.value = false;
-    resetEditProductForm();
-  } catch (error) {
-    console.error('Failed to edit product:', error);
-    if (error.response) {
-      console.error('Error response:', error.response.data);
-      alert(`Failed to edit product. ${error.response.data.message || 'Please try again later.'}`);
-    }
-  }
-};
 
 const deleteProduct = async (productId) => {
   try {

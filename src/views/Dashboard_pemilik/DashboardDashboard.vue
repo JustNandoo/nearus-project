@@ -29,7 +29,7 @@
                  <h1 class="text-white font-semibold text-[18px]">Total Jumlah Kamar</h1>
                  <font-awesome-icon :icon="faDoorClosed" class="text-white"/>
                </div>
-               <p class="text-white mt-2 font-bold text-[20px]">12 Kamar</p>
+               <p class="text-white mt-2 font-bold text-[20px]">10 Kamar</p>
              </div>
            </div>
            <div class="w-[350px] mx-auto overflow-hidden rounded-lg shadow-lg">
@@ -38,7 +38,7 @@
                  <h1 class="text-white font-semibold text-[18px]">Total Jumlah Penyewa Kost</h1>
                  <font-awesome-icon :icon="faUser" class="text-white"/>
                </div>
-               <p class="text-white mt-2 font-bold text-[20px] ">12 Penghuni Kost</p>
+               <p class="text-white mt-2 font-bold text-[20px] ">5 Penghuni Kost</p>
              </div>
            </div>
            <div class="w-[350px] mx-auto overflow-hidden rounded-lg shadow-lg">
@@ -47,7 +47,7 @@
                  <h1 class="text-white font-semibold text-[18px]">Sisa Saldo</h1>
                  <font-awesome-icon :icon="faMoneyBill" class="text-white"/>
                </div>
-               <p class="text-white mt-2 font-bold text-[20px]">Rp. 7.200.000</p>
+               <p class="text-white mt-2 font-bold text-[20px]">Rp. 0</p>
              </div>
            </div>
          </div>

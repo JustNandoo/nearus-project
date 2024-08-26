@@ -1,6 +1,5 @@
 <template>
   <div class="flex">
-    <sidebar />
     <div class="flex flex-col w-full p-4">
       <div class="flex items-center gap-2 mb-4">
         <FontAwesomeIcon class="text-black cursor-pointer" :icon="faChevronLeft" @click="goBack" />
@@ -64,23 +63,57 @@
 </template>
 
 <script setup>
-import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
+// Get router and route
 const router = useRouter();
+const route = useRoute();
+const facilities = ref(""); // Initialize as an empty array
+const rooms = ref([]);
+const ownerId = ref(null);
+const roomImages = ref([]);
 
 const product = ref({
-  productname: "Reftalia Kost & Laundry",
-  location: "Jl. Bae-Besito No.82, Besito Kulon, Besito, Kec. Gebog, Kabupaten Kudus, Jawa Tengah 59333",
-  category: "Pria",
-  price: 750000,
-  duration: "3 bulan",
-  image: ["https://api.nearus.id/storage/post-images/677754971.jpg"],
-  fasilitas: ["Ac", "Wifi", "Kamar Mandi Luar", "Free Listrik", "Laundry", "Kasur", "Meja"],
-  about: "Kost Kostan murah dekat sekolah SMK Raden Umar Said, disebelah balai desa dan sebrang toko mitra, bisa bayar perbulan/tahun",
+  productname: "",
+  location: "",
+  category: "",
+  price: 0,
+  duration: "",
+  image: [],
+  fasilitas: [],
+  about: "",
+  ownerId: null,
+  roomid: null,
+});
+
+const fetchProductData = async () => {
+  try {
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
+    const selectedProduct = response.data;
+
+    if (selectedProduct) {
+      localStorage.setItem('produk', JSON.stringify({
+        name: response.data.productname,
+        location: response.data.location
+      }));
+      product.value = selectedProduct;
+      facilities.value = selectedProduct.fasilitas;
+      ownerId.value = selectedProduct.ownerId;
+      roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image];
+    } else {
+      console.error('Error fetching product data: no data response');
+    }
+  } catch (error) {
+    console.error('Error fetching product data:', error);
+  }
+};
+
+onMounted(() => {
+  fetchProductData();
 });
 
 function goBack() {
@@ -98,9 +131,51 @@ function handleImageChange(event, index) {
   }
 }
 
-function saveChanges() {
-  // Implement your save logic here
-  console.log('Product details saved:', product.value);
+async function saveChanges() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return;
+    }
+
+    if (!product.value.productname || !product.value.location || !product.value.category || !product.value.price || !product.value.fasilitas.length || !product.value.about) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+
+    if (isNaN(product.value.price)) {
+      alert('Price must be a number.');
+      return;
+    }
+
+    const formData = new FormData();
+    product.value.image.forEach((img, index) => {
+      formData.append('images[]', img);
+    });
+    formData.append('productname', product.value.productname);
+    formData.append('location', product.value.location);
+    formData.append('category', product.value.category);
+    formData.append('price', product.value.price);
+    formData.append('duration', product.value.duration);
+    formData.append('fasilitas', product.value.fasilitas.join(','));
+    formData.append('about', product.value.about);
+
+    const response = await axios.post('https://api.nearus.id/api/product/edit', formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('Product details saved:', response.data);
+    // Navigate away or update the UI here
+  } catch (error) {
+    console.error('Failed to save product:', error);
+    if (error.response) {
+      console.error('Error response:', error.response.data);
+      alert(`Failed to save product. ${error.response.data.message || 'Please try again later.'}`);
+    }
+  }
 }
 </script>
 
