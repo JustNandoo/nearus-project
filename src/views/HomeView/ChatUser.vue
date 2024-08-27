@@ -57,7 +57,7 @@ const loadChatData = () => {
   return storedData ? JSON.parse(storedData) : [
     {
       id: 1,
-      name: 'Alice',
+      name: 'Pak Anwari',
       profilePicture: 'https://via.placeholder.com/150',
       messages: [
         { id: 1, text: 'Hello from Alice!', sender: 'bot' },
@@ -67,17 +67,17 @@ const loadChatData = () => {
     },
     {
       id: 2,
-      name: 'Bob',
+      name: 'Bu Olga',
       profilePicture: 'https://via.placeholder.com/150',
       messages: [
-        { id: 1, text: 'Hello from Bob!', sender: 'bot' },
+        { id: 1, text: 'Selamat Siang ini bu olga', sender: 'bot' },
         { id: 2, text: 'Hi Bob!', sender: 'user' },
         { id: 3, text: 'What\'s up?', sender: 'bot' },
       ],
     },
     {
       id: 3,
-      name: 'Charlie',
+      name: 'Pak Tito',
       profilePicture: 'https://via.placeholder.com/150',
       messages: [
         { id: 1, text: 'Hello from Charlie!', sender: 'bot' },
