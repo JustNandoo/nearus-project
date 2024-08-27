@@ -86,9 +86,6 @@ defineExpose({open});
   transform: scale(0.95);
 }
 
-.md:scale-100 {
-  transform: scale(1);
-}
 
 .bg-gray-300 {
   background-color: #e0e0e0;
