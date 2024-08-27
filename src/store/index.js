@@ -11,14 +11,10 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
+      if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
-          name: user.name || state.user.name,
-          email: user.email || state.user.email,
-          phone: user.phone || state.user?.phone, // Ensure phone is being set here
-          gender: user.gender || state.user?.gender,
-          photoprofile: user.photoprofile || state.user?.photoprofile,
+          ...user,
         };
         localStorage.setItem('local', JSON.stringify(state.user));
         if (user.websiterole) {
@@ -26,7 +22,7 @@ export default createStore({
           localStorage.setItem('role', user.websiterole);
         }
       } else {
-        console.error('User object is undefined');
+        console.error('Invalid user data:', user);
       }
     },
     setToken(state, token) {
@@ -57,7 +53,7 @@ export default createStore({
     },
   },
   actions: {
-    async login({ commit }, { email, password }) {
+    async login({ commit, dispatch }, { email, password }) {
       if (!email || !password) {
         throw new Error('Email and password are required.');
       }
@@ -66,6 +62,7 @@ export default createStore({
         const user = response.data;
         commit('setUser', user.data);
         commit('setToken', user.token);
+        await dispatch('fetchUserProfileByID', user.data.id);
       } catch (error) {
         console.error('Login failed:', error);
         throw error;
@@ -100,13 +97,6 @@ export default createStore({
             },
           }
         );
-        const userData = response.data.data;
-        if (userData) {
-          commit('setUser', userData);
-        } else {
-          console.error('User data is undefined or null:', userData);
-        }
-        console.log('API Response:', response.data);
         commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
@@ -119,10 +109,20 @@ export default createStore({
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
     },
+    async fetchUserProfileByID({ commit }, id) {
+      try {
+        const response = await axios.get(`${API_URL}/profile/${id}`);
+        commit('setUser', response.data);
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+      }
+    },
   },
   getters: {
     isLoggedIn: state => !!state.user,
     getUser: state => state.user,
     getRole: state => state.role,
+    getPhone: state => state.user?.phone || '',
+    getGender: state => state.user?.gender || '',
   },
 });

@@ -99,9 +99,8 @@ import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
 import Footer from '@/components/Pages/Footer.vue';
 
 export default {
-  components: { NavFixed, Footer, LogoutConfirmation},
+  components: { NavFixed, Footer, LogoutConfirmation },
   setup() {
-
     const store = useStore();
     const user = ref({
       name: '',
@@ -118,17 +117,18 @@ export default {
     const showLogoutConfirmation = ref(false);
 
     onMounted(() => {
-      // Fetch user data from Vuex store
       const userData = store.getters.getUser;
       if (userData) {
-        user.value.name = userData.name || '';
-        user.value.email = userData.email || '';
-        user.value.phone = userData.phone || '';
-        user.value.gender = userData.gender || '';
-        user.value.photoprofile = userData.photoprofile || '';
+        user.value = {
+          name: userData.name || '',
+          email: userData.email || '',
+          phone: userData.phone || '',
+          gender: userData.gender || '',
+          photoprofile: userData.photoprofile || '',
+        };
       } else {
-    console.error('User data is not available in Vuex store');
-  }
+        console.error('User data is not available in Vuex store');
+      }
     });
 
     const updateUserData = async () => {
@@ -201,8 +201,9 @@ export default {
       logout,
     };
   },
-};
+}
 </script>
+
 
 <style scoped>
 #profile-pic {
