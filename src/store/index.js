@@ -74,31 +74,32 @@ export default createStore({
     async updateUserProfile({ commit, state }, updatedProfileData) {
       try {
         const response = await axios.post(
-          `${API_URL}/profile/add-personal-data`,
-          updatedProfileData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/update`,
+            updatedProfileData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
-        commit('setUser', response.data.data); // Make sure the API returns the updated phone number
+        commit('setUser', response.data.data); // Make sure the API returns the updated user data
       } catch (error) {
         console.error('Failed to update profile:', error);
         throw error;
       }
     },
+
     async updateUserProfilePic({ commit, state }, formData) {
       try {
         const response = await axios.post(
-          `${API_URL}/profile/upload-photo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+            `${API_URL}/profile/update`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+                'Content-Type': 'multipart/form-data', // Ensure correct content type for file upload
+              },
+            }
         );
         const userData = response.data.data;
         if (userData) {
@@ -107,7 +108,6 @@ export default createStore({
           console.error('User data is undefined or null:', userData);
         }
         console.log('API Response:', response.data);
-        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
         throw error;
