@@ -2,7 +2,7 @@
   <div class="bg-white p-0 m-0 relative">
     <CarouselHome />
     <div class="main ml-20 mt-20">
-      <h1 class="font-extrabold text-3xl">Kos Terpopuler</h1>
+      <h1 class="font-extrabold text-3xl">Mitra Kost Kami</h1>
       <div class="grid grid-cols-4 gap-4">
         <ProductCard v-for="product in products" :key="product.kostid" :product="product" :isLoading="isLoading" />
         <ProductCard v-if="isLoading" v-for="n in 4" :key="'loading-' + n" :isLoading="true" />
