@@ -16,9 +16,9 @@ export default createStore({
           ...state.user,
           name: user.name || state.user.name,
           email: user.email || state.user.email,
-          phone: user.phone || state.user?.phone,
-          gender: user.gender || state.user?.gender,
-          photoprofile: user.photoprofile || state.user?.photoprofile,
+          phone: user.phone || state.user.phone,
+          gender: user.gender || state.user.gender,
+          photoprofile: user.photoprofile || state.user.photoprofile,
         };
         localStorage.setItem('local', JSON.stringify(state.user));
         if (user.websiterole) {
@@ -72,6 +72,19 @@ export default createStore({
         throw error;
       }
     },
+    async fetchUserData({ commit, state }) {
+      try {
+        const response = await axios.get(`${API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        commit('setUser', response.data.data);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+      }
+    },
     async updateUserProfile({ commit, state }, updatedProfileData) {
       try {
         const response = await axios.post(
@@ -107,7 +120,6 @@ export default createStore({
         } else {
           console.error('User data is undefined or null:', userData);
         }
-        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
         throw error;
@@ -124,7 +136,7 @@ export default createStore({
               },
             }
         );
-        commit('setUser', response.data.user); // Use the correct response structure
+        commit('setUser', response.data.user);
       } catch (error) {
         console.error('Failed to update contact info:', error);
         throw error;

@@ -115,18 +115,22 @@ export default {
     const loading = ref(false);
     const showLogoutConfirmation = ref(false);
 
-    onMounted(() => {
-      const userData = store.getters.getUser;
-      if (userData) {
-        user.value = {
-          name: userData.name || '',
-          email: userData.email || '',
-          phone: userData.phone || '',
-          gender: userData.gender || '',
-          photoprofile: userData.photoprofile || '',
-        };
-      } else {
-        console.error('User data is not available in Vuex store');
+    onMounted(async () => {
+      try {
+        await store.dispatch('fetchUserData');
+        const userData = store.getters.getUser;
+        if (userData) {
+          user.value = {
+            ...user.value,
+            name: userData.name,
+            email: userData.email,
+            phone: userData.phone,
+            gender: userData.gender,
+            photoprofile: userData.photoprofile,
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
       }
     });
 
@@ -140,24 +144,21 @@ export default {
         const contactInfo = {
           name: user.value.name || null,
           email: user.value.email || null,
-          phonenumber: user.value.phone || null,  // Ensure 'phonenumber' is the correct key
+          phonenumber: user.value.phone || null,
         };
 
-        // Update gender separately
         if (updatedProfileData.jenis_kelamin) {
           await store.dispatch('updateUserProfile', updatedProfileData);
         }
 
-        // Update contact info (name, email, phone)
         if (Object.values(contactInfo).some(value => value !== null)) {
           await store.dispatch('updateUserContactInfo', contactInfo);
           store.commit('setUser', {
             ...store.getters.getUser,
-            ...contactInfo,  // Update the user in the store
+            ...contactInfo,
           });
         }
 
-        // Update profile picture if selected
         if (selectedProfilePic.value) {
           const formData = new FormData();
           formData.append('photoprofile', selectedProfilePic.value);
@@ -174,9 +175,6 @@ export default {
         loading.value = false;
       }
     };
-
-
-
 
     const handleFileChange = (event) => {
       const file = event.target.files?.[0];
@@ -196,7 +194,7 @@ export default {
 
     const logout = () => {
       showLogoutConfirmation.value = false;
-      this.$router.push('/login');
+      store.dispatch('logout');
     };
 
     return {
