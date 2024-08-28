@@ -79,7 +79,7 @@ export default createStore({
             },
           }
         );
-        commit('setUser', response.data.data); // Make sure the API returns the updated phone number
+        commit('setUser', response.data.data); // Ensure phone number is included in the updated data
       } catch (error) {
         console.error('Failed to update profile:', error);
         throw error;
