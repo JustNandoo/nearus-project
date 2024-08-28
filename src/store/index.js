@@ -87,7 +87,7 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-            `${API_URL}/profile/add-personal-data`,
+            `${API_URL}/profile/update`,
             updatedProfileData,
             {
               headers: {
