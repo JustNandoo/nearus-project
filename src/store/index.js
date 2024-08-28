@@ -11,7 +11,7 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
+      if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
           name: user.name || state.user?.name || '',
@@ -47,7 +47,7 @@ export default createStore({
     },
   },
   actions: {
-    async login({ commit }, { email, password }) {
+    async login({ commit, dispatch }, { email, password }) {
       if (!email || !password) {
         throw new Error('Email and password are required.');
       }
@@ -56,6 +56,7 @@ export default createStore({
         const user = response.data;
         commit('setUser', user.data);
         commit('setToken', user.token);
+        await dispatch('fetchUserProfileByID', user.data.id);
       } catch (error) {
         console.error('Login failed:', error);
         throw error;
@@ -125,6 +126,7 @@ export default createStore({
         } else {
           console.error('Failed to update profile picture:', response.data);
         }
+        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
         throw error;
@@ -161,6 +163,14 @@ export default createStore({
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
+    },
+    async fetchUserProfileByID({ commit }, id) {
+      try {
+        const response = await axios.get(`${API_URL}/profile/${id}`);
+        commit('setUser', response.data);
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+      }
     },
   },
   getters: {
