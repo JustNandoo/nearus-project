@@ -145,6 +145,7 @@ export default {
           name: user.value.name || null,
           email: user.value.email || null,
           phone: user.value.phone || null,
+          gender: user.value.gender || null,
         };
 
         if (updatedProfileData.gender) {
