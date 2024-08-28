@@ -34,12 +34,12 @@
                 <p class="text-gray-600">Profile-pic.jpg</p>
               </div>
             </div>
-            <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
+            <h2 class="font-bold text-2xl mb-4">Update User Information</h2>
             <p class="text-sm text-gray-600">Details about your Personal Information</p>
             <form class="space-y-4" @submit.prevent="updateUserData">
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-gray-700">Nama Lengkap</label>
+                  <label class="block text-gray-700">Full Name</label>
                   <input type="text" class="input-field" v-model="user.name">
                 </div>
                 <div>
@@ -49,14 +49,14 @@
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-gray-700">Nomor Telepon</label>
+                  <label class="block text-gray-700">Phone Number</label>
                   <input type="text" class="input-field" v-model="user.phone">
                 </div>
                 <div>
-                  <label class="block text-gray-700">Jenis Kelamin</label>
+                  <label class="block text-gray-700">Gender</label>
                   <select class="input-field" v-model="user.gender">
-                    <option value="male">Pria</option>
-                    <option value="female">Wanita</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                   </select>
                 </div>
               </div>
@@ -66,11 +66,11 @@
         </div>
       </section>
     </main>
-        <!-- Custom Alert Modal -->
+    <!-- Custom Alert Modal -->
     <LogoutConfirmation
-      :show="showLogoutConfirmation"
-      @confirm="logout"
-      @cancel="showLogoutConfirmation = false"
+        :show="showLogoutConfirmation"
+        @confirm="logout"
+        @cancel="showLogoutConfirmation = false"
     />
 
     <!-- Custom Alert Modal -->
@@ -138,16 +138,16 @@ export default {
       loading.value = true;
       try {
         const updatedProfileData = {
-          jenis_kelamin: user.value.gender || null,
+          gender: user.value.gender || null,
         };
 
         const contactInfo = {
           name: user.value.name || null,
           email: user.value.email || null,
-          phonenumber: user.value.phone || null,
+          phone: user.value.phone || null,
         };
 
-        if (updatedProfileData.jenis_kelamin) {
+        if (updatedProfileData.gender) {
           await store.dispatch('updateUserProfile', updatedProfileData);
         }
 
@@ -219,12 +219,6 @@ export default {
   border-radius: 50%;
 }
 
-.label-field {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #4a4a4a;
-}
-
 .input-field {
   width: 100%;
   padding: 0.75rem;
@@ -270,18 +264,12 @@ export default {
   z-index: 9999;
 }
 
-
 .alert-modal-content button {
-background-color: #3b82f6;
-color: white;
-border: none;
-padding: 10px 20px;
-border-radius: 5px;
-cursor: pointer;
-}
-
-.alert-modal-content button
-{
-background-color: #2563eb;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>
