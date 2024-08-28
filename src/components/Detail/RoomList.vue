@@ -21,7 +21,7 @@
           <p class="text-2xl text-black mb-4">Rp. {{ formatPrice(room.price) }} / {{ room.time }}</p>
           <button @click="handleCheckout(room)"
                   :class="[
-            'w-full h-[60px] px-4 py-2 text-base text-center rounded-xl shadow-lg',
+            'w-full h-[55px] px-4 py-2 text-base text-center rounded-xl shadow-lg',
             room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
           ]"
                   :disabled="room.availability <= 0">
