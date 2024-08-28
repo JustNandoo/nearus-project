@@ -14,46 +14,36 @@ export default createStore({
       if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
-          name: user.name || state.user.name,
-          email: user.email || state.user.email,
-          phone: user.phone || state.user?.phone,
-          gender: user.gender || state.user?.gender,
-          photoprofile: user.photoprofile || state.user?.photoprofile,
+          name: user.name || state.user?.name || '',
+          email: user.email || state.user?.email || '',
+          phone: user.phone || state.user?.phone || '',
+          gender: user.gender || state.user?.gender || '',
+          photoprofile: user.photoprofile || state.user?.photoprofile || '',
         };
         localStorage.setItem('local', JSON.stringify(state.user));
-        if (user.websiterole) {
-          state.role = user.websiterole;
-          localStorage.setItem('role', user.websiterole);
-        }
       } else {
-        console.error('Invalid user data:', user);
+        console.error('User object is undefined or null');
       }
     },
     setToken(state, token) {
       state.token = token;
       localStorage.setItem('token', token);
     },
+    clearToken(state) {
+      state.token = null;
+      localStorage.removeItem('token');
+    },
     clearUser(state) {
       state.user = null;
-      state.token = null;
-      state.role = null;
       localStorage.removeItem('local');
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
     },
     loadUserFromStorage(state) {
       const user = localStorage.getItem('local');
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
-      if (user) {
-        state.user = JSON.parse(user);
-      }
-      if (token) {
-        state.token = token;
-      }
-      if (role) {
-        state.role = role;
-      }
+      state.user = user ? JSON.parse(user) : null;
+      state.token = token || null;
+      state.role = role || null;
     },
   },
   actions: {
@@ -72,7 +62,30 @@ export default createStore({
         throw error;
       }
     },
+    async fetchUserData({ commit, state }) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
+      try {
+        const response = await axios.get(`${API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
+        } else {
+          console.error('Failed to fetch user data:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+      }
+    },
     async updateUserProfile({ commit, state }, updatedProfileData) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
       try {
         const response = await axios.post(
             `${API_URL}/profile/add-personal-data`,
@@ -83,13 +96,20 @@ export default createStore({
               },
             }
         );
-        commit('setUser', response.data.data);
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
+        } else {
+          console.error('Failed to update profile:', response.data);
+        }
       } catch (error) {
         console.error('Failed to update profile:', error);
         throw error;
       }
     },
     async updateUserProfilePic({ commit, state }, formData) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
       try {
         const response = await axios.post(
             `${API_URL}/profile/upload-photo`,
@@ -101,11 +121,10 @@ export default createStore({
               },
             }
         );
-        const userData = response.data.data;
-        if (userData) {
-          commit('setUser', userData);
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
         } else {
-          console.error('User data is undefined or null:', userData);
+          console.error('Failed to update profile picture:', response.data);
         }
         commit('setUser', response.data.data);
       } catch (error) {
@@ -114,6 +133,9 @@ export default createStore({
       }
     },
     async updateUserContactInfo({ commit, state }, contactInfo) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
       try {
         const response = await axios.post(
             `${API_URL}/profile/update`,
@@ -124,14 +146,20 @@ export default createStore({
               },
             }
         );
-        commit('setUser', response.data.user); // Use the correct response structure
+        if (response.data && response.data.user) {
+          commit('setUser', response.data.user);
+        } else {
+          console.error('Failed to update contact info:', response.data);
+        }
       } catch (error) {
         console.error('Failed to update contact info:', error);
         throw error;
       }
     },
     logout({ commit }) {
-      commit('clearUser');
+      commit('clearToken');
+      // Optionally clear user data if you don't want to persist it
+      // commit('clearUser');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
@@ -147,9 +175,7 @@ export default createStore({
   },
   getters: {
     isLoggedIn: state => !!state.user,
-    getUser: state => state.user,
-    getRole: state => state.role,
-    getPhone: state => state.user?.phone || '',
-    getGender: state => state.user?.gender || '',
+    getUser: state => state.user || {},
+    getRole: state => state.role || null,
   },
 });
