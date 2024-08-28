@@ -24,7 +24,7 @@
             'w-full h-[55px] px-4 py-2 text-base text-center rounded-xl shadow-lg',
             room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
           ]"
-                  :disabled="room.availability <= 0">
+                  :disabled="room.availability <= 0 || loading">
             {{ room.availability > 0 ? 'Pilih' : 'Tidak Tersedia' }}
           </button>
         </div>
@@ -32,13 +32,17 @@
     </div>
   </div>
   <div v-else class="text-center text-gray-600 py-8">No rooms available.</div>
+  <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="text-white text-xl">Loading...</div>
+  </div>
 </template>
 
+
 <script setup>
-import {ref, onMounted, watch} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
-import {useRouter} from 'vue-router';
-import {useStore} from 'vuex';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const props = defineProps({
   ownerId: {
@@ -48,6 +52,7 @@ const props = defineProps({
 });
 
 const rooms = ref([]);
+const loading = ref(false);  // Add loading state
 const router = useRouter();
 const store = useStore();
 
@@ -70,6 +75,8 @@ const handleCheckout = async (room) => {
     console.warn('Kamar tidak tersedia untuk checkout.');
     return;
   }
+
+  loading.value = true;  // Set loading to true
 
   try {
     const userData = store.getters.getUser;
@@ -105,6 +112,8 @@ const handleCheckout = async (room) => {
     }
   } catch (error) {
     console.error('Error saat checkout:', error);
+  } finally {
+    loading.value = false;  // Set loading to false
   }
 };
 
@@ -124,6 +133,7 @@ onMounted(() => {
   }
 });
 </script>
+
 
 <style scoped>
 /* Add your styles here */
