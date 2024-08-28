@@ -22,7 +22,7 @@
       <div class="flex flex-col gap-3 w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-[24px]">Mulai Dari</h1>
-          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} </h1>
+          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / {{product.duration}} </h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
           <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">

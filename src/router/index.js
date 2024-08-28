@@ -157,7 +157,7 @@ const router = createRouter({
       component: () => import('../views/Dashboard_pemilik/DetailKoskuDashboard.vue')
     },
     {
-      path: '/dashboard-kosku-detail-product',
+      path: '/dashboard-kosku-detail-product/:id',
       name: 'DetailProduct',
       component: () => import('../views/DetailProduct.vue')
     },

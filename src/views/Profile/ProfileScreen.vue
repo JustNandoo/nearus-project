@@ -55,9 +55,8 @@
                 <div>
                   <label class="block text-gray-700">Jenis Kelamin</label>
                   <select class="input-field" v-model="user.gender">
-                    <option value="male">Laki-laki</option>
-                    <option value="female">Perempuan</option>
-                    <option value="other">Lainnya</option>
+                    <option value="male">Pria</option>
+                    <option value="female">Wanita</option>
                   </select>
                 </div>
               </div>
@@ -135,21 +134,30 @@ export default {
       loading.value = true;
       try {
         const updatedProfileData = {
-          name: user.value.name || null,
-          email: user.value.email || null,
-          phonenumber: user.value.phone || null,
           jenis_kelamin: user.value.gender || null,
         };
 
-        if (Object.values(updatedProfileData).some(value => value !== null)) {
+        const contactInfo = {
+          name: user.value.name || null,
+          email: user.value.email || null,
+          phonenumber: user.value.phone || null,  // Ensure 'phonenumber' is the correct key
+        };
+
+        // Update gender separately
+        if (updatedProfileData.jenis_kelamin) {
           await store.dispatch('updateUserProfile', updatedProfileData);
+        }
+
+        // Update contact info (name, email, phone)
+        if (Object.values(contactInfo).some(value => value !== null)) {
+          await store.dispatch('updateUserContactInfo', contactInfo);
           store.commit('setUser', {
             ...store.getters.getUser,
-            phone: user.value.phone,
-            gender: user.value.gender,
+            ...contactInfo,  // Update the user in the store
           });
         }
 
+        // Update profile picture if selected
         if (selectedProfilePic.value) {
           const formData = new FormData();
           formData.append('photoprofile', selectedProfilePic.value);
@@ -166,6 +174,9 @@ export default {
         loading.value = false;
       }
     };
+
+
+
 
     const handleFileChange = (event) => {
       const file = event.target.files?.[0];

@@ -49,7 +49,12 @@
         <div class="absolute left-0 top-[380px] text-black text-xl font-semibold font-montserrat">
           Rp. {{ roomData.price }}
         </div>
-        <img class="absolute left-[350px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
+        <img
+            class="absolute left-[350px] top-[183px] w-[192px] h-[101px] rounded-lg object-cover shadow-lg"
+            :src="roomData.image || 'https://via.placeholder.com/192x101'"
+            alt="Room Image"
+        />
+
       </div>
       <div class="w-[530px] h-[450px] relative left-[80px]" style="top: 90px;">
         <div class="w-[218px] h-7 left-0 top-0 absolute text-black text-2xl font-semibold font-montserrat leading-7">

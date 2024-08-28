@@ -25,10 +25,11 @@
             class="flex flex-col lg:flex-row mb-10 items-center lg:items-start bg-white rounded-lg shadow-lg p-4 md:p-6"
         >
           <img
-              class="w-full h-[300px] md:h-[400px] rounded-lg object-cover shadow-lg"
+              class="w-full h-[300px] md:h-[400px] lg:w-[500px] lg:h-[400px] rounded-lg object-cover shadow-lg"
               :src="transaction.image || 'https://via.placeholder.com/800x400'"
               alt="Main Image"
           />
+
           <div class="lg:ml-6 mt-4 lg:mt-0 flex flex-col justify-center text-center lg:text-left">
             <h1 class="text-gray-800 text-3xl md:text-4xl font-bold leading-tight mb-2">
               {{ transaction.detail }}
@@ -63,19 +64,19 @@
         <!-- Owner Details -->
         <div class="bg-white rounded-lg shadow-lg p-4 md:p-6 mt-10">
           <h2 class="text-gray-800 text-xl md:text-2xl font-semibold mb-6">Hubungi Pemilik</h2>
-          <div class="flex items-center mb-6">
+          <div class="flex flex-col sm:flex-row items-center mb-6">
             <img
                 class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg"
                 :src="owner.image || imageProfileDefault"
                 alt="Owner Profile"
             />
-            <div class="ml-4 text-center md:text-left">
+            <div class="ml-0 sm:ml-4 mt-4 sm:mt-0 text-center sm:text-left">
               <h3 class="text-gray-800 text-lg md:text-xl font-bold mb-1">{{ owner.name }}</h3>
               <p class="text-gray-600 text-base md:text-lg font-medium">{{ owner.email }}</p>
             </div>
-            <div class="ml-auto flex space-x-4">
+            <div class="mt-4 sm:mt-0 sm:ml-auto flex space-x-4">
               <button
-                  @click="extendRental"
+                  @click="confirmExtendRental"
                   class="flex items-center justify-center bg-blue-600 text-white px-4 py-2 md:px-6 md:py-2 rounded-lg font-semibold shadow hover:bg-blue-700 transition duration-300"
               >
                 Ajukan perpanjangan sewa
@@ -92,6 +93,28 @@
 
         <!-- Alert Component -->
         <Alert ref="alertPopup" />
+
+        <!-- Confirmation Modal -->
+        <div v-if="showConfirmation" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+          <div class="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">Konfirmasi Perpanjangan Sewa</h2>
+            <p class="text-gray-600 mb-6">Apakah Anda yakin ingin mengajukan perpanjangan sewa?</p>
+            <div class="flex justify-end space-x-4">
+              <button
+                  @click="showConfirmation = false"
+                  class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
+              >
+                Batal
+              </button>
+              <button
+                  @click="extendRental"
+                  class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+              >
+                Ya, Lanjutkan
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -116,6 +139,7 @@ const endDate = ref('');
 const route = useRoute();
 const produk = ref(JSON.parse(localStorage.getItem('produk')));
 const alertPopup = ref(null);
+const showConfirmation = ref(false);
 
 // Fetch owner details
 const fetchOwnerDetail = async (ownerId) => {
@@ -173,8 +197,15 @@ const formattedEndDate = computed(() => {
   });
 });
 
+// Show confirmation modal
+const confirmExtendRental = () => {
+  showConfirmation.value = true;
+};
+
 // Extend rental
 const extendRental = async () => {
+  showConfirmation.value = false; // Close confirmation modal
+
   const detailfinanceId = localStorage.getItem('detailfinance');
 
   try {
@@ -196,20 +227,21 @@ const extendRental = async () => {
           location.reload(); // Reload the page to update the rental duration
         },
         onPending: function (result) {
-          alert("Pembayaran tertunda!"); // Handle pending payment logic here
+          alert("Menunggu pembayaran!"); // Handle pending payment logic here
         },
         onError: function (result) {
-          alert("Pembayaran gagal!"); // Handle payment failure here
+          alert("Pembayaran gagal!"); // Handle error logic here
         },
         onClose: function () {
-          alertPopup.value.open(); // Show the alert popup
-        }
+          alert("Anda menutup tanpa menyelesaikan pembayaran!"); // Handle close logic here
+        },
       });
     } else {
-      console.error('Failed to get Snap token:', response.data);
+      console.error('Failed to get snapToken. Response:', response.data);
     }
   } catch (error) {
-    console.error('Error during the extension request:', error);
+    console.error('Error while extending rental:', error);
+    alertPopup.value.showMessage("Pembayaran gagal!", "error"); // Display error using Alert component
   }
 };
 
@@ -224,5 +256,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Add any scoped styles for your component here */
+/* Add any custom styles here */
 </style>

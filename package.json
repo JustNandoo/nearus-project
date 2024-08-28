@@ -25,6 +25,7 @@
     "vue": "^3.4.21",
     "vue-apexcharts": "^1.6.2",
     "vue-carousel": "^0.18.0",
+    "vue-loading-overlay": "^6.0.4",
     "vue-router": "^4.3.0",
     "vue-toast-notification": "^3.1.2",
     "vue3-apexcharts": "^1.5.3",

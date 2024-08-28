@@ -14,7 +14,11 @@ export default createStore({
       if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
-          ...user,
+          name: user.name || state.user.name,
+          email: user.email || state.user.email,
+          phone: user.phone || state.user?.phone,
+          gender: user.gender || state.user?.gender,
+          photoprofile: user.photoprofile || state.user?.photoprofile,
         };
         localStorage.setItem('local', JSON.stringify(state.user));
         if (user.websiterole) {
@@ -71,15 +75,15 @@ export default createStore({
     async updateUserProfile({ commit, state }, updatedProfileData) {
       try {
         const response = await axios.post(
-          `${API_URL}/profile/add-personal-data`,
-          updatedProfileData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/add-personal-data`,
+            updatedProfileData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
-        commit('setUser', response.data.data); // Ensure phone number is included in the updated data
+        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile:', error);
         throw error;
@@ -88,18 +92,41 @@ export default createStore({
     async updateUserProfilePic({ commit, state }, formData) {
       try {
         const response = await axios.post(
-          `${API_URL}/profile/upload-photo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+            `${API_URL}/profile/upload-photo`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            }
         );
+        const userData = response.data.data;
+        if (userData) {
+          commit('setUser', userData);
+        } else {
+          console.error('User data is undefined or null:', userData);
+        }
         commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
+        throw error;
+      }
+    },
+    async updateUserContactInfo({ commit, state }, contactInfo) {
+      try {
+        const response = await axios.post(
+            `${API_URL}/profile/update`,
+            contactInfo,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
+        );
+        commit('setUser', response.data.user); // Use the correct response structure
+      } catch (error) {
+        console.error('Failed to update contact info:', error);
         throw error;
       }
     },
