@@ -121,12 +121,11 @@ export default {
         const userData = store.getters.getUser;
         if (userData) {
           user.value = {
-            ...user.value,
-            name: userData.name,
-            email: userData.email,
-            phone: userData.phone,
-            gender: userData.gender,
-            photoprofile: userData.photoprofile,
+            name: userData.name || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
+            gender: userData.gender || '',
+            photoprofile: userData.photoprofile || '',
           };
         }
       } catch (error) {
@@ -137,10 +136,6 @@ export default {
     const updateUserData = async () => {
       loading.value = true;
       try {
-        const updatedProfileData = {
-          gender: user.value.gender || null,
-        };
-
         const contactInfo = {
           name: user.value.name || null,
           email: user.value.email || null,
@@ -148,16 +143,12 @@ export default {
           gender: user.value.gender || null,
         };
 
-        if (updatedProfileData.gender) {
-          await store.dispatch('updateUserProfile', updatedProfileData);
+        if (contactInfo.gender) {
+          await store.dispatch('updateUserProfile', { gender: contactInfo.gender });
         }
 
         if (Object.values(contactInfo).some(value => value !== null)) {
           await store.dispatch('updateUserContactInfo', contactInfo);
-          store.commit('setUser', {
-            ...store.getters.getUser,
-            ...contactInfo,
-          });
         }
 
         if (selectedProfilePic.value) {
@@ -169,7 +160,7 @@ export default {
         alertMessage.value = 'Profile updated successfully';
         showAlert.value = true;
       } catch (error) {
-        console.error('Error updating user data:', error);
+        console.error('Failed to update user data:', error);
         alertMessage.value = 'Failed to update profile';
         showAlert.value = true;
       } finally {
@@ -178,14 +169,10 @@ export default {
     };
 
     const handleFileChange = (event) => {
-      const file = event.target.files?.[0];
+      const file = event.target.files[0];
       if (file) {
         selectedProfilePic.value = file;
-        const reader = new FileReader();
-        reader.onload = () => {
-          profilePicPreview.value = reader.result;
-        };
-        reader.readAsDataURL(file);
+        profilePicPreview.value = URL.createObjectURL(file);
       }
     };
 
@@ -194,25 +181,26 @@ export default {
     };
 
     const logout = () => {
-      showLogoutConfirmation.value = false;
       store.dispatch('logout');
+      showLogoutConfirmation.value = false;
     };
 
     return {
       user,
-      updateUserData,
-      handleFileChange,
       profilePicPreview,
       showAlert,
       alertMessage,
-      closeAlert,
       loading,
       showLogoutConfirmation,
+      updateUserData,
+      handleFileChange,
+      closeAlert,
       logout,
     };
   },
-}
+};
 </script>
+
 
 
 <style scoped>
