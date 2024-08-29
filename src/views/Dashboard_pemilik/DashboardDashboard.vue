@@ -5,13 +5,18 @@
      <div class="overflow-auto w-screen h-screen">
        <div class="flex flex-col">
          <div class="flex justify-between items-center w-[1500px] mx-10 mt-5 gap-2 h-10px">
-           <h1 class="text-black font-medium text-[18px]">Dashboard</h1>
-           <div class="rounded-full gap-5 flex items-center justify-center cursor-pointer">
-             <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
-             <p class="text-xl font-medium text-black">
-               Halo, {{ user.name }}
-             </p>
+           <h1 class="text-black font-medium text-[20px]">Dashboard</h1>
+           <div class="rounded-full gap-5 flex items-center justify-center">
+             <div class="flex items-center justify-center gap-3">
+               <img :src="profilePicture" alt="Profile Picture" class="object-cover rounded-full h-12 w-12">
+               <p class="text-xl font-medium text-black">
+                 {{ user.name }}
+               </p>
+             </div>
            </div>
+         </div>
+         <div class="ml-10 mt-4 font-medium text-[22px]">
+           Halo, {{user.name}} apa rencanamu hari ini?
          </div>
          <div class="flex mt-8 mx-auto gap-8">
            <div class="w-[350px] h-full mx-auto overflow-hidden rounded-lg shadow-lg">
@@ -61,7 +66,7 @@
 <script setup>
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import { faArrowUp, faMoneyBill, faDoorClosed, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUp, faMoneyBill, faDoorClosed, faUser, faBell} from '@fortawesome/free-solid-svg-icons';
 import {onMounted} from "vue";
 import ChartStatistik from "@/components/DashboardPemilik/ChartStatistik.vue";
 import {computed, ref} from "vue";

@@ -65,14 +65,20 @@
             <thead>
             <tr>
               <th class="py-2 px-4 border-b text-left">No</th>
-              <th v-if="isOrdersPaid" class="py-2 px-4 border-b text-left">Nama</th>
-              <th v-if="isOrdersPaid" class="py-2 px-4 border-b text-left">Nomor Telpon</th>
-              <th v-if="isOrdersPaid" class="py-2 px-4 border-b text-left">Status Pembayaran</th>
+              <th v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b text-left">Nama Kost</th>
+              <th v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b text-left">Tipe Kost</th>
+              <th v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b text-left">Lokasi</th>
+              <th v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b text-left">Harga</th>
 
-              <th v-if="!isOrdersPaid" class="py-2 px-4 border-b text-left">Nama Kost</th>
-              <th v-if="!isOrdersPaid" class="py-2 px-4 border-b text-left">Tipe Kost</th>
-              <th v-if="!isOrdersPaid" class="py-2 px-4 border-b text-left">Lokasi</th>
-              <th v-if="!isOrdersPaid" class="py-2 px-4 border-b text-left">Harga</th>
+              <th v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b text-left">Nama</th>
+              <th v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b text-left">Nomor Telpon</th>
+              <th v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b text-left">Status Pembayaran</th>
+
+              <th v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b text-left">Nama Kamar</th>
+              <th v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b text-left">Tipe Kamar</th>
+              <th v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b text-left">Fasilitas</th>
+              <th v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b text-left">Harga</th>
+              <th v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b text-left">Ketersediaan</th>
             </tr>
             </thead>
             <tbody>
@@ -82,14 +88,24 @@
                 :class="{'bg-gray-100': index % 2 === 0, 'bg-gray-200': index % 2 === 1}"
             >
               <td class="py-2 px-4 border-b">{{ (currentPage - 1) * rowsPerPage + index + 1 }}</td>
-              <td v-if="isOrdersPaid" class="py-2 px-4 border-b">{{ item.name }}</td>
-              <td v-if="isOrdersPaid" class="py-2 px-4 border-b">{{ item.phonenumber }}</td>
-              <td v-if="isOrdersPaid" class="py-2 px-4 border-b">{{ item.status }}</td>
 
-              <td v-if="!isOrdersPaid" class="py-2 px-4 border-b">{{ item.productname }}</td>
-              <td v-if="!isOrdersPaid" class="py-2 px-4 border-b">{{ item.category }}</td>
-              <td v-if="!isOrdersPaid" class="py-2 px-4 border-b">{{ item.location }}</td>
-              <td v-if="!isOrdersPaid" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price}` : 'N/A' }}</td>
+              <!-- Data Kost Columns -->
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.productname }}</td>
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.category }}</td>
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.location }}</td>
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price}` : 'N/A' }}</td>
+
+              <!-- Data Penyewa Columns -->
+              <td v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b">{{ item.name }}</td>
+              <td v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b">{{ item.phonenumber }}</td>
+              <td v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b">{{ item.status }}</td>
+
+              <!-- Data Kamar Columns -->
+              <td v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b">{{ item.name }}</td>
+              <td v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b">{{ item.category }}</td>
+              <td v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b">{{ item.fasilitas }}</td>
+              <td v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price}` : 'N/A' }}</td>
+              <td v-if="dropdownText === 'Data Kamar'" class="py-2 px-4 border-b">{{ item.availability }}</td>
             </tr>
             </tbody>
           </table>
@@ -105,6 +121,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
@@ -172,12 +189,16 @@ const fetchData = async () => {
 
     let url;
     if (dropdownText.value === 'Data Kost') {
-      url = 'https://api.nearus.id/api/product';
+      url = 'https://api.nearus.id/api/product/ownerid';
+      isOrdersPaid.value = false;
+    } else if (dropdownText.value === 'Data Kamar') {
+      url = 'https://api.nearus.id/api/rooms/get/ownerid';
       isOrdersPaid.value = false;
     } else {
       url = 'https://api.nearus.id/api/orders/paid';
       isOrdersPaid.value = true;
     }
+
 
     const response = await axios.get(url, {
       headers: {
