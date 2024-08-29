@@ -50,11 +50,11 @@
               <div class="grid grid-cols-2 gap-4">
                 <div>
                   <label class="block text-gray-700">Phone Number</label>
-                  <input type="text" class="input-field" v-model="user.phone">
+                  <input type="text" class="input-field" v-model="user.phonenumber">
                 </div>
                 <div>
                   <label class="block text-gray-700">Gender</label>
-                  <select class="input-field" v-model="user.gender">
+                  <select class="input-field" v-model="user.jenis_kelamin">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </select>
@@ -104,8 +104,8 @@ export default {
     const user = ref({
       name: '',
       email: '',
-      phone: '',
-      gender: '',
+      phonenumber: '',
+      jenis_kelamin: '',
       photoprofile: '',
     });
     const selectedProfilePic = ref(null);
@@ -123,8 +123,8 @@ export default {
           user.value = {
             name: userData.name || '',
             email: userData.email || '',
-            phone: userData.phone || '',
-            gender: userData.gender || '',
+            phonenumber: userData.phonenumber || '',
+            jenis_kelamin: userData.jenis_kelamin || '',
             photoprofile: userData.photoprofile || '',
           };
         }
@@ -139,12 +139,12 @@ export default {
         const contactInfo = {
           name: user.value.name || null,
           email: user.value.email || null,
-          phone: user.value.phone || null,
-          gender: user.value.gender || null,
+          phonenumber: user.value.phonenumber || null,
+          jenis_kelamin: user.value.jenis_kelamin || null,
         };
 
-        if (contactInfo.gender) {
-          await store.dispatch('updateUserProfile', { gender: contactInfo.gender });
+        if (contactInfo.jenis_kelamin) {
+          await store.dispatch('updateUserProfile', { jenis_kelamin: contactInfo.jenis_kelamin });
         }
 
         if (Object.values(contactInfo).some(value => value !== null)) {
@@ -200,6 +200,7 @@ export default {
   },
 };
 </script>
+
 
 
 

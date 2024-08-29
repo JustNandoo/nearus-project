@@ -16,8 +16,8 @@ export default createStore({
           ...state.user,
           name: user.name || state.user?.name || '',
           email: user.email || state.user?.email || '',
-          phone: user.phone || state.user?.phone || '',
-          gender: user.gender || state.user?.gender || '',
+          phonenumber: user.phonenumber || state.user?.phonenumber || '',
+          jenis_kelamin: user.jenis_kelamin || state.user?.jenis_kelamin || '',
           photoprofile: user.photoprofile || state.user?.photoprofile || '',
         };
         localStorage.setItem('local', JSON.stringify(state.user));
@@ -88,13 +88,13 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-            `${API_URL}/profile/add-personal-data`,
-            updatedProfileData,
-            {
-              headers: {
-                Authorization: `Bearer ${state.token}`,
-              },
-            }
+          `${API_URL}/profile/add-personal-data`,
+          updatedProfileData,
+          {
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+            },
+          }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -112,21 +112,20 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-            `${API_URL}/profile/upload-photo`,
-            formData,
-            {
-              headers: {
-                Authorization: `Bearer ${state.token}`,
-                'Content-Type': 'multipart/form-data',
-              },
-            }
+          `${API_URL}/profile/upload-photo`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
         } else {
           console.error('Failed to update profile picture:', response.data);
         }
-        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
         throw error;
@@ -138,16 +137,16 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-            `${API_URL}/profile/update`,
-            contactInfo,
-            {
-              headers: {
-                Authorization: `Bearer ${state.token}`,
-              },
-            }
+          `${API_URL}/profile/update`,
+          contactInfo,
+          {
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+            },
+          }
         );
-        if (response.data && response.data.user) {
-          commit('setUser', response.data.user);
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
         } else {
           console.error('Failed to update contact info:', response.data);
         }
@@ -158,8 +157,6 @@ export default createStore({
     },
     logout({ commit }) {
       commit('clearToken');
-      // Optionally clear user data if you don't want to persist it
-      // commit('clearUser');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
