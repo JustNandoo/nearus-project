@@ -128,9 +128,14 @@ const fetchProductData = async () => {
         location: response.data.location
       }));
       product.value = selectedProduct;
+
+      // Parse image data correctly
+      roomImages.value = selectedProduct.image
+          ? selectedProduct.image.split(',').filter(img => img)
+          : [];
+
       facilities.value = selectedProduct.fasilitas;
       ownerId.value = selectedProduct.ownerId;
-      roomImages.value = Array.isArray(selectedProduct.image) ? selectedProduct.image : [selectedProduct.image];
       await fetchRooms();
     } else {
       console.error('Error fetching product data: no data response');
@@ -139,6 +144,7 @@ const fetchProductData = async () => {
     console.error('Error fetching product data:', error);
   }
 };
+
 
 const fetchRooms = async () => {
   try {
