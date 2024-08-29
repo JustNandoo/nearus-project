@@ -135,7 +135,7 @@ const processPayment = async () => {
     const formattedDateValue = new Date(selectedDate.value).toISOString().split('T')[0];
     console.log('Payment request data:', {
       name: user.value.name,
-      phonenumber: user.value.phone,
+      phonenumber: user.value.phonenumber,
       ownerId: roomData.ownerId,
       detail: `${roomData.roomName} - ${produk.name}`,
       duration: formattedDateValue,
@@ -147,7 +147,7 @@ const processPayment = async () => {
 
     const response = await axios.post('https://api.nearus.id/api/checkout', {
       name: user.value.name,
-      phonenumber: user.value.phone,
+      phonenumber: user.value.phonenumber,
       ownerId: roomData.ownerId,
       detail: `${roomData.roomName} - ${produk.name}`,
       duration: formattedDateValue,

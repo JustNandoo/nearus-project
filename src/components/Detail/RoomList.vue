@@ -37,7 +37,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
@@ -52,7 +51,7 @@ const props = defineProps({
 });
 
 const rooms = ref([]);
-const loading = ref(false);  // Add loading state
+const loading = ref(false);
 const router = useRouter();
 const store = useStore();
 
@@ -76,14 +75,17 @@ const handleCheckout = async (room) => {
     return;
   }
 
-  loading.value = true;  // Set loading to true
+  loading.value = true;
 
   try {
     const userData = store.getters.getUser;
 
+    // Logging user data retrieved from the store
+    console.log("User Data from Store:", userData);
+
     const requestBody = {
       name: userData.name,
-      phonenumber: userData.phone,
+      phonenumber: userData.phonenumber,
       detail: `${room.name}`,
       price: room.price,
       duration: new Date().toISOString().split('T')[0],
@@ -91,9 +93,12 @@ const handleCheckout = async (room) => {
       image: room.image,
     };
 
+    // Logging request body
+    console.log("Request Body for Checkout:", requestBody);
+
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${store.state.token}`,
       },
     });
 
@@ -113,7 +118,7 @@ const handleCheckout = async (room) => {
   } catch (error) {
     console.error('Error saat checkout:', error);
   } finally {
-    loading.value = false;  // Set loading to false
+    loading.value = false;
   }
 };
 
@@ -133,7 +138,6 @@ onMounted(() => {
   }
 });
 </script>
-
 
 <style scoped>
 /* Add your styles here */
