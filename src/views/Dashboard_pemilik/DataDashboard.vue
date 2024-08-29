@@ -189,10 +189,10 @@ const fetchData = async () => {
 
     let url;
     if (dropdownText.value === 'Data Kost') {
-      url = 'https://api.nearus.id/api/product';
+      url = 'https://api.nearus.id/api/product/ownerid';
       isOrdersPaid.value = false;
     } else if (dropdownText.value === 'Data Kamar') {
-      url = 'https://api.nearus.id/api/rooms/get';
+      url = 'https://api.nearus.id/api/rooms/get/ownerid';
       isOrdersPaid.value = false;
     } else {
       url = 'https://api.nearus.id/api/orders/paid';
