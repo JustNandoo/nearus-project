@@ -17,4 +17,5 @@ app.use(VueApexCharts)
 
 app.component('apexchart', VueApexCharts)
 
+
 app.mount('#app')

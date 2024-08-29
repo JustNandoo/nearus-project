@@ -11,53 +11,43 @@ export default createStore({
   },
   mutations: {
     setUser(state, user) {
-      if (user) {
+      if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
-          name: user.name || state.user.name,
-          email: user.email || state.user.email,
-          phone: user.phone || state.user?.phone, // Ensure phone is being set here
-          gender: user.gender || state.user?.gender,
-          photoprofile: user.photoprofile || state.user?.photoprofile,
+          name: user.name || state.user?.name || '',
+          email: user.email || state.user?.email || '',
+          phonenumber: user.phonenumber || state.user?.phonenumber || '',
+          jenis_kelamin: user.jenis_kelamin || state.user?.jenis_kelamin || '',
+          photoprofile: user.photoprofile || state.user?.photoprofile || '',
         };
         localStorage.setItem('local', JSON.stringify(state.user));
-        if (user.websiterole) {
-          state.role = user.websiterole;
-          localStorage.setItem('role', user.websiterole);
-        }
       } else {
-        console.error('User object is undefined');
+        console.error('User object is undefined or null');
       }
     },
     setToken(state, token) {
       state.token = token;
       localStorage.setItem('token', token);
     },
+    clearToken(state) {
+      state.token = null;
+      localStorage.removeItem('token');
+    },
     clearUser(state) {
       state.user = null;
-      state.token = null;
-      state.role = null;
       localStorage.removeItem('local');
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
     },
     loadUserFromStorage(state) {
       const user = localStorage.getItem('local');
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
-      if (user) {
-        state.user = JSON.parse(user);
-      }
-      if (token) {
-        state.token = token;
-      }
-      if (role) {
-        state.role = role;
-      }
+      state.user = user ? JSON.parse(user) : null;
+      state.token = token || null;
+      state.role = role || null;
     },
   },
   actions: {
-    async login({ commit }, { email, password }) {
+    async login({ commit, dispatch }, { email, password }) {
       if (!email || !password) {
         throw new Error('Email and password are required.');
       }
@@ -66,12 +56,36 @@ export default createStore({
         const user = response.data;
         commit('setUser', user.data);
         commit('setToken', user.token);
+        await dispatch('fetchUserProfileByID', user.data.id);
       } catch (error) {
         console.error('Login failed:', error);
         throw error;
       }
     },
+    async fetchUserData({ commit, state }) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
+      try {
+        const response = await axios.get(`${API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
+        } else {
+          console.error('Failed to fetch user data:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+      }
+    },
     async updateUserProfile({ commit, state }, updatedProfileData) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
       try {
         const response = await axios.post(
           `${API_URL}/profile/add-personal-data`,
@@ -82,13 +96,20 @@ export default createStore({
             },
           }
         );
-        commit('setUser', response.data.data); // Make sure the API returns the updated phone number
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
+        } else {
+          console.error('Failed to update profile:', response.data);
+        }
       } catch (error) {
         console.error('Failed to update profile:', error);
         throw error;
       }
     },
     async updateUserProfilePic({ commit, state }, formData) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
       try {
         const response = await axios.post(
           `${API_URL}/profile/upload-photo`,
@@ -100,29 +121,58 @@ export default createStore({
             },
           }
         );
-        const userData = response.data.data;
-        if (userData) {
-          commit('setUser', userData);
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
         } else {
-          console.error('User data is undefined or null:', userData);
+          console.error('Failed to update profile picture:', response.data);
         }
-        console.log('API Response:', response.data);
-        commit('setUser', response.data.data);
       } catch (error) {
         console.error('Failed to update profile picture:', error);
         throw error;
       }
     },
+    async updateUserContactInfo({ commit, state }, contactInfo) {
+      if (!state.token) {
+        throw new Error('No token found');
+      }
+      try {
+        const response = await axios.post(
+          `${API_URL}/profile/update`,
+          contactInfo,
+          {
+            headers: {
+              Authorization: `Bearer ${state.token}`,
+            },
+          }
+        );
+        if (response.data && response.data.data) {
+          commit('setUser', response.data.data);
+        } else {
+          console.error('Failed to update contact info:', response.data);
+        }
+      } catch (error) {
+        console.error('Failed to update contact info:', error);
+        throw error;
+      }
+    },
     logout({ commit }) {
-      commit('clearUser');
+      commit('clearToken');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
     },
+    async fetchUserProfileByID({ commit }, id) {
+      try {
+        const response = await axios.get(`${API_URL}/profile/${id}`);
+        commit('setUser', response.data);
+      } catch (error) {
+        console.error('Failed to fetch user profile:', error);
+      }
+    },
   },
   getters: {
     isLoggedIn: state => !!state.user,
-    getUser: state => state.user,
-    getRole: state => state.role,
+    getUser: state => state.user || {},
+    getRole: state => state.role || null,
   },
 });

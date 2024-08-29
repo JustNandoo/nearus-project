@@ -3,6 +3,7 @@
     <Nav />
     <div class="flex justify-center items-center">
       <div class="w-[523px] h-[500px] relative mb-20" style="top: 130px;">
+        <!-- Your existing content -->
         <div class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
           <i class="fas fa-arrow-left mr-5 cursor-pointer" @click="goBack"></i> Pesan Kamar
         </div>
@@ -49,7 +50,11 @@
         <div class="absolute left-0 top-[380px] text-black text-xl font-semibold font-montserrat">
           Rp. {{ roomData.price }}
         </div>
-        <img class="absolute left-[350px] top-[183px] w-48 h-[101px] rounded-lg" :src="roomData.image" alt="Room Image">
+        <img
+            class="absolute left-[350px] top-[183px] w-[192px] h-[101px] rounded-lg object-cover shadow-lg"
+            :src="roomData.image || 'https://via.placeholder.com/192x101'"
+            alt="Room Image"
+        />
       </div>
       <div class="w-[530px] h-[450px] relative left-[80px]" style="top: 90px;">
         <div class="w-[218px] h-7 left-0 top-0 absolute text-black text-2xl font-semibold font-montserrat leading-7">
@@ -72,125 +77,126 @@
       </div>
     </div>
     <Footer />
+    <ConfirmationPopup
+        :visible="showPopup"
+        title="Confirm Navigation"
+        message="Are you sure you want to cancel? All unsaved changes will be lost."
+        @confirm="handleConfirm"
+        @cancel="handleCancel"
+    />
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import Footer from "@/components/Pages/Footer.vue";
 import Nav from "@/components/Pages/Nav.vue";
+import ConfirmationPopup from "@/components/Payment/CancelPopUp.vue";
 import axios from "axios";
-import { mapGetters } from 'vuex';
-import router from "@/router/index.js";
 
-export default {
-  components: {
-    Nav,
-    Footer
-  },
-  data() {
-    return {
-      isEditing: false,
-      selectedDate: new Date().toISOString().split('T')[0],
-      roomData: JSON.parse(localStorage.getItem('roomData')) || {
-        roomName: 'Kamar Test',
-        productName: 'Produk Test',
-        price: 'Rp 7.200.000/6bln',
-        image: 'https://via.placeholder.com/192x101'
-      },
-      produk: JSON.parse(localStorage.getItem('produk'))
-    };
-  },
-  computed: {
-    ...mapGetters(['getUser']),
-    user() {
-      return this.getUser;
-    },
-    formattedDate() {
-      return new Date(this.selectedDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-  },
-  methods: {
-    goBack() {
-      this.$router.go(-1);
-    },
-    toggleEditing() {
-      this.isEditing = !this.isEditing;
-    },
-    async processPayment() {
-      try {
-        const formattedDate = new Date(this.selectedDate).toISOString().split('T')[0];
-        console.log('Payment request data:', {
-          name: this.user.name,
-          phonenumber: this.user.phone,
-          ownerId: this.roomData.ownerId,
-          detail: `${this.roomData.roomName} - ${this.produk.name}`,
-          duration: formattedDate,
-          price: this.roomData.price,
-          image: this.roomData.image,
-          location: this.produk.location,
-          fasilitas: this.roomData.fasilitas,
-        });
-
-        const response = await axios.post('https://api.nearus.id/api/checkout', {
-          name: this.user.name,
-          phonenumber: this.user.phone,
-          ownerId: this.roomData.ownerId,
-          detail: `${this.roomData.roomName} - ${this.produk.name}`,
-          duration: formattedDate,
-          price: this.roomData.price,
-          image: this.roomData.image,
-          fasilitas: this.roomData.fasilitas,
-          location: this.produk.location
-        }, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          }
-        });
-
-        if (response.data.success) {
-          console.log(response.data.disorder)
-          console.log(response.data)
-          const snapToken = response.data.snapToken;
-          window.snap.pay(snapToken, {
-            onSuccess: (result) => {
-              console.log('Payment Result:', {
-                refnumber: response.data.refnumber,
-                payment_time: result.transaction_time,
-                payment_method: result.payment_type.toUpperCase()
-              });
-              localStorage.setItem('paymentDetails', JSON.stringify({
-                refnumber: response.data.refnumber,
-                payment_time: result.transaction_time,
-                payment_method: result.payment_type.toUpperCase()
-              }));
-              router.push('/PaymentPage');
-            },
-            onPending: (result) => {
-              alert("Waiting for your payment!");
-              console.log(result);
-            },
-            onError: (result) => {
-              alert("Payment failed!");
-              console.log(result);
-            },
-            onClose: () => {
-              alert('You closed the popup');
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Payment processing error:', error);
-        alert('An error occurred during payment processing.');
-      }
-    }
-  }
+const router = useRouter();
+const store = useStore();
+const showPopup = ref(false);
+const isEditing = ref(false);
+const selectedDate = ref(new Date().toISOString().split('T')[0]);
+const roomData = JSON.parse(localStorage.getItem('roomData')) || {
+  roomName: 'Kamar Test',
+  productName: 'Produk Test',
+  price: 'Rp 7.200.000/6bln',
+  image: 'https://via.placeholder.com/192x101'
 };
-const formatPrice = (price) => {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+const produk = JSON.parse(localStorage.getItem('produk'));
+
+const user = computed(() => store.getters.getUser);
+
+const formattedDate = computed(() => new Date(selectedDate.value).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }));
+
+const goBack = () => {
+  showPopup.value = true;
+};
+
+const handleConfirm = () => {
+  showPopup.value = false;
+  router.go(-1);
+};
+
+const handleCancel = () => {
+  showPopup.value = false;
+};
+
+const toggleEditing = () => {
+  isEditing.value = !isEditing.value;
+};
+
+const processPayment = async () => {
+  try {
+    const formattedDateValue = new Date(selectedDate.value).toISOString().split('T')[0];
+    console.log('Payment request data:', {
+      name: user.value.name,
+      phonenumber: user.value.phone,
+      ownerId: roomData.ownerId,
+      detail: `${roomData.roomName} - ${produk.name}`,
+      duration: formattedDateValue,
+      price: roomData.price,
+      image: roomData.image,
+      location: produk.location,
+      fasilitas: roomData.fasilitas,
+    });
+
+    const response = await axios.post('https://api.nearus.id/api/checkout', {
+      name: user.value.name,
+      phonenumber: user.value.phone,
+      ownerId: roomData.ownerId,
+      detail: `${roomData.roomName} - ${produk.name}`,
+      duration: formattedDateValue,
+      price: roomData.price,
+      image: roomData.image,
+      fasilitas: roomData.fasilitas,
+      location: produk.location
+    }, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+
+    if (response.data.success) {
+      const snapToken = response.data.snapToken;
+      window.snap.pay(snapToken, {
+        onSuccess: (result) => {
+          console.log('Payment Result:', {
+            refnumber: response.data.refnumber,
+            payment_time: result.transaction_time,
+            payment_method: result.payment_type.toUpperCase()
+          });
+          localStorage.setItem('paymentDetails', JSON.stringify({
+            refnumber: response.data.refnumber,
+            payment_time: result.transaction_time,
+            payment_method: result.payment_type.toUpperCase()
+          }));
+          router.push('/PaymentPage');
+        },
+        onPending: (result) => {
+          alert("Waiting for your payment!");
+          console.log(result);
+        },
+        onError: (result) => {
+          alert("Payment failed!");
+          console.log(result);
+        },
+        onClose: () => {
+          alert('You closed the popup');
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Payment processing error:', error);
+    alert('An error occurred during payment processing.');
+  }
 };
 </script>
 
-
 <style scoped>
-/* Add any custom styles here */
+/* Add custom styles here if needed */
 </style>

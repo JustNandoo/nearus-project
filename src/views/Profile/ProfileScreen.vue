@@ -34,12 +34,12 @@
                 <p class="text-gray-600">Profile-pic.jpg</p>
               </div>
             </div>
-            <h2 class="font-bold text-2xl mb-4">Ubah Informasi User</h2>
+            <h2 class="font-bold text-2xl mb-4">Update User Information</h2>
             <p class="text-sm text-gray-600">Details about your Personal Information</p>
             <form class="space-y-4" @submit.prevent="updateUserData">
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-gray-700">Nama Lengkap</label>
+                  <label class="block text-gray-700">Full Name</label>
                   <input type="text" class="input-field" v-model="user.name">
                 </div>
                 <div>
@@ -49,15 +49,14 @@
               </div>
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-gray-700">Nomor Telepon</label>
-                  <input type="text" class="input-field" v-model="user.phone">
+                  <label class="block text-gray-700">Phone Number</label>
+                  <input type="text" class="input-field" v-model="user.phonenumber">
                 </div>
                 <div>
-                  <label class="block text-gray-700">Jenis Kelamin</label>
-                  <select class="input-field" v-model="user.gender">
-                    <option value="male">Laki-laki</option>
-                    <option value="female">Perempuan</option>
-                    <option value="other">Lainnya</option>
+                  <label class="block text-gray-700">Gender</label>
+                  <select class="input-field" v-model="user.jenis_kelamin">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
                   </select>
                 </div>
               </div>
@@ -67,11 +66,11 @@
         </div>
       </section>
     </main>
-        <!-- Custom Alert Modal -->
+    <!-- Custom Alert Modal -->
     <LogoutConfirmation
-      :show="showLogoutConfirmation"
-      @confirm="logout"
-      @cancel="showLogoutConfirmation = false"
+        :show="showLogoutConfirmation"
+        @confirm="logout"
+        @cancel="showLogoutConfirmation = false"
     />
 
     <!-- Custom Alert Modal -->
@@ -99,15 +98,14 @@ import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
 import Footer from '@/components/Pages/Footer.vue';
 
 export default {
-  components: { NavFixed, Footer, LogoutConfirmation},
+  components: { NavFixed, Footer, LogoutConfirmation },
   setup() {
-
     const store = useStore();
     const user = ref({
       name: '',
       email: '',
-      phone: '',
-      gender: '',
+      phonenumber: '',
+      jenis_kelamin: '',
       photoprofile: '',
     });
     const selectedProfilePic = ref(null);
@@ -117,37 +115,40 @@ export default {
     const loading = ref(false);
     const showLogoutConfirmation = ref(false);
 
-    onMounted(() => {
-      // Fetch user data from Vuex store
-      const userData = store.getters.getUser;
-      if (userData) {
-        user.value.name = userData.name || '';
-        user.value.email = userData.email || '';
-        user.value.phone = userData.phone || '';
-        user.value.gender = userData.gender || '';
-        user.value.photoprofile = userData.photoprofile || '';
-      } else {
-    console.error('User data is not available in Vuex store');
-  }
+    onMounted(async () => {
+      try {
+        await store.dispatch('fetchUserData');
+        const userData = store.getters.getUser;
+        if (userData) {
+          user.value = {
+            name: userData.name || '',
+            email: userData.email || '',
+            phonenumber: userData.phonenumber || '',
+            jenis_kelamin: userData.jenis_kelamin || '',
+            photoprofile: userData.photoprofile || '',
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     });
 
     const updateUserData = async () => {
       loading.value = true;
       try {
-        const updatedProfileData = {
+        const contactInfo = {
           name: user.value.name || null,
           email: user.value.email || null,
-          phonenumber: user.value.phone || null,
-          jenis_kelamin: user.value.gender || null,
+          phonenumber: user.value.phonenumber || null,
+          jenis_kelamin: user.value.jenis_kelamin || null,
         };
 
-        if (Object.values(updatedProfileData).some(value => value !== null)) {
-          await store.dispatch('updateUserProfile', updatedProfileData);
-          store.commit('setUser', {
-            ...store.getters.getUser,
-            phone: user.value.phone,
-            gender: user.value.gender,
-          });
+        if (contactInfo.jenis_kelamin) {
+          await store.dispatch('updateUserProfile', { jenis_kelamin: contactInfo.jenis_kelamin });
+        }
+
+        if (Object.values(contactInfo).some(value => value !== null)) {
+          await store.dispatch('updateUserContactInfo', contactInfo);
         }
 
         if (selectedProfilePic.value) {
@@ -159,7 +160,7 @@ export default {
         alertMessage.value = 'Profile updated successfully';
         showAlert.value = true;
       } catch (error) {
-        console.error('Error updating user data:', error);
+        console.error('Failed to update user data:', error);
         alertMessage.value = 'Failed to update profile';
         showAlert.value = true;
       } finally {
@@ -168,14 +169,10 @@ export default {
     };
 
     const handleFileChange = (event) => {
-      const file = event.target.files?.[0];
+      const file = event.target.files[0];
       if (file) {
         selectedProfilePic.value = file;
-        const reader = new FileReader();
-        reader.onload = () => {
-          profilePicPreview.value = reader.result;
-        };
-        reader.readAsDataURL(file);
+        profilePicPreview.value = URL.createObjectURL(file);
       }
     };
 
@@ -184,36 +181,33 @@ export default {
     };
 
     const logout = () => {
+      store.dispatch('logout');
       showLogoutConfirmation.value = false;
-      this.$router.push('/login');
     };
 
     return {
       user,
-      updateUserData,
-      handleFileChange,
       profilePicPreview,
       showAlert,
       alertMessage,
-      closeAlert,
       loading,
       showLogoutConfirmation,
+      updateUserData,
+      handleFileChange,
+      closeAlert,
       logout,
     };
   },
 };
 </script>
 
+
+
+
 <style scoped>
 #profile-pic {
   object-fit: cover;
   border-radius: 50%;
-}
-
-.label-field {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #4a4a4a;
 }
 
 .input-field {
@@ -261,18 +255,12 @@ export default {
   z-index: 9999;
 }
 
-
 .alert-modal-content button {
-background-color: #3b82f6;
-color: white;
-border: none;
-padding: 10px 20px;
-border-radius: 5px;
-cursor: pointer;
-}
-
-.alert-modal-content button
-{
-background-color: #2563eb;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 </style>

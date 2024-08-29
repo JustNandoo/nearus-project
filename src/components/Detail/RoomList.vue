@@ -1,51 +1,45 @@
 <template>
-  <div v-if="rooms.length" class="bg-white rounded-2xl border border-solid border-slate-400 border-opacity-60 mb-8">
-    <div v-for="room in rooms" :key="room.roomid" class="flex gap-5 max-md:flex-col max-md:gap-0 mb-6">
-      <div class="flex flex-col w-[78%] max-md:w-full">
-        <div class="grow max-md:mt-6">
-          <div class="flex gap-5 max-md:flex-col max-md:gap-0">
-            <div class="flex flex-col w-[43%] max-md:w-full h-full">
-              <img :src="room.image" alt="Room Image" class="grow w-full h-full object-cover aspect-[1.96] max-md:mt-2.5" />
-            </div>
-            <div class="flex flex-col ml-5 w-[57%] max-md:ml-0 max-md:w-full">
-              <div class="flex flex-col self-stretch px-5 my-auto max-md:mt-10">
-                <div class="text-2xl font-semibold leading-7 text-black mb-4">{{ room.name }}</div>
-                <div class="text-sm text-gray-600 mb-4">{{ room.category }}</div>
-                <div class="shrink-0 h-px bg-slate-400 border-slate-400 border-opacity-60 mb-4"></div>
-                <div class="flex gap-2.5 flex-wrap">
-                  <div v-for="facility in room.fasilitas.split(',')" :key="facility"
-                       class="px-4 py-2 bg-white rounded-md border border-solid border-slate-400 border-opacity-60 text-sm font-medium text-center">
-                    {{ facility }}
-                  </div>
-                </div>
-              </div>
+  <div v-if="rooms.length" class="space-y-6 p-6">
+    <div v-for="room in rooms" :key="room.roomid" class="bg-white rounded-2xl border border-slate-400 border-opacity-60 shadow-lg flex">
+      <div class="w-1/3 flex-shrink-0 overflow-hidden">
+        <img :src="room.image" alt="Room Image" class="w-full h-[320px] object-cover rounded-tl-2xl rounded-bl-2xl" />
+      </div>
+      <div class="w-2/3 p-6 flex flex-col justify-between">
+        <div>
+          <h2 class="text-2xl font-semibold text-black mb-2">{{ room.name }}</h2>
+          <p class="text-sm text-gray-600 mb-4">{{ room.category }}</p>
+          <hr class="border-slate-400 border-opacity-60 mb-4" />
+          <div class="flex gap-2 flex-wrap mb-4">
+            <div v-for="facility in room.fasilitas.split(',')" :key="facility"
+                 class="px-3 py-1 bg-white rounded-md border border-slate-400 border-opacity-60 text-sm font-medium text-center">
+              {{ facility }}
             </div>
           </div>
+          <p class="text-sm text-gray-600 mb-2">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }}</p>
         </div>
-      </div>
-      <div class="flex flex-col ml-5 w-[22%] max-md:ml-0 max-md:w-full">
-        <div class="flex flex-col grow px-5 pt-2.5 pb-5 font-semibold border border-solid border-slate-400 border-opacity-20 max-md:mt-6">
-          <div class="mt-4 text-sm text-gray-600">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }}</div>
-          <div class="shrink-0 mt-2 h-px bg-slate-400 border-slate-400 border-opacity-60"></div>
-          <div class="self-center mt-20 text-2xl text-center text-black max-md:mt-10"> Rp. {{ formatPrice(room.price) }} / {{ room.time }}</div>
+        <div>
+          <p class="text-2xl text-black mb-4">Rp. {{ formatPrice(room.price) }} / {{ room.time }}</p>
           <button @click="handleCheckout(room)"
                   :class="[
-          'justify-center items-center px-24 py-5 mt-14 text-base text-center rounded-xl shadow-2xl',
-          room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
-        ]"
-                  :disabled="room.availability <= 0">
+            'w-full h-[55px] px-4 py-2 text-base text-center rounded-xl shadow-lg',
+            room.availability > 0 ? 'text-white bg-sky-600' : 'text-gray-500 bg-gray-300 cursor-not-allowed'
+          ]"
+                  :disabled="room.availability <= 0 || loading">
             {{ room.availability > 0 ? 'Pilih' : 'Tidak Tersedia' }}
           </button>
-
         </div>
       </div>
     </div>
   </div>
-  <div v-else class="text-center text-gray-600">No rooms available.</div>
+  <div v-else class="text-center text-gray-600 py-8">No rooms available.</div>
+  <div v-if="loading" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div class="text-white text-xl">Loading...</div>
+  </div>
 </template>
 
+
 <script setup>
-import {ref, onMounted, watch} from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -58,6 +52,7 @@ const props = defineProps({
 });
 
 const rooms = ref([]);
+const loading = ref(false);  // Add loading state
 const router = useRouter();
 const store = useStore();
 
@@ -80,6 +75,8 @@ const handleCheckout = async (room) => {
     console.warn('Kamar tidak tersedia untuk checkout.');
     return;
   }
+
+  loading.value = true;  // Set loading to true
 
   try {
     const userData = store.getters.getUser;
@@ -115,9 +112,10 @@ const handleCheckout = async (room) => {
     }
   } catch (error) {
     console.error('Error saat checkout:', error);
+  } finally {
+    loading.value = false;  // Set loading to false
   }
 };
-
 
 watch(() => props.ownerId, (newOwnerId) => {
   if (newOwnerId) {

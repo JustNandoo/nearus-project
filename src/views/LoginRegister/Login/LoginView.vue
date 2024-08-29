@@ -8,11 +8,6 @@
           <div class="h-[243px] left-[147px] top-[287px] absolute flex-col justify-start items-start gap-[33px] inline-flex">
             <div class="w-[340px] text-white text-[26px] font-bold font-sans">Anda anak merantau? kesulitan mencari kos? banyak kos yang tidak cocok?</div>
             <div class="w-[351px] text-white text-lg font-normal font-sans">Nearus hadir sebagai platform website pencari kos disekitar anda dengan kriteria yang sesuai.</div>
-            <div class="w-[312px] h-[15px] justify-center items-start gap-3 inline-flex">
-              <div class="w-24 h-[15px] bg-white shadow"></div>
-              <div class="w-[95px] h-[15px] bg-white bg-opacity-40 shadow"></div>
-              <div class="w-24 h-[15px] bg-white bg-opacity-40 shadow"></div>
-            </div>
           </div>
         </div>
         <div class="w-[571px] h-[817px] left-[68px] top-[25px] absolute">
@@ -35,10 +30,6 @@
                 <i v-if="passwordVisible" class="fas fa-eye text-lg"></i>
                 <i v-else class="fas fa-eye-slash text-lg"></i>
               </button>
-            </div>
-            <div class="h-[22px] left-0 top-[550px] absolute justify-center items-start gap-4 inline-flex">
-              <input type="checkbox" class="w-[22px] h-[22px] border-2 border-blue-600" v-model="rememberMe" />
-              <div class="text-black text-lg font-bold font-sans">Remember me</div>
             </div>
             <a href="/reset-password" class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans hover:text-blue-500 hover:underline">Forgot Password</a>
             <div class="w-[202px] h-[54px] left-[369px] top-[617px] absolute">

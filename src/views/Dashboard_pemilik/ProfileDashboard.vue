@@ -84,8 +84,8 @@ const alertMessage = ref('');
 const alertType = ref('success');
 
 // Load user data from the store when the component is mounted
-onMounted(() => {
-  store.dispatch('initializeStore'); // Ensure local storage data is loaded
+onMounted(async () => {
+  await store.dispatch('initializeStore'); // Ensure local storage data is loaded
   const userData = store.getters.getUser;
   if (userData) {
     user.value = { ...userData };
@@ -96,7 +96,7 @@ onMounted(() => {
 
 // Watch the user object and update the Vuex store whenever it changes
 watch(user, (newUser) => {
-  store.commit('updateUser', newUser);
+  store.commit('setUser', newUser);
 }, { deep: true });
 
 // Function to update user profile data

@@ -3,31 +3,31 @@
     <Nav />
     <div class="pt-[72px] flex-grow">
       <div class="relative w-full h-[286px] bg-[#008dda] shadow-lg flex items-center">
-        <div class="absolute left-20 text-white font-bold">
-          <div class="text-4xl mb-2">NeaRuS Finance</div>
-          <div class="text-lg font-medium w-[563px]">
+        <div class="absolute left-4 sm:left-20 text-white font-bold">
+          <div class="text-2xl sm:text-4xl mb-2">NeaRuS Finance</div>
+          <div class="text-sm sm:text-lg font-medium w-full sm:w-[563px]">
             Atur management pembayaran serta mengatur kos yang telah di sewa
             dengan mudah hanya dengan NeaRuS Finance.
           </div>
         </div>
-        <div class="absolute flex space-x-4 bottom-10 right-[90px]">
-          <img class="w-[150px] h-[150px]" :src="finance1" alt="Finance 1" />
-          <img class="w-[150px] h-[150px]" :src="finance2" alt="Finance 2" />
-          <img class="w-[150px] h-[150px]" :src="finance3" alt="Finance 3" />
+        <div class="absolute flex space-x-2 sm:space-x-4 bottom-5 sm:bottom-10 right-4 sm:right-[90px]">
+          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance1" alt="Finance 1" />
+          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance2" alt="Finance 2" />
+          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance3" alt="Finance 3" />
         </div>
       </div>
 
       <div class="mt-12 px-4">
-        <div class="flex items-center justify-between">
-          <div class="text-black text-[32px] font-bold ml-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between">
+          <div class="text-black text-2xl sm:text-[32px] font-bold ml-4">
             Kos yang disewa
           </div>
-          <div class="relative flex items-center mr-7">
+          <div class="relative flex items-center mr-7 mt-4 sm:mt-0">
             <i class="fas fa-search absolute left-3 text-gray-400"></i>
             <input
                 v-model="searchQuery"
                 type="text"
-                class="pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto"
                 placeholder="Search transactions..."
             />
           </div>
@@ -55,29 +55,29 @@
             <div
                 v-for="transaction in filteredTransactions"
                 :key="transaction.id"
-                class="relative w-[80%] max-w-[1255px] h-[270px] bg-white rounded-[15px] border border-[#8692a6]/60 mb-4"
+                class="relative w-full max-w-[1255px] h-auto sm:h-[270px] bg-white rounded-[15px] border border-[#8692a6]/60 mb-4 p-4 sm:p-0"
             >
-              <div class="absolute top-7 right-7 flex items-center space-x-2">
+              <div class="absolute top-4 sm:top-7 right-4 sm:right-7 flex items-center space-x-2">
                 <img
-                    class="w-6 h-6"
+                    class="w-5 h-5 sm:w-6 sm:h-6"
                     :src="transaction.status === 'Paid' ? checkmark : ''"
                     alt="Checkmark"
                 />
-                <div class="text-black text-[15px] font-bold leading-7">
+                <div class="text-black text-sm sm:text-[15px] font-bold leading-7">
                   {{ transaction.status }}
                 </div>
               </div>
 
               <div
-                  class="absolute left-[537px] top-[22px] text-black text-sm font-bold w-[400px] h-[23px]"
+                  class="mt-6 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[22px] text-black text-sm font-bold w-full sm:w-[400px] h-auto sm:h-[23px]"
               >
                 {{ transaction.detail }}
               </div>
               <div
-                  class="absolute left-[540px] top-[87px] flex items-center space-x-2"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[87px] flex items-center space-x-2"
               >
                 <img
-                    class="w-7 h-7"
+                    class="w-5 h-5 sm:w-7 sm:h-7"
                     :src="bathroomImage"
                     alt="Kamar Mandi Dalam"
                 />
@@ -86,36 +86,36 @@
                 </div>
               </div>
               <div
-                  class="absolute left-[745px] top-[87px] flex items-center space-x-2"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[87px] flex items-center space-x-2"
               >
-                <img class="w-7 h-7" :src="acImage" alt="AC" />
+                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="acImage" alt="AC" />
                 <div class="text-black text-sm font-normal leading-7">AC</div>
               </div>
               <div
-                  class="absolute left-[540px] top-[141px] flex items-center space-x-2"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[141px] flex items-center space-x-2"
               >
-                <img class="w-7 h-7" :src="deskImage" alt="Meja" />
+                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="deskImage" alt="Meja" />
                 <div class="text-black text-sm font-normal leading-7">Meja</div>
               </div>
               <div
-                  class="absolute left-[745px] top-[141px] flex items-center space-x-2"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[141px] flex items-center space-x-2"
               >
-                <img class="w-7 h-7" :src="toiletImage" alt="Kloset Duduk" />
+                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="toiletImage" alt="Kloset Duduk" />
                 <div class="text-black text-sm font-normal leading-7">
                   Kloset Duduk
                 </div>
               </div>
               <div
-                  class="absolute left-[537px] top-[63px] border border-[#8692a6]/60 w-[699px] h-0"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[63px] border border-[#8692a6]/60 w-full sm:w-[699px] h-0"
               ></div>
               <div
-                  class="absolute left-[932px] top-[61px] border border-[#8692a6]/60 w-[129px] h-0 rotate-90 origin-top-left"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[932px] sm:top-[61px] border border-[#8692a6]/60 w-[129px] h-0 rotate-90 origin-top-left"
               ></div>
               <router-link
                   :to="{ name: 'NearusFinance2', params: { id: transaction.id } }"
               >
                 <button
-                    class="absolute left-[537px] top-[203px] bg-[#008dda] rounded-[10px] shadow w-[678px] pt-[15px] pb-4 flex justify-center items-center"
+                    class="mt-6 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[203px] bg-[#008dda] rounded-[10px] shadow w-full sm:w-[678px] pt-4 sm:pt-[15px] pb-4 flex justify-center items-center"
                 >
                   <div class="text-center text-white text-base font-semibold">
                     Manage
@@ -123,11 +123,11 @@
                 </button>
               </router-link>
               <img
-                  class="absolute left-0 w-[510px] h-[270px] rounded-lg object-cover"
+                  class="w-full sm:absolute sm:left-0 sm:w-[510px] h-auto sm:h-[270px] rounded-lg object-cover mt-4 sm:mt-0"
                   :src="transaction.image"
               />
               <div
-                  class="absolute left-[931px] top-[109px] text-center text-[#2171e3] text-2xl font-semibold w-[305px] h-[41px]"
+                  class="mt-4 sm:mt-0 sm:absolute sm:left-[931px] sm:top-[109px] text-center text-[#2171e3] text-xl sm:text-2xl font-semibold w-full sm:w-[305px] h-auto sm:h-[41px]"
               >
                 Rp. {{ formatPrice(transaction.price) }}
               </div>
@@ -143,6 +143,7 @@
     <ProfileCard v-if="showProfileCard" />
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';

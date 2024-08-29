@@ -8,11 +8,6 @@
           <div class="h-[243px] left-[147px] top-[287px] absolute flex-col justify-start items-start gap-[33px] inline-flex">
             <div class="w-[340px] text-white text-[26px] font-bold font-sans">Anda anak merantau? kesulitan mencari kos? banyak kos yang tidak cocok?</div>
             <div class="w-[351px] text-white text-lg font-normal font-sans">Nearus hadir sebagai platform website pencari kos disekitar anda dengan kriteria yang sesuai.</div>
-            <div class="w-[312px] h-[15px] justify-center items-start gap-3 inline-flex">
-              <div class="w-24 h-[15px] bg-white shadow"></div>
-              <div class="w-[95px] h-[15px] bg-white bg-opacity-40 shadow"></div>
-              <div class="w-24 h-[15px] bg-white bg-opacity-40 shadow"></div>
-            </div>
           </div>
         </div>
         <div class="w-[571px] h-[817px] left-[68px] top-[25px] absolute">
