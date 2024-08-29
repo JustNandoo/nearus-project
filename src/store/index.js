@@ -5,7 +5,7 @@ const API_URL = 'https://api.nearus.id/api';
 
 export default createStore({
   state: {
-    user: JSON.parse(localStorage.getItem('local')) || null,
+    user: JSON.parse(localStorage.getItem('local')) || {},
     token: localStorage.getItem('token') || null,
     role: localStorage.getItem('role') || null,
   },
@@ -29,19 +29,27 @@ export default createStore({
       state.token = token;
       localStorage.setItem('token', token);
     },
+    setRole(state, role) {
+      state.role = role;
+      localStorage.setItem('role', role);
+    },
     clearToken(state) {
       state.token = null;
       localStorage.removeItem('token');
     },
     clearUser(state) {
-      state.user = null;
-      localStorage.removeItem('local');
+      const preservedUserData = {
+        photoprofile: state.user?.photoprofile || '',
+        jenis_kelamin: state.user?.jenis_kelamin || '',
+      };
+      state.user = preservedUserData;
+      localStorage.setItem('local', JSON.stringify(state.user));
     },
     loadUserFromStorage(state) {
       const user = localStorage.getItem('local');
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
-      state.user = user ? JSON.parse(user) : null;
+      state.user = user ? JSON.parse(user) : {};
       state.token = token || null;
       state.role = role || null;
     },
@@ -54,8 +62,12 @@ export default createStore({
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
+
+        // Set user data, token, and role
         commit('setUser', user.data);
         commit('setToken', user.token);
+        commit('setRole', user.data.websiterole);
+
         await dispatch('fetchUserProfileByID', user.data.id);
       } catch (error) {
         console.error('Login failed:', error);
@@ -88,13 +100,13 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/add-personal-data`,
-          updatedProfileData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/add-personal-data`,
+            updatedProfileData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -112,14 +124,14 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/upload-photo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+            `${API_URL}/profile/upload-photo`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -137,13 +149,13 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/update`,
-          contactInfo,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/update`,
+            contactInfo,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -157,6 +169,7 @@ export default createStore({
     },
     logout({ commit }) {
       commit('clearToken');
+      commit('clearUser');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
@@ -171,7 +184,7 @@ export default createStore({
     },
   },
   getters: {
-    isLoggedIn: state => !!state.user,
+    isLoggedIn: state => !!state.token,
     getUser: state => state.user || {},
     getRole: state => state.role || null,
   },

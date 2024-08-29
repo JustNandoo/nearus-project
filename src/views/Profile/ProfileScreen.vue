@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
+  <div class="flex flex-col pb-14 bg-white min-h-screen">
     <NavFixed />
     <main class="flex flex-col items-center px-5 mt-12 w-full">
       <section class="mt-16 w-full max-w-5xl">
@@ -87,7 +87,7 @@
       </div>
     </div>
   </div>
-  <Footer />
+<Footer />
 </template>
 
 <script>

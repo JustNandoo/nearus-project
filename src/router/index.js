@@ -66,12 +66,6 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/privatedata',
-      name: 'privatedata',
-      component: () => import('../views/Profile/PrivateData.vue'),
-      meta: { requiresAuth: true }
-    },
-    {
       path: '/passworddata/:id',
       name: 'passworddata',
       component: () => import('../views/Profile/ProfilePassword.vue'),
@@ -82,7 +76,8 @@ const router = createRouter({
       path: '/detail-kost/:id',
       name: 'detailkost',
       component: () => import('../views/DetailPage/DetailPageView.vue'),
-      props: true
+      props: true,
+      meta: { requiresAuth: true }
     },
     {
       path: '/AboutUs',
