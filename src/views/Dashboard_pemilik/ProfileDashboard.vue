@@ -36,14 +36,13 @@
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="block text-gray-700">Nomor Telepon</label>
-                    <input type="text" class="input-field" v-model="user.phone">
+                    <input type="text" class="input-field" v-model="user.phonenumber">
                   </div>
                   <div>
                     <label class="block text-gray-700">Jenis Kelamin</label>
-                    <select class="input-field" v-model="user.gender">
+                    <select class="input-field" v-model="user.jenis_kelamin">
                       <option value="male">Laki-laki</option>
                       <option value="female">Perempuan</option>
-                      <option value="other">Lainnya</option>
                     </select>
                   </div>
                 </div>
@@ -74,8 +73,8 @@ const store = useStore();
 const user = ref({
   name: '',
   email: '',
-  phone: '',
-  gender: '',
+  phonenumber: '',
+  jenis_kelamin: '',
   photoprofile: '',
 });
 const selectedProfilePic = ref(null);
@@ -106,8 +105,8 @@ const updateUserData = async () => {
     const updatedProfileData = {
       name: user.value.name || null,
       email: user.value.email || null,
-      phonenumber: user.value.phone || null,
-      jenis_kelamin: user.value.gender || null,
+      phonenumber: user.value.phonenumber || null,
+      jenis_kelamin: user.value.jenis_kelamin || null,
     };
 
     if (Object.values(updatedProfileData).some(value => value !== null)) {
