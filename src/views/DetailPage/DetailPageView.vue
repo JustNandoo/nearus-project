@@ -28,22 +28,26 @@
           <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
             <font-awesome-icon class="text-light-black w-6 h-6" :icon="faMessage" />
           </button>
-          <button class="bg-blue-primary w-full h-12 rounded-lg shadow-lg flex items-center justify-center">
+          <button @click="scrollToRoomList" class="bg-blue-primary w-full h-12 rounded-lg shadow-lg flex items-center justify-center">
             <a class="no-underline text-white font-medium" href="#">Lihat Kamar</a>
           </button>
         </div>
       </div>
     </div>
+
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
+
     <div class="mt-10 mr-32 ml-32 mb-20">
       <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
       <div v-if="facilities.length" class="flex flex-wrap gap-4">
         <p class="text-black text-lg font-montserrat mr-4 mb-2">
-          {{ facilities }}
+          {{ formattedFacilities.join(', ') }}
         </p>
       </div>
       <p v-else class="text-gray-500">Belum ada data fasilitas</p>
+
       <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
+
       <div>
         <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
         <div class="flex gap-8 justify-between">
@@ -66,15 +70,24 @@
             </div>
           </div>
         </div>
+
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
+
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <RoomList :ownerId="productId" />
+          <div ref="roomListSection">
+            <RoomList :ownerId="productId" />
+          </div>
+
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
     </div>
-    <div id="disqus_thread"></div>
+
+    <div class="mx-32 my-10">
+      <div id="disqus_thread"></div>
+    </div>
+
     <Footer />
   </div>
 </template>
@@ -113,6 +126,8 @@ const items = ref([
   { id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM' },
 ]);
 
+const roomListSection = ref(null);
+
 const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
@@ -145,7 +160,6 @@ const fetchProductData = async () => {
   }
 };
 
-
 const fetchRooms = async () => {
   try {
     const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${productId}`);
@@ -163,6 +177,12 @@ const fetchRooms = async () => {
 const formattedFacilities = computed(() => {
   return facilities.value.split(',').map(facility => facility.trim());
 });
+
+const scrollToRoomList = () => {
+  if (roomListSection.value) {
+    roomListSection.value.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 onMounted(async () => {
   await fetchProductData();
