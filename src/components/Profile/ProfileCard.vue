@@ -82,7 +82,7 @@ setTimeout(() => {
 .profile-card {
   position: fixed;
   top: 6rem;
-  right: 15rem;
+  right: 0.8rem;
   z-index: 1100;
 }
 

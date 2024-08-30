@@ -69,7 +69,7 @@
         <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         <div>
           <h1 class="font-bold text-[28px] mb-10">Kamar</h1>
-          <RoomList :ownerId="ownerId" />
+          <RoomList :ownerId="productId" />
           <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
         </div>
       </div>
@@ -148,7 +148,7 @@ const fetchProductData = async () => {
 
 const fetchRooms = async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId.value}`);
+    const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${productId}`);
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {

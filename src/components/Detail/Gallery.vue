@@ -3,23 +3,25 @@
     <!-- Single Image Layout -->
     <div v-if="images.length === 1" class="single-image">
       <div class="image-wrapper">
-        <img :src="images[0]" alt="Single Image" class="image">
+        <img :src="images[0]" alt="Single Image" class="image" @click="openModal(0)">
       </div>
     </div>
 
     <!-- Two Images Layout -->
     <div v-else-if="images.length === 2" class="two-images">
       <div class="image-wrapper">
-        <img v-for="(img, index) in images" :key="index" :src="img" alt="Image" class="image">
+        <img v-for="(img, index) in images" :key="index" :src="img" alt="Image" class="image" @click="openModal(index)">
       </div>
     </div>
 
     <!-- Three or Four Images Layout -->
     <div v-else class="main-and-thumbnails">
-      <!-- Main Image -->
+      <!-- Main Image with Transition -->
       <div class="main-image">
         <div class="image-wrapper">
-          <img :src="mainImage" alt="Main Image" class="image">
+          <transition name="fade">
+            <img :src="mainImage" alt="Main Image" class="image" @click="openModal(mainImageIndex)">
+          </transition>
         </div>
       </div>
 
@@ -30,26 +32,28 @@
                :class="{ 'selected': mainImage === img }"
                @click="selectImage(img)">
         </div>
-        <!-- Full View Thumbnail -->
-        <div v-if="images.length > 3" class="thumbnail-wrapper full-view-thumbnail">
+        <!-- Full View Thumbnail with Camera Icon -->
+        <div v-if="images.length > 3" class="thumbnail-wrapper full-view-thumbnail relative">
           <img :src="images[3]" alt="Full View" class="thumbnail-image hover:opacity-50 transition-opacity duration-300"
                @click="openModal(3)">
+          <i class="fas fa-camera absolute inset-0 flex justify-center items-center text-white text-2xl opacity-0 hover:opacity-100 transition-opacity duration-300" @click="openModal(3)"></i>
         </div>
       </div>
     </div>
 
-    <!-- Modal for Full View -->
+    <!-- Modal for Full View with Image Transition -->
     <div v-if="isModalOpen" class="fixed inset-0 bg-gray-800 bg-opacity-80 flex justify-center items-center z-50" @click="closeModal">
       <div class="relative bg-white p-4 rounded-lg w-[900px] h-[520px] overflow-hidden" @click.stop>
-        <button class="absolute top-4 right-4 text-2xl text-gray-700 hover:text-gray-900" @click="closeModal">&times;</button>
+        <button class="absolute top-4 right-4 text-2xl text-gray-700 hover:text-gray-900" @click="closeModal"></button>
         <div class="relative flex justify-center items-center h-full">
-          <img :src="images[currentIndex]" class="w-[800px] h-[470px] object-cover">
-          <button class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="prevImage">&lt;</button>
-          <button class="absolute top-1/2 right-0  transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="nextImage">&gt;</button>
+          <transition name="fade">
+            <img :src="images[currentIndex]" class="w-[800px] h-[470px] object-cover">
+          </transition>
+          <button class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-blue-500 text-white p-2 rounded-full" @click="prevImage">&lt;</button>
+          <button class="absolute top-1/2 right-0 transform -translate-y-1/2 bg-blue-500 text-white p-2 rounded-full" @click="nextImage">&gt;</button>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -67,16 +71,19 @@ const props = defineProps({
 const mainImage = ref('');
 const isModalOpen = ref(false);
 const currentIndex = ref(0);
+const mainImageIndex = ref(0);
 
 // Update mainImage whenever images prop changes
 watch(() => props.images, (newImages) => {
   if (newImages.length > 0) {
     mainImage.value = newImages[0];
+    mainImageIndex.value = 0;
   }
 }, { immediate: true });
 
-function selectImage(image) {
+function selectImage(image, index) {
   mainImage.value = image;
+  mainImageIndex.value = index;
 }
 
 function openModal(index) {
@@ -96,7 +103,6 @@ function nextImage() {
   currentIndex.value = (currentIndex.value + 1) % props.images.length;
 }
 </script>
-
 
 <style scoped>
 /* Container Styles */
@@ -190,11 +196,34 @@ function nextImage() {
 .thumbnail-image:focus,
 .thumbnail-image:active {
   opacity: 0.8;
-
 }
 
+.full-view-thumbnail.selected,
+.full-view-thumbnail:focus,
+.full-view-thumbnail:active {
+  opacity: 0.8;
+}
+
+
 .full-view-thumbnail {
-  border: 3px solid #007bff;
+  position: relative;
+}
+
+/* Camera Icon on Hover */
+.full-view-thumbnail .fa-camera {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.full-view-thumbnail:hover .fa-camera {
+  opacity: 1;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease-in-out;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 
 /* Modal Styles */
@@ -277,24 +306,29 @@ function nextImage() {
 /* Responsive Styles */
 @media (max-width: 1200px) {
   .main-and-thumbnails {
-    flex-direction: column;
-  }
 
-  .thumbnail-images {
-    grid-template-columns: 1fr;
-  }
-}
+    @media (max-width: 1200px) {
+      .main-and-thumbnails {
+        flex-direction: column;
+      }
 
-@media (max-width: 600px) {
-  .main-image {
-    flex: 1;
-  }
+      .thumbnail-images {
+        grid-template-columns: 1fr;
+      }
+    }
 
-  .thumbnail-images {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    @media (max-width: 600px) {
+      .main-image {
+        flex: 1;
+      }
+
+      .thumbnail-images {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+    }
   }
 }
 </style>
