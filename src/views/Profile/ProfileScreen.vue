@@ -55,8 +55,8 @@
                 <div>
                   <label class="block text-gray-700">Gender</label>
                   <select class="input-field" v-model="user.jenis_kelamin">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="male">Laki-laki</option>
+                    <option value="female">Perempuan</option>
                   </select>
                 </div>
               </div>

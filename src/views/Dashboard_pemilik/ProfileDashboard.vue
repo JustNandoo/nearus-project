@@ -58,7 +58,6 @@
                     <select class="input-field" v-model="user.jenis_kelamin">
                       <option value="Laki-laki">Laki-laki</option>
                       <option value="Perempuan">Perempuan</option>
-                      <option value="Lainnya">Lainnya</option>
                     </select>
                   </div>
                 </div>
@@ -118,17 +117,23 @@ watch(user, (newUser) => {
 const updateUserData = async () => {
   loading.value = true;
   try {
-    const updatedProfileData = {
+    const contactInfo = {
       name: user.value.name || null,
       email: user.value.email || null,
       phonenumber: user.value.phonenumber || null,
       jenis_kelamin: user.value.jenis_kelamin || null,
     };
+    
+    if (contactInfo.jenis_kelamin) {
+          await store.dispatch('updateUserProfile', { jenis_kelamin: contactInfo.jenis_kelamin });
+        }
 
-    if (Object.values(updatedProfileData).some(value => value !== null)) {
-      await store.dispatch('updateUserProfile', updatedProfileData);
+    // Update contact info if any field is present
+    if (Object.values(contactInfo).some(value => value !== null)) {
+      await store.dispatch('updateUserContactInfo', contactInfo);
     }
 
+    // Update profile picture if a new one is selected
     if (selectedProfilePic.value) {
       const formData = new FormData();
       formData.append('photoprofile', selectedProfilePic.value);

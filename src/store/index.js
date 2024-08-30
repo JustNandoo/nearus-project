@@ -1,5 +1,5 @@
-import { createStore } from "/node_modules/.vite/deps/vuex.js?v=61cc79d3";
-import axios from "/node_modules/.vite/deps/axios.js?v=61cc79d3";
+import { createStore } from 'vuex';
+import axios from 'axios';
 
 const API_URL = 'https://api.nearus.id/api';
 
