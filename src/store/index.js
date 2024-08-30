@@ -1,5 +1,5 @@
-import { createStore } from 'vuex';
-import axios from 'axios';
+import { createStore } from "/node_modules/.vite/deps/vuex.js?v=61cc79d3";
+import axios from "/node_modules/.vite/deps/axios.js?v=61cc79d3";
 
 const API_URL = 'https://api.nearus.id/api';
 
@@ -68,10 +68,41 @@ export default createStore({
         commit('setToken', user.token);
         commit('setRole', user.data.websiterole);
 
-        await dispatch('fetchUserProfileByID', user.data.id);
+        // Fetch user profile after setting the token
+        await dispatch('fetchUserProfileByID');
       } catch (error) {
         console.error('Login failed:', error);
         throw error;
+      }
+    },
+    async fetchUserProfileByID({ commit, state }) {
+      if (!state.token) {
+        console.error('No token available for authorization');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+
+        // Handle the response structure
+        if (response.data && response.data.success && response.data.data) {
+          commit('setUser', response.data.data);
+        } else if (response.data && response.data.user) {
+          // Handle case where response contains a `user` object directly
+          commit('setUser', response.data.user);
+        } else {
+          console.error('Failed to fetch user profile: Unexpected response format', response.data);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          console.error('Authorization failed: Invalid token');
+        } else {
+          console.error('Failed to fetch user profile:', error);
+        }
       }
     },
     async fetchUserData({ commit, state }) {
@@ -84,10 +115,13 @@ export default createStore({
             Authorization: `Bearer ${state.token}`,
           },
         });
+        // Handle different response structures
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
+        } else if (response.data && response.data.user) {
+          commit('setUser', response.data.user);
         } else {
-          console.error('Failed to fetch user data:', response.data);
+          console.error('Failed to fetch user data: Unexpected response format', response.data);
         }
       } catch (error) {
         console.error('Failed to fetch user data:', error);
@@ -173,14 +207,6 @@ export default createStore({
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
-    },
-    async fetchUserProfileByID({ commit }, id) {
-      try {
-        const response = await axios.get(`${API_URL}/profile`);
-        commit('setUser', response.data);
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error);
-      }
     },
   },
   getters: {
