@@ -7,24 +7,25 @@
 
     <!-- Two Images Layout -->
     <div v-else-if="images.length === 2" class="two-images">
-      <img :src="images[0]" alt="Image 1" class="w-full h-[270px] object-cover rounded-lg shadow-lg">
-      <img :src="images[1]" alt="Image 2" class="w-full h-[270px] object-cover rounded-lg shadow-lg">
+      <img v-for="(img, index) in images" :key="index" :src="img" alt="Image" class="w-full h-[270px] object-cover rounded-lg shadow-lg">
     </div>
 
     <!-- Three or More Images Layout -->
     <div v-else class="grid-layout">
       <!-- Main Image -->
       <div class="col-span-3 row-span-2">
-        <img :src="images[0]" alt="Main Image" class="w-full h-[560px] object-cover rounded-lg shadow-lg">
+        <img :src="mainImage" alt="Main Image" class="w-full h-[560px] object-cover rounded-lg shadow-lg">
       </div>
       <div class="col-span-2 flex flex-col gap-4 px-5">
         <div class="flex gap-4">
-          <img :src="images[1]" alt="Image 2" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 1">
-          <img :src="images[2]" alt="Image 3" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 2">
+          <img v-for="(img, index) in images.slice(1, 3)" :key="index" :src="img" alt="Image"
+               class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg cursor-pointer"
+               @click="updateMainImage(img)">
         </div>
         <div class="flex gap-4">
-          <img :src="images[3]" alt="Image 4" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 3">
-          <img :src="images[4]" alt="Image 5" class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg" v-if="images.length > 4">
+          <img v-for="(img, index) in images.slice(3, 5)" :key="index" :src="img" alt="Image"
+               class="w-[330px] h-[270px] object-cover rounded-lg shadow-lg cursor-pointer"
+               @click="updateMainImage(img)">
         </div>
       </div>
     </div>
@@ -32,7 +33,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref, defineProps } from 'vue';
 
 const props = defineProps({
   images: {
@@ -40,6 +41,14 @@ const props = defineProps({
     default: () => []
   }
 });
+
+// State to hold the main image
+const mainImage = ref(props.images[0]);
+
+// Method to update the main image
+const updateMainImage = (img) => {
+  mainImage.value = img;
+};
 </script>
 
 <style scoped>
@@ -53,7 +62,6 @@ const props = defineProps({
   display: flex;
   justify-content: center;
   padding-left: 8rem;
-
 }
 
 .single-image img {
@@ -92,5 +100,10 @@ const props = defineProps({
   object-fit: cover;
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add cursor pointer to make it clear the images are clickable */
+.grid-layout img {
+  cursor: pointer;
 }
 </style>

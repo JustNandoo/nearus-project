@@ -5,7 +5,38 @@
       <div class="max-w-4xl ">
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
-
+        <div class="flex-col gap-3">
+          <h1 class="font-medium text-[20px]">Pesanan Kamar</h1>
+          <div>
+            <div v-for="product in products" class="border border-gray-300 rounded-lg p-4 mb-4 bg-white shadow-sm flex flex-col relative">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                  <img class="w-20 h-20 rounded-lg object-cover" :src="product.image[0]" alt="Product Image">
+                  <div>
+                    <a href="" class="text-lg font-medium">{{ product.productname }}</a>
+                    <p class="text-gray-500">{{ product.location }}</p>
+                  </div>
+                </div>
+                <font-awesome-icon
+                    :icon="faEllipsisV"
+                    class="text-gray-500 cursor-pointer"
+                    @click="toggleMenu(product.id)"
+                />
+                <div v-if="showMenu === product.id" class="absolute right-0 mt-8 bg-white shadow-md rounded-lg p-2">
+                  <div class="cursor-pointer p-2 text-red-500" @click="deleteProduct(product.id)">Delete</div>
+                </div>
+              </div>
+              <hr class="my-2">
+              <div class="flex justify-between items-center text-gray-600">
+                <span>5 Penyewa</span>
+                <span>10 Kamar Tersedia</span>
+              </div>
+              <button class="mt-4 bg-blue-500 text-white rounded-full py-2 w-full hover:bg-blue-600 transition duration-300">
+                <a :href="'/dashboard-kosku-detail/${product.ownerId}'" class="block text-center">Manage</a>
+              </button>
+            </div>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -87,8 +118,6 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faEllipsisV, faPlus, faTimes, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
-import KoskuCard from "@/components/DashboardPemilik/KoskuCard.vue";
-import Gallery from "@/components/Detail/Gallery.vue";
 
 
 const products = ref([]);
@@ -119,17 +148,19 @@ const editedProduct = ref({
 onMounted(async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('https://api.nearus.id/api/product', {
+    const response = await axios.get('https://api.nearus.id/api/product/ownerid', {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     });
+    console.log(response.data);
     products.value = response.data.data;
     isLoading.value = false;
   } catch (error) {
     console.error('Failed to fetch products:', error);
   }
 });
+
 
 const toggleMenu = (productId) => {
   showMenu.value = showMenu.value === productId ? null : productId;

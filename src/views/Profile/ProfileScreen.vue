@@ -12,7 +12,7 @@
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md">
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
-              <router-link to="/passworddata/:id" class="sidebar-option">Change password</router-link>
+              <router-link to="/passworddata/:id" class="sidebar-option">Change Password</router-link>
             </div>
             <div class="bg-white p-4 rounded-lg shadow-md mt-4">
               <router-link to="/login" class="sidebar-option">Logout</router-link>

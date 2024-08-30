@@ -163,7 +163,7 @@ export default createStore({
     },
     async fetchUserProfileByID({ commit }, id) {
       try {
-        const response = await axios.get(`${API_URL}/profile/${id}`);
+        const response = await axios.get(`${API_URL}/profile`);
         commit('setUser', response.data);
       } catch (error) {
         console.error('Failed to fetch user profile:', error);
