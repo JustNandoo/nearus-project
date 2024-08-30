@@ -26,31 +26,30 @@
       <!-- Thumbnail Images in 2x2 Layout -->
       <div class="thumbnail-images">
         <div v-for="(img, index) in images.slice(0, 3)" :key="index" class="thumbnail-wrapper">
-          <img :src="img" alt="Thumbnail" class="thumbnail-image"
+          <img :src="img" alt="Thumbnail" class="thumbnail-image hover:opacity-50 transition-opacity duration-300"
                :class="{ 'selected': mainImage === img }"
                @click="selectImage(img)">
         </div>
         <!-- Full View Thumbnail -->
         <div v-if="images.length > 3" class="thumbnail-wrapper full-view-thumbnail">
-          <img :src="images[3]" alt="Full View" class="thumbnail-image"
+          <img :src="images[3]" alt="Full View" class="thumbnail-image hover:opacity-50 transition-opacity duration-300"
                @click="openModal(3)">
         </div>
       </div>
     </div>
 
     <!-- Modal for Full View -->
-    <div v-if="isModalOpen" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50" @click="closeModal">
-      <div class="relative bg-white p-6 rounded-lg overflow-hidden w-full max-w-4xl" @click.stop>
-        <button class="absolute top-2 right-2 text-2xl text-gray-700 hover:text-gray-900" @click="closeModal">&times;</button>
-        <div class="relative">
-          <div class="flex justify-center items-center overflow-hidden h-96">
-            <img v-for="(img, index) in images" :key="index" :src="img" alt="Full Image" class="absolute inset-0 transition-opacity duration-500" :class="{ 'opacity-100': currentIndex === index, 'opacity-0': currentIndex !== index }">
-          </div>
-          <button class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="prevImage">&lt;</button>
-          <button class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="nextImage">&gt;</button>
+    <div v-if="isModalOpen" class="fixed inset-0 bg-gray-800 bg-opacity-80 flex justify-center items-center z-50" @click="closeModal">
+      <div class="relative bg-white p-4 rounded-lg w-[900px] h-[520px] overflow-hidden" @click.stop>
+        <button class="absolute top-4 right-4 text-2xl text-gray-700 hover:text-gray-900" @click="closeModal">&times;</button>
+        <div class="relative flex justify-center items-center h-full">
+          <img :src="images[currentIndex]" class="w-[800px] h-[470px] object-cover">
+          <button class="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="prevImage">&lt;</button>
+          <button class="absolute top-1/2 right-0  transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full" @click="nextImage">&gt;</button>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -76,15 +75,13 @@ watch(() => props.images, (newImages) => {
   }
 }, { immediate: true });
 
-// Method to handle image selection
 function selectImage(image) {
   mainImage.value = image;
 }
 
-// Methods for modal operations
 function openModal(index) {
   isModalOpen.value = true;
-  currentIndex.value = index; // Set the index of the image to be displayed in the modal
+  currentIndex.value = index;
 }
 
 function closeModal() {
@@ -100,29 +97,32 @@ function nextImage() {
 }
 </script>
 
+
 <style scoped>
+/* Container Styles */
 .container {
   display: flex;
   justify-content: center;
   padding-top: 8rem;
-  margin-left: 9rem;
+  margin-left: 11rem;
 }
 
 /* Single Image Layout */
 .single-image {
+  align-items: center;
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-left: 6rem;
+  overflow: hidden; /* Hide overflow to allow image to be clipped */
+  margin-left: calc(50% - 50vw); /* Center image and maintain large margins */
+  margin-right: calc(50% - 50vw); /* Center image and maintain large margins */
 }
 
 .single-image .image {
-  width: 100%;
-  height: 600px;
-  object-fit: cover;
+  width: 1650px;
+  height: 600px; /* Full viewport height for large images */
+  object-fit: cover; /* Cover ensures the image covers the container without distortion */
   border-radius: 1rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 /* Two Images Layout */
@@ -137,7 +137,7 @@ function nextImage() {
   width: 100%;
   height: 270px;
   object-fit: cover;
-  border-radius: 1rem;
+  border-radius: 5px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -154,8 +154,9 @@ function nextImage() {
 
 .main-image .image {
   width: 100%;
-  height: 555px;
+  height: 500px;
   object-fit: cover;
+  border-radius: 20px;
 }
 
 .thumbnail-images {
@@ -172,56 +173,47 @@ function nextImage() {
 
 .thumbnail-image {
   width: 100%;
-  height: 270px;
+  height: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
   cursor: pointer;
   border-radius: 1rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.thumbnail-image.selected {
-  position: relative;
+.thumbnail-image:hover {
+  opacity: 0.7;
 }
 
-.thumbnail-image.selected::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 1rem;
+.thumbnail-image.selected,
+.thumbnail-image:focus,
+.thumbnail-image:active {
+  opacity: 0.8;
+
 }
 
-/* Full View Thumbnail */
 .full-view-thumbnail {
   border: 3px solid #007bff;
 }
 
 /* Modal Styles */
-.modal {
+.fixed {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
 }
 
 .modal-content {
   position: relative;
-  width: 80%;
-  max-width: 900px;
   background: #fff;
   padding: 2rem;
   border-radius: 1rem;
   overflow: hidden;
+  width: 80%;
+  max-width: 900px;
 }
 
 .modal-image {
@@ -230,6 +222,25 @@ function nextImage() {
   object-fit: cover;
 }
 
+.modal-images-container {
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-image-wrapper {
+  flex: 1;
+  overflow: hidden;
+}
+
+.modal-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Close button */
 .close {
   position: absolute;
   top: 1rem;
@@ -238,6 +249,7 @@ function nextImage() {
   cursor: pointer;
 }
 
+/* Navigation buttons */
 .prev, .next {
   position: absolute;
   top: 50%;
