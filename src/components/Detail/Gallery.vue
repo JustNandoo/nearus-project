@@ -35,8 +35,8 @@
 
           <!-- Camera Icon and Text -->
           <div class="absolute inset-0 flex flex-col justify-center items-center text-white text-2xl bg-black bg-opacity-25 hover:underline rounded-lg cursor-pointer" @click="openModal(3)">
-            <i class="fas fa-camera mb-2 "></i>
-            <span class="text-xs">Image Detail</span>
+            <i class="fas fa-images mb-2"></i>
+            <span class="text-xs">Gallery Kost</span>
           </div>
         </div>
 
@@ -51,10 +51,10 @@
         </button>
 
         <!-- Modal Header -->
-        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Detail Image</h2>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Gallery Kost</h2>
 
         <!-- Image and Navigation -->
-        <div class="relative flex justify-center items-center">
+        <div class="relative flex flex-col items-center">
           <!-- Image without Transition -->
           <img :src="images[currentIndex]" :key="currentIndex" class="w-full max-w-[840px] h-[480px] object-cover rounded-lg shadow-md">
 
@@ -70,7 +70,13 @@
               <i class="fas fa-chevron-right text-lg"></i>
             </button>
           </div>
+
+          <!-- Image Caption -->
+          <div class="mt-4 text-gray-700 text-center">
+            <span>Image {{ currentIndex + 1 }} of {{ images.length }}</span>
+          </div>
         </div>
+
       </div>
     </div>
     </div>

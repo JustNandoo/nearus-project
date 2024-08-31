@@ -67,7 +67,7 @@
           <div class="flex flex-col sm:flex-row items-center mb-6">
             <img
                 class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg"
-                :src="owner.image || imageProfileDefault"
+                :src="owner.photoprofile || imageProfileDefault"
                 alt="Owner Profile"
             />
             <div class="ml-0 sm:ml-4 mt-4 sm:mt-0 text-center sm:text-left">
