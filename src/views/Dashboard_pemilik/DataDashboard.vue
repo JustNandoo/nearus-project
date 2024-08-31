@@ -57,8 +57,6 @@
             :height="60"
         />
       </div>
-
-      <!-- Data Table -->
       <div v-else class="container p-4 w-screen mx-8">
         <div class="table-container border border-gray-200 rounded-lg shadow-md max-h-80 overflow-y-auto">
           <table class="min-w-full bg-white">
@@ -88,8 +86,6 @@
                 :class="{'bg-gray-100': index % 2 === 0, 'bg-gray-200': index % 2 === 1}"
             >
               <td class="py-2 px-4 border-b">{{ (currentPage - 1) * rowsPerPage + index + 1 }}</td>
-
-              <!-- Data Kost Columns -->
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.productname }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.category }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.location }}</td>
@@ -138,6 +134,7 @@ const isDropdownOpen = ref(false);
 const dropdownText = ref('Data Kost');
 const isOrdersPaid = ref(false);
 const isLoading = ref(false);
+
 
 const totalPages = computed(() => Math.ceil(filteredData.value.length / rowsPerPage));
 
