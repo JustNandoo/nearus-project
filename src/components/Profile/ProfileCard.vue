@@ -12,7 +12,7 @@
         <router-link to="/NearusFinance">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faHouseUser" />
-          <p class="text-[22px] font-medium">Kosku</p>
+          <p class="text-[22px] font-medium">Nearus Finance</p>
         </div>
         </router-link>
         <router-link to="/profile">
