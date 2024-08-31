@@ -40,20 +40,29 @@ export default {
   data() {
     return {
       inputs: [
-        { id: 'input1', type: 'text', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan', value: '' },
-        { id: 'input2', type: 'text', icon: 'fa-regular fa-clock', placeholder: 'Masa Sewa', value: '' },
-        { id: 'input3', type: 'select', icon: 'fa-solid fa-venus-mars', placeholder: 'Semua Tipe', value: '', options: ['Pria', 'Wanita', 'Campuran'] },
+        { id: 'input1', type: 'text', icon: 'fa-solid fa-location-dot',
+          placeholder: 'Cari nama kost-kostan',
+          value: ''
+        },
+        {
+          id: 'input3',
+          type: 'select',
+          icon: 'fa-solid fa-venus-mars',
+          placeholder: 'Semua Tipe',
+          value: '',
+          options: ['Pria', 'Wanita', 'Campuran']
+        },
       ],
     };
   },
   methods: {
     handleSearch() {
-      console.log(this.inputs.map(input => input.value));
+      // Emit search parameters to the parent component
+      this.$emit('search', {
+        name: this.inputs[0].value,
+        category: this.inputs[1].value,
+      });
     },
   },
 };
 </script>
-
-<style scoped>
-/* Add any additional scoped styles here */
-</style>

@@ -4,9 +4,19 @@
     <div class="main ml-20 mt-20">
       <h1 class="font-extrabold text-3xl">Mitra Kost Kami</h1>
       <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in displayedProducts" :key="product.kostid" :product="product" :isLoading="isLoading" />
+        <ProductCard
+            v-for="product in displayedProducts"
+            :key="product.kostid"
+            :product="product"
+            :isLoading="isLoading"
+        />
         <ProductCard v-if="isLoading" v-for="n in 4" :key="'loading-' + n" :isLoading="true" />
       </div>
+
+      <div v-if="displayedProducts.length === 0 && !isLoading" class="text-center text-gray-500 mt-10">
+        <p>No data available</p>
+      </div>
+
       <div class="flex justify-center mt-10 mb-20">
         <button
             class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg relative"
@@ -17,22 +27,8 @@
           <span v-else>Lihat Lebih Banyak</span>
         </button>
       </div>
-      <h1 class="font-extrabold text-3xl">Cari Kos Sesuai Kategori</h1>
-      <PriceSortCard />
-      <div class="grid grid-cols-4 gap-4">
-        <ProductCard v-for="product in displayedProducts" :key="product.id" :product="product" :isLoading="isLoading" />
-        <ProductCard v-if="isLoading" v-for="n in 4" :key="'loading-' + n" :isLoading="true" />
-      </div>
-      <div class="flex justify-center mt-10 mb-20">
-        <button
-            class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg relative"
-            @click="loadMoreProducts"
-            :disabled="isLoadingMore"
-        >
-          <span v-if="isLoadingMore" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <span v-else>Lihat Lebih Banyak</span>
-        </button>
-      </div>
+
+      <CategoryFilter :allProducts="displayedProducts" :isLoading="isLoading" />
     </div>
     <ProfileCard v-if="showProfileCard" class="profile-card"/>
     <Chatbot />
@@ -46,17 +42,17 @@ import axios from 'axios';
 
 import CarouselHome from "@/components/Home/CarouselHome.vue";
 import ProductCard from "@/components/Home/ProductCard.vue";
-import PriceSortCard from "@/components/Home/PriceSortCard.vue";
+import CategoryFilter from "@/components/Home/PriceSortCard.vue";
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
 import FooterComponent from "@/components/Pages/Footer.vue";
 import Chatbot from "@/components/Chat/ChatBot.vue";
 
 const showProfileCard = ref(false);
-const allProducts = ref([]); // Store all products
-const displayedProducts = ref([]); // Store currently displayed products
+const allProducts = ref([]);
+const displayedProducts = ref([]);
 const isLoading = ref(true);
-const isLoadingMore = ref(false); // Loading state for the "Lihat Semua" button
-const productsToShow = ref(4); // Number of products to display at a time
+const isLoadingMore = ref(false);
+const productsToShow = ref(4);
 
 const fetchProducts = async () => {
   try {
@@ -71,7 +67,7 @@ const fetchProducts = async () => {
 };
 
 const loadMoreProducts = async () => {
-  if (isLoadingMore.value) return; // Prevent multiple requests
+  if (isLoadingMore.value) return;
   isLoadingMore.value = true;
   try {
     const currentLength = displayedProducts.value.length;
