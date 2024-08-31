@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col pb-14 bg-white min-h-screen">
+  <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
     <NavFixed />
     <main class="flex flex-col items-center px-5 mt-12 w-full">
       <section class="mt-16 w-full max-w-5xl">
@@ -25,19 +25,11 @@
               <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
               <p class="text-sm text-gray-600">Change your account password</p>
               <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
-
-              <form class="space-y-4" @submit.prevent="updatePasswordProfile">
+              <form class="space-y-4" @submit.prevent="resetPassword">
                 <div>
-                  <label class="block text-gray-700">Current Password</label>
-                  <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="currentPassword" required>
-                </div>
-                <div>
-                  <label class="block text-gray-700">New Password</label>
-                  <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="newPassword" required>
-                </div>
-                <div>
-                  <label class="block text-gray-700">Confirm New Password</label>
-                  <input type="password" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="confirmPassword" required>
+                  <label class="block text-gray-700">Email</label>
+                  <input type="email" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="email">
+                  <p v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</p>
                 </div>
                 <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg mt-6 button">Reset Password</button>
               </form>
@@ -47,104 +39,95 @@
       </section>
     </main>
   </div>
-  <Footer/>
+  <Footer />
 </template>
 
 <script>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
 import Footer from '@/components/Pages/Footer.vue';
-import PasswordAlert from '@/components/Profile/PasswordAlert.vue';
+import PasswordAlert from '@/components/Profile/PasswordAlert.vue'; // Import PasswordAlert component
 import axios from 'axios';
 import { API_URL } from '@/constants';
 
 export default {
-  components: {Footer, NavFixed, PasswordAlert },
+  components: {
+    NavFixed,
+    Footer,
+    PasswordAlert, // Register PasswordAlert component
+  },
   setup() {
-    const user = ref({
-      email: ''
-    });
     const store = useStore();
     const currentPassword = ref('');
     const newPassword = ref('');
     const confirmPassword = ref('');
+    const email = ref('');
+    const emailError = ref('');
     const showAlert = ref(false);
     const alertMessage = ref('');
     const alertType = ref('');
-    const loading = ref(false);
 
-    onMounted(async () => {
-      try {
-        await store.dispatch('fetchUserData');
-        const userData = store.getters.getUser;
-        if (userData) {
-          user.value = {
-            email: userData.email || '',
-          };
-        }
-      } catch (error) {
-        console.error('Failed to Fetch User Data');
+    const changePassword = async () => {
+      if (newPassword.value !== confirmPassword.value) {
+        showAlert.value = true;
+        alertMessage.value = 'Kata sandi baru dan konfirmasi kata sandi tidak cocok.';
+        alertType.value = 'error';
+        return;
       }
-    });
-
-    const updatePasswordProfile = async () => {
-      loading.value = true;
 
       try {
-        // Check if new password matches the confirmation password
-        if (newPassword.value !== confirmPassword.value) {
-          alertMessage.value = 'New password and confirmation do not match.';
-          alertType.value = 'error';
-          showAlert.value = true;
-          loading.value = false;
-          return;
-        }
-
-        const token = store.state.token; // Get the user's token from the store
-
-        // Send the password update request
-        const response = await axios.post(`${API_URL}/profile/reset-password`, {
-          email: user.value.email || '',
-          current_password: currentPassword.value || '',
-          new_password: newPassword.value || ''
-        }, {
+        const response = await fetch(`${API_URL}/profile/reset-password`, {
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            'Authorization': `Bearer ${store.state.token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            currentPassword: currentPassword.value,
+            newPassword: newPassword.value,
+          }),
         });
 
-        // Handle the response status
-        if (response.status === 200) {
-          alertMessage.value = 'Password changed successfully';
-          alertType.value = 'success';
-          showAlert.value = true;
+        if (!response.ok) {
+          throw new Error('Gagal mengubah kata sandi');
         }
 
+        showAlert.value = true;
+        alertMessage.value = 'Kata sandi berhasil diubah';
+        alertType.value = 'success';
       } catch (error) {
-        console.error('Failed to Update Password', error);
+        console.error('Error changing password:', error);
+        showAlert.value = true;
+        alertMessage.value = 'Terjadi kesalahan saat mengubah kata sandi';
+        alertType.value = 'error';
+      }
+    };
 
-        // Handle specific error codes
-        if (error.response) {
-          if (error.response.status === 404) {
-            alertMessage.value = 'Email not found';
-          } else if (error.response.status === 403) {
-            alertMessage.value = 'Current password is incorrect';
-          } else if (error.response.status === 400) {
-            alertMessage.value = 'New password cannot be the same as the current password';
-          } else {
-            alertMessage.value = 'An error occurred while changing the password';
-          }
-          alertType.value = 'error';
-          showAlert.value = true;
-        } else {
-          // Handle other errors, such as network issues
-          alertMessage.value = 'Failed to connect to the server. Please try again later.';
-          alertType.value = 'error';
-          showAlert.value = true;
-        }
-      } finally {
-        loading.value = false; // Ensure loading is set to false after the operation
+    const resetPassword = async () => {
+      if (!email.value) {
+        emailError.value = 'Email harus diisi'; 
+        return;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      
+      if (!emailRegex.test(email.value)) {
+        emailError.value = 'Format email tidak valid'; 
+        return;
+      }
+      
+      emailError.value = '';
+
+      try {
+        const response = await axios.post(`${API_URL}/reset-password`, { email: email.value });
+        showAlert.value = true;
+        alertMessage.value = response.data.message;
+        alertType.value = 'success';
+      } catch (error) {
+        showAlert.value = true;
+        alertMessage.value = error.response.data.message || 'Terjadi kesalahan saat mereset kata sandi';
+        alertType.value = 'error';
       }
     };
 
@@ -152,13 +135,16 @@ export default {
       currentPassword,
       newPassword,
       confirmPassword,
-      updatePasswordProfile,
+      email,
+      emailError,
+      changePassword,
+      resetPassword,
       showAlert,
       alertMessage,
       alertType,
     };
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

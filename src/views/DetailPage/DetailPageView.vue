@@ -22,7 +22,7 @@
       <div class="flex flex-col gap-3 w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-[24px]">Mulai Dari</h1>
-          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / {{product.duration}} </h1>
+          <h1 class="font-bold text-[24px]">Rp.{{ product.price }} / {{ product.duration }}</h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
           <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
@@ -39,39 +39,34 @@
 
     <div class="mt-10 mr-32 ml-32 mb-20">
       <div>
-      <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
-      <div v-if="facilities.length" class="grid grid-cols-4 gap-4">
-        <div v-for="(facility, index) in formattedFacilities" :key="index">
-          <p class="text-black text-lg font-montserrat">
-            • {{ facility }}
-          </p>
+        <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
+        <div v-if="facilities.length" class="grid grid-cols-4 gap-4">
+          <div v-for="(facility, index) in formattedFacilities" :key="index">
+            <p class="text-black text-lg font-montserrat">• {{ facility }}</p>
+          </div>
         </div>
+        <p v-else class="text-gray-500 bg-gray-100 p-4 rounded-lg shadow-md">Belum ada data fasilitas</p>
       </div>
-      <p v-else class="text-gray-500 bg-gray-100 p-4 rounded-lg shadow-md">Belum ada data fasilitas</p>
-      </div>
 
-
-
-    <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
+      <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
 
       <div>
-        <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
+        <h1 class="font-bold text-[28px] mb-4">Lokasi dan Jarak</h1>
         <div class="flex gap-8 justify-between">
-          <div>
-            <LeafletMap />
+          <div v-if="product.lat && product.lng">
+            <LeafletMap :lat="product.lat" :lng="product.lng" :address="product.location" />
+
           </div>
           <div class="w-1/2 container mx-auto py-8">
-            <div v-for="item in items" :key="item.id" class="flex items-center justify-between py-5">
+            <div v-for="place in places" :key="place.name" class="flex items-center justify-between py-5">
               <div class="flex items-center gap-5">
-                <div class="flex-shrink-0">
-                  <img :src="item.icon" alt="icon" class="w-8 h-8 object-cover">
-                </div>
+
                 <div class="flex-1">
-                  <h2 class="text-[18px] text-black">{{ item.title }}</h2>
+                  <h2 class="text-[18px] text-black">{{ place.name }}</h2>
                 </div>
               </div>
               <div class="flex-shrink-0">
-                <p class="text-[18px] text-black">{{ item.text }}</p>
+                <p class="text-[18px] text-black">{{ calculateDistance(product.lat, product.lng, place.lat, place.lng) }} KM </p>
               </div>
             </div>
           </div>
@@ -103,10 +98,10 @@ import RoomList from "@/components/Detail/RoomList.vue";
 import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
 import NavFixed from "@/components/Pages/NavFixed.vue";
 import { onBeforeUnmount, onMounted, ref, computed } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
 import Gallery from "@/components/Detail/Gallery.vue";
-import axios from 'axios';
+import axios from "axios";
 import LeafletMap from "@/components/Detail/LeafletMap.vue";
 import Footer from "@/components/Pages/Footer.vue";
 
@@ -114,22 +109,30 @@ const route = useRoute();
 const productId = route.params.id;
 const showProfileCard = ref(false);
 const product = ref({});
-const facilities = ref(""); // Initialize as an empty array
+const facilities = ref("");
 const rooms = ref([]);
 const ownerId = ref(null);
-const roomImages = ref([]); // Ensure this is an array
+const roomImages = ref([]);
 
-import icon1 from '@/assets/images/school.png';
-import icon2 from '@/assets/images/tempatmakan.png';
-import icon3 from '@/assets/images/tokokelontong.png';
-import icon4 from '@/assets/images/laundry.png';
+import icon1 from "@/assets/images/school.png";
+import icon2 from "@/assets/images/tempatmakan.png";
+import icon3 from "@/assets/images/tokokelontong.png";
+import icon4 from "@/assets/images/laundry.png";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
+// Coordinates for places
+const places = ref([
+  { name: "SMK Raden Umar Said", lat: -6.753778505127288, lng: 110.84282136045294 },
+  { name: "Indomaret Besito 2", lat: -6.752888056320824, lng: 110.84273815739694 },
+  { name: "Masjid Hidayatul Abidin", lat: -6.7528294570832665, lng: 110.84177524435272 },
+  { name: "Warmindo Anggrek Muria", lat: -6.7525253658953845 , lng: 110.84283996650778 },
+]);
+
 const items = ref([
-  { id: 1, icon: icon1, title: 'SMK RADEN UMAR SAID KUDUS', text: '0.85 KM' },
-  { id: 2, icon: icon2, title: 'Tempat Makan MakRU', text: '0.70 KM' },
-  { id: 3, icon: icon3, title: 'Toko Lima', text: '1.25 KM' },
-  { id: 4, icon: icon4, title: 'Laundry Reftalia', text: '0.25 KM' },
+  { id: 1, icon: icon1, title: "SMK RADEN UMAR SAID KUDUS", text: "0.85 KM" },
+  { id: 2, icon: icon2, title: "Tempat Makan MakRU", text: "0.70 KM" },
+  { id: 3, icon: icon3, title: "Toko Lima", text: "1.25 KM" },
+  { id: 4, icon: icon4, title: "Laundry Reftalia", text: "0.25 KM" },
 ]);
 
 const roomListSection = ref(null);
@@ -140,87 +143,120 @@ const toggleProfileCard = () => {
 
 const fetchProductData = async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
+    const response = await axios.get(
+        `https://api.nearus.id/api/product/get/${productId}`
+    );
     const selectedProduct = response.data;
 
     if (selectedProduct) {
-      localStorage.setItem('produk', JSON.stringify({
-        name: response.data.productname,
-        location: response.data.location
-      }));
+      localStorage.setItem(
+          "produk",
+          JSON.stringify({
+            name: response.data.productname,
+            location: response.data.location,
+          })
+      );
       product.value = selectedProduct;
+      const [lat, lng] = selectedProduct.linklocation
+          .split(",")
+          .map((coord) => parseFloat(coord.trim()));
+      product.value.lat = lat;
+      product.value.lng = lng;
 
       // Parse image data correctly
       roomImages.value = selectedProduct.image
-          ? selectedProduct.image.split(',').filter(img => img)
+          ? selectedProduct.image.split(",").filter((img) => img)
           : [];
 
       facilities.value = selectedProduct.fasilitas;
       ownerId.value = selectedProduct.ownerId;
       await fetchRooms();
     } else {
-      console.error('Error fetching product data: no data response');
+      console.error("Error fetching product data: no data response");
     }
   } catch (error) {
-    console.error('Error fetching product data:', error);
+    console.error("Error fetching product data:", error);
   }
 };
 
 const fetchRooms = async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${productId}`);
+    const response = await axios.get(
+        `https://api.nearus.id/api/rooms/get/kost/${productId}`
+    );
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {
-      console.error('No rooms data available for this owner');
+      console.error("No rooms data available for this owner");
     }
   } catch (error) {
-    console.error('Error fetching rooms data:', error);
+    console.error("Error fetching rooms data:", error);
   }
 };
 
 // Computed property to format facilities
 const formattedFacilities = computed(() => {
-  return facilities.value.split(',').map(facility => facility.trim());
+  return facilities.value.split(",").map((facility) => facility.trim());
 });
+
+// Calculate distance using Haversine formula
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in kilometers
+  return distance.toFixed(2); // Return distance with two decimals
+}
 
 const scrollToRoomList = () => {
   if (roomListSection.value) {
-    roomListSection.value.scrollIntoView({ behavior: 'smooth' });
+    roomListSection.value.scrollIntoView({ behavior: "smooth" });
   }
 };
 
 onMounted(async () => {
   await fetchProductData();
-  window.addEventListener('toggle-profile-card', toggleProfileCard);
+  window.addEventListener("toggle-profile-card", toggleProfileCard);
 
   const disqus_config = function () {
     this.page.url = window.location.href;
     this.page.identifier = productId;
   };
 
-  const script = document.createElement('script');
-  script.src = 'https://nearus.disqus.com/embed.js';
-  script.setAttribute('data-timestamp', +new Date());
+  const script = document.createElement("script");
+  script.src = "https://nearus.disqus.com/embed.js";
+  script.setAttribute("data-timestamp", +new Date());
   (document.head || document.body).appendChild(script);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('toggle-profile-card', toggleProfileCard);
+  window.removeEventListener("toggle-profile-card", toggleProfileCard);
 });
-
-const formatPrice = (price) => {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-};
 </script>
 
 <style>
 .font-montserrat {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 .empty-message {
   color: #666;
   font-style: italic;
+}
+
+/* Add styles for distance list */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 5px 0;
 }
 </style>
