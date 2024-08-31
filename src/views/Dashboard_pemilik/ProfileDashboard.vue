@@ -9,10 +9,25 @@
             <section class="flex flex-col w-full max-w-3xl">
               <div class="flex items-center mb-6">
                 <div class="relative">
-                  <img id="profile-pic" loading="lazy" :src="user.photoprofile || placeholderImage" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
-                  <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
+                  <img
+                      id="profile-pic"
+                      loading="lazy"
+                      :src="user.photoprofile || placeholderImage"
+                      alt="Profile Picture"
+                      class="w-20 h-20 rounded-full object-cover shadow-md"
+                  />
+                  <label
+                      for="upload-profile-pic"
+                      class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md"
+                  >
                     <i class="fas fa-pencil-alt text-white"></i>
-                    <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="handleFileChange">
+                    <input
+                        type="file"
+                        id="upload-profile-pic"
+                        class="hidden"
+                        accept="image/*"
+                        @change="handleFileChange"
+                    />
                   </label>
                 </div>
                 <div class="ml-4">
@@ -26,24 +41,23 @@
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="block text-gray-700">Nama Lengkap</label>
-                    <input type="text" class="input-field" v-model="user.name">
+                    <input type="text" class="input-field" v-model="user.name" />
                   </div>
                   <div>
                     <label class="block text-gray-700">Email Address</label>
-                    <input type="email" class="input-field" v-model="user.email">
+                    <input type="email" class="input-field" v-model="user.email" />
                   </div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                   <div>
                     <label class="block text-gray-700">Nomor Telepon</label>
-                    <input type="text" class="input-field" v-model="user.phone">
+                    <input type="text" class="input-field" v-model="user.phonenumber" />
                   </div>
                   <div>
                     <label class="block text-gray-700">Jenis Kelamin</label>
-                    <select class="input-field" v-model="user.gender">
-                      <option value="male">Laki-laki</option>
-                      <option value="female">Perempuan</option>
-                      <option value="other">Lainnya</option>
+                    <select class="input-field" v-model="user.jenis_kelamin">
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
                     </select>
                   </div>
                 </div>
@@ -74,8 +88,8 @@ const store = useStore();
 const user = ref({
   name: '',
   email: '',
-  phone: '',
-  gender: '',
+  phonenumber: '',
+  jenis_kelamin: '',
   photoprofile: '',
 });
 const selectedProfilePic = ref(null);
@@ -103,17 +117,23 @@ watch(user, (newUser) => {
 const updateUserData = async () => {
   loading.value = true;
   try {
-    const updatedProfileData = {
+    const contactInfo = {
       name: user.value.name || null,
       email: user.value.email || null,
-      phonenumber: user.value.phone || null,
-      jenis_kelamin: user.value.gender || null,
+      phonenumber: user.value.phonenumber || null,
+      jenis_kelamin: user.value.jenis_kelamin || null,
     };
+    
+    if (contactInfo.jenis_kelamin) {
+          await store.dispatch('updateUserProfile', { jenis_kelamin: contactInfo.jenis_kelamin });
+        }
 
-    if (Object.values(updatedProfileData).some(value => value !== null)) {
-      await store.dispatch('updateUserProfile', updatedProfileData);
+    // Update contact info if any field is present
+    if (Object.values(contactInfo).some(value => value !== null)) {
+      await store.dispatch('updateUserContactInfo', contactInfo);
     }
 
+    // Update profile picture if a new one is selected
     if (selectedProfilePic.value) {
       const formData = new FormData();
       formData.append('photoprofile', selectedProfilePic.value);
@@ -206,7 +226,11 @@ const handleFileChange = (event) => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

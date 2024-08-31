@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
+  <div class="flex flex-col pb-14 bg-white min-h-screen">
     <NavFixed />
     <main class="flex flex-col items-center px-5 mt-12 w-full">
       <section class="mt-16 w-full max-w-5xl">
@@ -55,8 +55,8 @@
                 <div>
                   <label class="block text-gray-700">Gender</label>
                   <select class="input-field" v-model="user.jenis_kelamin">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="male">Laki-laki</option>
+                    <option value="female">Perempuan</option>
                   </select>
                 </div>
               </div>
@@ -87,7 +87,7 @@
       </div>
     </div>
   </div>
-  <Footer />
+<Footer />
 </template>
 
 <script>

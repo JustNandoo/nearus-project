@@ -5,7 +5,7 @@ const API_URL = 'https://api.nearus.id/api';
 
 export default createStore({
   state: {
-    user: JSON.parse(localStorage.getItem('local')) || null,
+    user: JSON.parse(localStorage.getItem('local')) || {},
     token: localStorage.getItem('token') || null,
     role: localStorage.getItem('role') || null,
   },
@@ -29,19 +29,27 @@ export default createStore({
       state.token = token;
       localStorage.setItem('token', token);
     },
+    setRole(state, role) {
+      state.role = role;
+      localStorage.setItem('role', role);
+    },
     clearToken(state) {
       state.token = null;
       localStorage.removeItem('token');
     },
     clearUser(state) {
-      state.user = null;
-      localStorage.removeItem('local');
+      const preservedUserData = {
+        photoprofile: state.user?.photoprofile || '',
+        jenis_kelamin: state.user?.jenis_kelamin || '',
+      };
+      state.user = preservedUserData;
+      localStorage.setItem('local', JSON.stringify(state.user));
     },
     loadUserFromStorage(state) {
       const user = localStorage.getItem('local');
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
-      state.user = user ? JSON.parse(user) : null;
+      state.user = user ? JSON.parse(user) : {};
       state.token = token || null;
       state.role = role || null;
     },
@@ -54,12 +62,46 @@ export default createStore({
       try {
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
+
         commit('setUser', user.data);
         commit('setToken', user.token);
-        await dispatch('fetchUserProfileByID', user.data.id);
+        commit('setRole', user.data.websiterole);
+
+        // Fetch user profile after setting the token
+        await dispatch('fetchUserProfileByID');
       } catch (error) {
         console.error('Login failed:', error);
         throw error;
+      }
+    },
+    async fetchUserProfileByID({ commit, state }) {
+      if (!state.token) {
+        console.error('No token available for authorization');
+        return;
+      }
+
+      try {
+        const response = await axios.get(`${API_URL}/profile`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+
+        // Handle the response structure
+        if (response.data && response.data.success && response.data.data) {
+          commit('setUser', response.data.data);
+        } else if (response.data && response.data.user) {
+          // Handle case where response contains a `user` object directly
+          commit('setUser', response.data.user);
+        } else {
+          console.error('Failed to fetch user profile: Unexpected response format', response.data);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          console.error('Authorization failed: Invalid token');
+        } else {
+          console.error('Failed to fetch user profile:', error);
+        }
       }
     },
     async fetchUserData({ commit, state }) {
@@ -72,10 +114,13 @@ export default createStore({
             Authorization: `Bearer ${state.token}`,
           },
         });
+        // Handle different response structures
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
+        } else if (response.data && response.data.user) {
+          commit('setUser', response.data.user);
         } else {
-          console.error('Failed to fetch user data:', response.data);
+          console.error('Failed to fetch user data: Unexpected response format', response.data);
         }
       } catch (error) {
         console.error('Failed to fetch user data:', error);
@@ -88,13 +133,13 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/add-personal-data`,
-          updatedProfileData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/add-personal-data`,
+            updatedProfileData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -112,14 +157,14 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/upload-photo`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-              'Content-Type': 'multipart/form-data',
-            },
-          }
+            `${API_URL}/profile/upload-photo`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+                'Content-Type': 'multipart/form-data',
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -137,13 +182,13 @@ export default createStore({
       }
       try {
         const response = await axios.post(
-          `${API_URL}/profile/update`,
-          contactInfo,
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
+            `${API_URL}/profile/update`,
+            contactInfo,
+            {
+              headers: {
+                Authorization: `Bearer ${state.token}`,
+              },
+            }
         );
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
@@ -157,21 +202,14 @@ export default createStore({
     },
     logout({ commit }) {
       commit('clearToken');
+      commit('clearUser');
     },
     initializeStore({ commit }) {
       commit('loadUserFromStorage');
     },
-    async fetchUserProfileByID({ commit }, id) {
-      try {
-        const response = await axios.get(`${API_URL}/profile`);
-        commit('setUser', response.data);
-      } catch (error) {
-        console.error('Failed to fetch user profile:', error);
-      }
-    },
   },
   getters: {
-    isLoggedIn: state => !!state.user,
+    isLoggedIn: state => !!state.token,
     getUser: state => state.user || {},
     getRole: state => state.role || null,
   },
