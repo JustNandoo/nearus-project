@@ -3,7 +3,6 @@
     <Nav />
     <div class="flex justify-center items-center">
       <div class="w-[523px] h-[500px] relative mb-20" style="top: 130px;">
-        <!-- Your existing content -->
         <div class="text-black text-3xl font-semibold font-montserrat absolute top-0 left-[1px] flex items-center">
           <i class="fas fa-arrow-left mr-5 cursor-pointer" @click="goBack"></i> Pesan Kamar
         </div>
@@ -77,12 +76,19 @@
       </div>
     </div>
     <Footer />
-    <ConfirmationPopup
-        :visible="showPopup"
-        title="Confirm Navigation"
-        message="Are you sure you want to cancel? All unsaved changes will be lost."
-        @confirm="handleConfirm"
-        @cancel="handleCancel"
+    <ClosePopUp
+        :visible="showClosePopUp"
+        title="Confirm Close"
+        message="Are you sure you want to go back? All unsaved changes will be lost."
+        @confirm="handleConfirmGoBack"
+        @cancel="handleCancelGoBack"
+    />
+    <ConfirmationModal
+        :visible="showConfirmationModal"
+        title="Confirm Close"
+        message="Are you sure you want to close the payment popup? All unsaved changes will be lost."
+        @confirm="handleConfirmClose"
+        @cancel="handleCancelClose"
     />
   </div>
 </template>
@@ -93,12 +99,14 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import Footer from "@/components/Pages/Footer.vue";
 import Nav from "@/components/Pages/Nav.vue";
-import ConfirmationPopup from "@/components/Payment/CancelPopUp.vue";
+import ClosePopUp from "@/components/Payment/CancelPopUp.vue";
+import ConfirmationModal from "@/components/Payment/CancelProcess.vue";
 import axios from "axios";
 
 const router = useRouter();
 const store = useStore();
-const showPopup = ref(false);
+const showClosePopUp = ref(false);
+const showConfirmationModal = ref(false);
 const isEditing = ref(false);
 const selectedDate = ref(new Date().toISOString().split('T')[0]);
 const roomData = JSON.parse(localStorage.getItem('roomData')) || {
@@ -111,19 +119,38 @@ const produk = JSON.parse(localStorage.getItem('produk'));
 
 const user = computed(() => store.getters.getUser);
 
-const formattedDate = computed(() => new Date(selectedDate.value).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }));
+const formattedDate = computed(() => new Date(selectedDate.value).toLocaleDateString('id-ID', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}));
 
 const goBack = () => {
-  showPopup.value = true;
+  showClosePopUp.value = true;
 };
 
-const handleConfirm = () => {
-  showPopup.value = false;
+const handleConfirmGoBack = () => {
+  showClosePopUp.value = false;
+  if (window.snap && window.snap.close) {
+    window.snap.close(); // Close the Midtrans popup
+  }
   router.go(-1);
 };
 
-const handleCancel = () => {
-  showPopup.value = false;
+const handleCancelGoBack = () => {
+  showClosePopUp.value = false;
+};
+
+const handleConfirmClose = () => {
+  showConfirmationModal.value = false;
+  if (window.snap && window.snap.close) {
+    window.snap.close(); // Close the Midtrans popup
+  }
+  router.go(-1);
+};
+
+const handleCancelClose = () => {
+  showConfirmationModal.value = false;
 };
 
 const toggleEditing = () => {
@@ -186,7 +213,7 @@ const processPayment = async () => {
           console.log(result);
         },
         onClose: () => {
-          alert('You closed the popup');
+          showConfirmationModal.value = true;
         }
       });
     }
