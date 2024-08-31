@@ -130,6 +130,10 @@
           <input required type="text" v-model="newProduct.fasilitas" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Enter facilities, separated by commas">
         </div>
         <div class="mb-4">
+          <label class="block text-gray-700">Deskripsi Kost</label>
+          <input required type="text" v-model="newProduct.about" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan Deskripsi">
+        </div>
+        <div class="mb-4">
           <label class="block text-gray-700">Image</label>
           <input required type="file" multiple accept="image/*" @change="handleImageUpload" class="w-full p-2 border border-gray-300 rounded mt-1">
         </div>
@@ -252,31 +256,89 @@ const deleteProduct = async (productId) => {
   }
 }
 
-
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
+      newProduct.value.linklocation = `${latitude},${longitude}`;
+    });
+  } else {
+    alert('Geolocation is not supported by this browser.');
+  }
+};
 
 const closeAddModal = () => {
   showAddModal.value = false
 }
 
 const addProduct = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    console.error('No token found in localStorage');
-    return;
-  }
   try {
-    await axios.post('https://api.nearus.id/api/product/create', newProduct.value, {
-      headers: { Authorization: `Bearer ${token}` }
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found in localStorage');
+      return;
+    }
+
+    // Create FormData instance
+    const formData = new FormData();
+    Object.keys(newProduct.value).forEach(key => {
+      if (key === 'image') {
+        newProduct.value[key].forEach(image => {
+          formData.append('image[]', image);
+        });
+      } else if (Array.isArray(newProduct.value[key])) {
+        newProduct.value[key].forEach(item => formData.append(`${key}[]`, item));
+      } else {
+        formData.append(key, newProduct.value[key]);
+      }
     });
-    // Reset form and close modal
-    Object.keys(newProduct.value).forEach(key => newProduct.value[key] = '');
-    showAddModal.value = false;
-    // Re-fetch products after adding a new one
-    await fetchData();
+
+    // Send request to add product
+    await axios.post('https://api.nearus.id/api/addproduct', formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    // Reset the form and close the modal
+    newProduct.value = {
+      productname: '',
+      location: '',
+      category: '',
+      linklocation: '',
+      price: null,
+      duration: '',
+      fasilitas: [],
+      about: '',
+      image: [],
+      imagePreviews: [],
+      ownerId: 0,
+      roomId: null
+    };
+    closeAddModal();
+    fetchData(); // Refresh data
   } catch (error) {
-    console.error('Error adding product:', error);
+    console.error('Error adding product:', error.response?.data || error.message);
+
+    // Display validation errors
+    if (error.response?.data?.errors) {
+      const errors = error.response.data.errors;
+      if (errors.productname) {
+        alert('Validation Error: ' + errors.productname.join(', '));
+      } else {
+        // Handle other validation errors if necessary
+        alert('Validation Errors: ' + Object.values(errors).flat().join(', '));
+      }
+    } else {
+      // General error message
+      alert('An error occurred while adding the product. Please try again.');
+    }
   }
-}
+};
+
+
+
 
 const filteredAndSortedOrders = computed(() => {
   return orders.value
@@ -314,8 +376,6 @@ const placeholderImage = 'path/to/placeholder/image.png'; // Update with actual 
 
 onMounted(fetchData);
 </script>
-
-
 
 <style scoped>
 /* Add any additional styles here */

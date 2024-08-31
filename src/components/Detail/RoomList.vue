@@ -57,7 +57,7 @@ const store = useStore();
 
 const fetchRooms = async () => {
   try {
-    const response = await axios.get(`https://api.nearus.id/api/rooms/${props.ownerId}`);
+    const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${props.ownerId}`);
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {
@@ -80,7 +80,6 @@ const handleCheckout = async (room) => {
   try {
     const userData = store.getters.getUser;
 
-    // Logging user data retrieved from the store
     console.log("User Data from Store:", userData);
 
     const requestBody = {

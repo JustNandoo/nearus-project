@@ -85,7 +85,7 @@ const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard' },
   { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
   { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
-  { text: 'Chat', icon: faMessage, path: '/dashboard-chat' },
+  // { text: 'Chat', icon: faMessage, path: '/dashboard-chat' },
 ];
 
 const generalItems = [

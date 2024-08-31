@@ -14,6 +14,12 @@ const router = createRouter({
       component: () => import('../views/HomeView/HomeView.vue'),
     },
     {
+      path: '/Kos',
+      name: 'Kos',
+      component: () => import('../views/HomeView/FullViewKos.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginRegister/Login/LoginView.vue'),
