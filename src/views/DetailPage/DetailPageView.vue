@@ -38,15 +38,21 @@
     <hr class="my-10 ml-32 mr-32 border-t-4 border-neutral-300 mb-10">
 
     <div class="mt-10 mr-32 ml-32 mb-20">
+      <div>
       <h1 class="font-bold text-[28px] mb-4">Fasilitas Bersama</h1>
-      <div v-if="facilities.length" class="flex flex-wrap gap-4">
-        <p class="text-black text-lg font-montserrat mr-4 mb-2">
-          {{ formattedFacilities.join(', ') }}
-        </p>
+      <div v-if="facilities.length" class="grid grid-cols-4 gap-4">
+        <div v-for="(facility, index) in formattedFacilities" :key="index">
+          <p class="text-black text-lg font-montserrat">
+            • {{ facility }}
+          </p>
+        </div>
       </div>
-      <p v-else class="text-gray-500">Belum ada data fasilitas</p>
+      <p v-else class="text-gray-500 bg-gray-100 p-4 rounded-lg shadow-md">Belum ada data fasilitas</p>
+      </div>
 
-      <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
+
+
+    <hr class="my-10 border-t-4 border-neutral-300 mb-10 w-full">
 
       <div>
         <h1 class="font-bold text-[28px] mb-4">Lokasi</h1>
