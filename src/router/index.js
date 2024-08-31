@@ -168,6 +168,11 @@ const router = createRouter({
       component: () => import('../views/HomeView/ChatUser.vue')
     },
     {
+      path: '/search-page',
+      name: 'search-page',
+      component: () => import('../views/HomeView/SearchPage.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }

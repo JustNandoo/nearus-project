@@ -17,14 +17,22 @@
         <p>No data available</p>
       </div>
 
-      <div class="flex justify-center mt-10 mb-20">
+      <div class="flex justify-center mt-20 mb-20">
         <button
+            v-if="!showingLess"
             class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg relative"
             @click="loadMoreProducts"
             :disabled="isLoadingMore"
         >
           <span v-if="isLoadingMore" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
           <span v-else>Lihat Lebih Banyak</span>
+        </button>
+        <button
+            v-if="showingLess"
+            class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg relative"
+            @click="showLessProducts"
+        >
+          <span>Lihat Lebih Sedikit</span>
         </button>
       </div>
 
@@ -35,6 +43,7 @@
     <FooterComponent/>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
@@ -53,6 +62,7 @@ const displayedProducts = ref([]);
 const isLoading = ref(true);
 const isLoadingMore = ref(false);
 const productsToShow = ref(4);
+const showingLess = ref(false); // New state for toggle
 
 const fetchProducts = async () => {
   try {
@@ -73,11 +83,17 @@ const loadMoreProducts = async () => {
     const currentLength = displayedProducts.value.length;
     const nextProducts = allProducts.value.slice(currentLength, currentLength + productsToShow.value);
     displayedProducts.value = [...displayedProducts.value, ...nextProducts];
+    showingLess.value = true; // Show 'Less' button when more products are loaded
   } catch (error) {
     console.error('Error loading more products:', error);
   } finally {
     isLoadingMore.value = false;
   }
+};
+
+const showLessProducts = () => {
+  displayedProducts.value = allProducts.value.slice(0, productsToShow.value);
+  showingLess.value = false; // Hide 'Less' button when showing initial products
 };
 
 onMounted(() => {
@@ -93,6 +109,7 @@ const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
 </script>
+
 
 <style>
 .bg-white {

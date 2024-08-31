@@ -24,7 +24,7 @@
               {{ option }}
             </option>
           </select>
-          <i class="fa-solid fa-chevron-down text-gray-400 absolute right-4"></i>
+          <i class="fa-solid fa-chevron-down text-gray-400 absolute left-[114px]"></i>
         </div>
       </div>
     </div>
@@ -35,34 +35,30 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      inputs: [
-        { id: 'input1', type: 'text', icon: 'fa-solid fa-location-dot',
-          placeholder: 'Cari nama kost-kostan',
-          value: ''
-        },
-        {
-          id: 'input3',
-          type: 'select',
-          icon: 'fa-solid fa-venus-mars',
-          placeholder: 'Semua Tipe',
-          value: '',
-          options: ['Pria', 'Wanita', 'Campuran']
-        },
-      ],
-    };
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const inputs = ref([
+  { id: 'input1', type: 'text', icon: 'fa-solid fa-location-dot', placeholder: 'Cari nama kost-kostan', value: '' },
+  {
+    id: 'input3',
+    type: 'select',
+    icon: 'fa-solid fa-venus-mars',
+    placeholder: 'Semua Tipe',
+    value: '',
+    options: ['Pria', 'Wanita', 'Campuran'],
   },
-  methods: {
-    handleSearch() {
-      // Emit search parameters to the parent component
-      this.$emit('search', {
-        name: this.inputs[0].value,
-        category: this.inputs[1].value,
-      });
-    },
-  },
+]);
+
+const handleSearch = () => {
+  const searchParams = {
+    name: inputs.value[0].value,
+    category: inputs.value[1].value,
+  };
+
+  router.push({ name: 'search-page', query: searchParams });
 };
 </script>
