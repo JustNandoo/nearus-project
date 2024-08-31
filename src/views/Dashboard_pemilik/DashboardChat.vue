@@ -3,7 +3,7 @@
     <div>
     <sidebar/>
     </div>
-    <div class="chat-section">
+    <div  class=" ml-[350px] chat-section">
       <ChatComponent/>
     </div>
   </div>

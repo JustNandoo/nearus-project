@@ -28,7 +28,7 @@
     </div>
     <div v-if="filteredProducts.length" class="product-grid mt-4 flex-grow">
       <ProductCard
-          class="mx-auto"
+          class="mx-auto mb-20"
           v-for="product in paginatedProducts"
           :key="product.id"
           :product="product"
@@ -38,7 +38,7 @@
     <div v-else class="text-center mt-10 flex-grow">
       <p>No results found</p>
     </div>
-    <div class="pagination mt-4 flex justify-center">
+    <div class="pagination mt-8 flex justify-center">
       <button
           @click="previousPage"
           :disabled="currentPage === 1"

@@ -173,6 +173,11 @@ const router = createRouter({
       component: () => import('../views/HomeView/SearchPage.vue')
     },
     {
+      path: '/dashboard-pesanan',
+      name: 'DashboardPesanan',
+      component: () => import('../views/Dashboard_pemilik/PesananDashboard.vue')
+    },
+    {
       path: '/',
       redirect: '/home'
     }

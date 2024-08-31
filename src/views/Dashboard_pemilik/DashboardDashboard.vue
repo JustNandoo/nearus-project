@@ -2,7 +2,7 @@
   <div class="">
     <div class="flex">
       <sidebar/>
-     <div class="overflow-auto w-screen h-screen">
+     <div  class=" ml-[350px] overflow-auto w-screen h-screen">
        <div class="flex flex-col">
          <div class="flex justify-between items-center w-[1500px] mx-10 mt-5 gap-2 h-10px">
            <h1 class="text-black font-medium text-[20px]">Dashboard</h1>

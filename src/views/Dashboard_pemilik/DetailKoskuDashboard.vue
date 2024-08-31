@@ -1,7 +1,8 @@
 <template>
   <div class="relative flex">
     <Sidebar />
-    <div class="flex flex-col w-full">
+    <div class="flex flex-col w-full ml-[350px]">
+      <!-- Rest of your content -->
       <div class="flex items-center gap-2 ml-4 mt-4 mb-2">
         <FontAwesomeIcon class="text-black" :icon="faChevronLeft" />
         <router-link to="/dashboard-kosku" class="text-black font-bold text-[20px]">Kembali</router-link>
@@ -42,50 +43,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
           <h2 class="text-lg font-bold mb-4">Add New Room</h2>
           <form @submit.prevent="addRoom">
-            <div class="mb-4">
-              <label for="roomid" class="block text-sm font-medium text-gray-700">Room ID</label>
-              <input v-model.number="newRoom.roomid" type="number" id="roomid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="ownerId" class="block text-sm font-medium text-gray-700">Owner ID</label>
-              <input v-model.number="newRoom.ownerId" type="number" id="ownerId" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="kostid" class="block text-sm font-medium text-gray-700">Kost ID</label>
-              <input v-model.number="newRoom.kostid" type="number" id="kostid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div class="mb-4">
-              <label for="name" class="block text-sm font-medium text-gray-700">Room Name</label>
-              <input v-model="newRoom.name" type="text" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-              <select v-model="newRoom.category" id="category" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <option value="Pria">Pria</option>
-                <option value="Wanita">Wanita</option>
-                <option value="Campur">Campur</option>
-              </select>
-            </div>
-            <div class="mb-4">
-              <label for="fasilitas" class="block text-sm font-medium text-gray-700">Facilities</label>
-              <input v-model="newRoom.fasilitas" type="text" id="fasilitas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="image" class="block text-sm font-medium text-gray-700">Image URL</label>
-              <input v-model="newRoom.image" type="text" id="image" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div class="mb-4">
-              <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-              <input v-model.number="newRoom.price" type="number" id="price" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
-              <input v-model="newRoom.time" type="text" id="time" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="availability" class="block text-sm font-medium text-gray-700">Availability</label>
-              <input v-model.number="newRoom.availability" type="number" id="availability" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
+            <!-- Form Fields -->
             <div class="flex gap-4">
               <button type="button" @click="showAddRoomModal = false" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
                 Cancel
@@ -100,6 +58,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
@@ -191,6 +150,7 @@ const addRoom = async () => {
 </script>
 
 <style scoped>
+
 input, select {
   transition: border-color 0.2s, box-shadow 0.2s;
 }

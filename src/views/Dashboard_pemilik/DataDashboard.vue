@@ -1,8 +1,7 @@
 <template>
   <div class="flex">
     <sidebar />
-
-    <div class="flex flex-col mt-10">
+    <div class="ml-[350px] flex flex-col mt-10">
       <div class="relative ml-12 mb-3">
         <button @click="toggleDropdown" class="text-black bg-white shadow-lg border-[1px] border-blue-300 px-4 py-1 rounded-lg text-[18px] font-bold flex items-center space-x-1">
           <div>{{ dropdownText }}</div>
