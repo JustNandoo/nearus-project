@@ -17,7 +17,7 @@
         <select
             v-model="sortOption"
             @change="sortProducts"
-            class="bg-gray-200 text-gray-700 px-4 py-2 rounded border border-gray-300"
+            class="bg-gray-200 text-gray-700 mr- px-4 py-2 rounded border border-gray-300"
         >
           <option value="name-asc">Nama (A-Z)</option>
           <option value="name-desc">Nama (Z-A)</option>
@@ -38,7 +38,9 @@
     <div v-else class="text-center mt-10 flex-grow">
       <p>No results found</p>
     </div>
-    <div class="pagination mt-4 flex justify-center">
+
+    <div class="mt-16">
+    <div class="pagination mt-4 flex justify-center ">
       <button
           @click="previousPage"
           :disabled="currentPage === 1"
@@ -57,6 +59,8 @@
         Selanjutnya
       </button>
     </div>
+    </div>
+
     <FooterComponent />
   </div>
 </template>

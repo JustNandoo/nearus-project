@@ -24,7 +24,7 @@
               {{ option }}
             </option>
           </select>
-          <i class="fa-solid fa-chevron-down text-gray-400 absolute left-[114px]"></i>
+          <i class="fa-solid fa-chevron-down text-gray-400 absolute left-[130px]"></i>
         </div>
       </div>
     </div>
