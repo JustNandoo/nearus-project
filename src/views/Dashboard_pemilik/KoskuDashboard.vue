@@ -48,7 +48,7 @@
                 <!-- Manage Button -->
                 <div class="absolute bottom-4 right-4">
                   <button
-                      @click="manageProduct(product.ownerId)"
+                      @click="manageProduct(product.id)"
                       class="bg-blue-500 text-white px-4 py-2 rounded"
                   >
                     Manage
@@ -58,22 +58,26 @@
                 <!-- Three-dot menu -->
                 <div class="absolute top-2 right-2">
                   <button
-                      @click="toggleDropdown(product.kostid)"
+                      @click="toggleDropdown(product.id)"
                       class="focus:outline-none"
                   >
                     <font-awesome-icon :icon="faEllipsisV" class="text-black" />
                   </button>
                   <!-- Dropdown menu -->
-                  <div
-                      v-if="dropdownVisible(product.id)"
-                      class="absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg"
-                  >
+                  <div v-if="dropdownVisible(product.id)" class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
                     <button
-                        @click="confirmDeleteProduct(product.kostid)"
+                        @click="confirmDeleteProduct(product.id)"
                         class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
                     >
                       <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
                       Delete
+                    </button>
+                    <button
+                        @click=""
+                        class="block w-full text-left px-4 py-2 text-sm text-blue-500 hover:bg-gray-100 flex items-center"
+                    >
+                      <font-awesome-icon :icon="faPencil" class="mr-2 text-blue-500" />
+                      Edit
                     </button>
                   </div>
                 </div>
@@ -162,7 +166,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
-import {faPlus, faTimes, faEllipsisV, faTrash, faLocationDot} from '@fortawesome/free-solid-svg-icons'
+import {faPlus, faTimes, faEllipsisV, faTrash, faLocationDot, faPencil} from '@fortawesome/free-solid-svg-icons'
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import placeholderImage from '@/assets/images/bg-loginPage.png'; // Adjust the path as needed
@@ -206,7 +210,7 @@ const fetchData = async () => {
     if (productsResponse.data && Array.isArray(productsResponse.data.data)) {
       products.value = productsResponse.data.datadata.map(product => ({
         ...product,
-        id: product.kostid,
+        id: product.id,
         image: Array.isArray(product.image) ? product.image : [],
         fasilitas: Array.isArray(product.fasilitas) ? product.fasilitas : []
       }));
@@ -334,6 +338,7 @@ const addProduct = async () => {
     console.error('Error adding product:', error.response.data); // Log detailed error response
   }
 };
+
 
 
 const formatPrice = (price) => {
