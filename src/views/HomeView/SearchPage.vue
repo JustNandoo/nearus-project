@@ -129,7 +129,7 @@ watch(() => route.query, () => {
 const fetchProducts = async () => {
   isLoading.value = true;
   try {
-    const response = await axios.get(`https://api.nearus.id/api/product`);
+    const response = await axios.get('https://api.nearus.id/api/product');
     products.value = response.data.data;
     currentPage.value = 1;
   } catch (error) {

@@ -1,100 +1,92 @@
 <template>
-  <div class="relative flex">
-    <Sidebar />
-    <div class="flex flex-col w-full">
-      <div class="flex items-center gap-2 ml-4 mt-4 mb-2">
-        <FontAwesomeIcon class="text-black" :icon="faChevronLeft" />
-        <router-link to="/dashboard-kosku" class="text-black font-bold text-[20px]">Kembali</router-link>
-      </div>
-      <hr class="w-full bg-black h-[2px]">
-      <div class="flex justify-between items-center p-4">
-        <h1 class="text-center mt-2 text-black font-bold text-[25px]">List Kamar</h1>
-        <div class="flex items-center gap-4">
-          <input
-              type="text"
-              placeholder="Search..."
-              v-model="searchQuery"
-              class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+  <div class="flex relative w-screen">
+    <sidebar/>
+    <div class="ml-[350px] w-full p-8">
+      <!-- Back Button -->
+      <button @click="$router.push('/dashboard-kosku')" class="mb-4 font-medium text-[20px]">
+        <font-awesome-icon :icon="faArrowLeft" class=""/>
+        Kembali
+      </button>
+      <div v-if="product" class="space-y-8">
+        <!-- Product Images -->
+        <div class="w-full h-[400px] bg-cover bg-center rounded-lg">
+          <img
+              v-if="product.images.length === 1"
+              :src="product.images[0]"
+              alt="Product Image"
+              class="w-full h-full object-cover rounded-lg"
           />
-          <select
-              v-model="filterCategory"
-              class="px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">All Categories</option>
-            <option value="Pria">Pria</option>
-            <option value="Wanita">Wanita</option>
-            <option value="Campur">Campur</option>
-          </select>
+          <div v-else class="flex overflow-x-auto">
+            <img
+                v-for="(image, index) in product.images[0]"
+                :key="index"
+                :src="image"
+                alt="Product Image"
+                class="w-full h-[400px] object-cover rounded-lg mr-2"
+            />
+          </div>
+        </div>
+        <div class="text-gray-800 space-y-6">
+          <h2 class="text-4xl font-bold">{{ product.productname }}</h2>
+          <p class="text-lg text-gray-600">Alamat Kost: {{ product.location }}</p>
+          <div class="flex flex-col gap-8">
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faVenusMars" class=""/>
+              <span class="text-gray-700 text-[18px] font-medium ml-2">Category:</span>
+              <span class="ml-2 text-black text-[20px] font-semibold">{{ product.category }}</span>
+            </div>
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faMoneyBills" class=""/>
+              <span class="text-gray-700 font-semibold ml-2">Price:</span>
+              <span class="ml-2 text-black font-semibold">{{ formatPrice(product.price) }}</span>
+            </div>
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faHandHoldingHeart" class=""/>
+              <span class="text-gray-700 font-semibold ml-2">Facilities:</span>
+              <p class="text-gray-600 ml-2 space-y-1">
+                <span v-for="(facility, index) in product.fasilitas.split(',')" :key="index">{{ facility.trim() }}</span>
+              </p>
+            </div>
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faClock" class=""/>
+              <span class="text-gray-700 font-semibold ml-2">Duration:</span>
+              <p class="text-gray-600 ml-2">{{ product.duration }}</p>
+            </div>
+
+            <!-- Description -->
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faInfoCircle" class=""/>
+              <span class="text-gray-700 font-semibold ml-2">Description:</span>
+              <p class="text-gray-600 ml-2">{{ product.about }}</p>
+            </div>
+
+            <!-- Location Link -->
+            <div class="flex items-center">
+              <font-awesome-icon :icon="faMap" class=""/>
+              <span class="text-gray-700 font-semibold ml-2">Location Link:</span>
+              <a
+                  :href="`https://www.google.com/maps?q=${product.linklocation}`"
+                  target="_blank"
+                  class="text-blue-500 underline ml-2"
+              >
+                View on Google Maps
+              </a>
+              <p class="ml-2">Koordinat Lokasi : {{product.linklocation}}</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div v-if="isLoading" class="text-center">Loading...</div>
-      <div v-else class="flex flex-col gap-6 p-4">
-        <RoomCard v-for="room in filteredRooms" :key="room.roomid" :room="room" />
-      </div>
-      <!-- Fixed Button -->
-      <div class="fixed bottom-4 right-4 z-50">
-        <button @click="showAddRoomModal = true" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-          Add New Room
-        </button>
-      </div>
-      <!-- Modal -->
-      <div v-if="showAddRoomModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-          <h2 class="text-lg font-bold mb-4">Add New Room</h2>
-          <form @submit.prevent="addRoom">
-            <div class="mb-4">
-              <label for="roomid" class="block text-sm font-medium text-gray-700">Room ID</label>
-              <input v-model.number="newRoom.roomid" type="number" id="roomid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="ownerId" class="block text-sm font-medium text-gray-700">Owner ID</label>
-              <input v-model.number="newRoom.ownerId" type="number" id="ownerId" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="kostid" class="block text-sm font-medium text-gray-700">Kost ID</label>
-              <input v-model.number="newRoom.kostid" type="number" id="kostid" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div class="mb-4">
-              <label for="name" class="block text-sm font-medium text-gray-700">Room Name</label>
-              <input v-model="newRoom.name" type="text" id="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
-              <select v-model="newRoom.category" id="category" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <option value="Pria">Pria</option>
-                <option value="Wanita">Wanita</option>
-                <option value="Campur">Campur</option>
-              </select>
-            </div>
-            <div class="mb-4">
-              <label for="fasilitas" class="block text-sm font-medium text-gray-700">Facilities</label>
-              <input v-model="newRoom.fasilitas" type="text" id="fasilitas" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="image" class="block text-sm font-medium text-gray-700">Image URL</label>
-              <input v-model="newRoom.image" type="text" id="image" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-            <div class="mb-4">
-              <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
-              <input v-model.number="newRoom.price" type="number" id="price" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="time" class="block text-sm font-medium text-gray-700">Time</label>
-              <input v-model="newRoom.time" type="text" id="time" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="mb-4">
-              <label for="availability" class="block text-sm font-medium text-gray-700">Availability</label>
-              <input v-model.number="newRoom.availability" type="number" id="availability" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-            </div>
-            <div class="flex gap-4">
-              <button type="button" @click="showAddRoomModal = false" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg shadow-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500">
-                Cancel
-              </button>
-              <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Add Room
-              </button>
-            </div>
-          </form>
+      <div class="mt-8 font-bold text-[25px]">
+        List Produk Kamar
+        <div v-if="room" class="bg-white shadow-lg rounded-lg p-4 mt-8">
+          <img :src="room.image" alt="Room Image" class="w-full h-[200px] object-cover rounded-t-lg">
+          <div class="p-4">
+            <h3 class="text-xl font-bold">{{ room.name }}</h3>
+            <p class="text-black text-[18px]">Category: {{ room.category }}</p>
+            <p class="text-black text-[18px]">Price: {{ formatPrice(room.price) }}</p>
+            <p class="text-black text-[18px]">Time: {{ room.time }}</p>
+            <p class="text-black text-[18px]">Availability: {{ room.availability === -1 ? 'Available' : 'Not Available' }}, {{room.availability}} Kamar Tersedia</p>
+          </div>
         </div>
       </div>
     </div>
@@ -102,101 +94,71 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted, watch } from 'vue'
+import axios from 'axios'
+import { useRoute } from 'vue-router'
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
-import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import RoomCard from "@/components/Home/RoomCard.vue";
-import axios from 'axios';
+import { faVenusMars, faArrowLeft, faMoneyBills, faHandHoldingHeart, faClock, faInfoCircle, faMap } from "@fortawesome/free-solid-svg-icons";
 
-const route = useRoute();
-const ownerId = route.params.ownerId;
+const route = useRoute()
+const productId = route.params.id
+const product = ref(null)
+const room = ref(null)
 
-const rooms = ref([]);
-const isLoading = ref(true);
-const searchQuery = ref('');
-const filterCategory = ref('');
-const showAddRoomModal = ref(false);
-
-const newRoom = ref({
-  roomid: 0,
-  ownerId: Number(ownerId),
-  kostid: null,
-  name: '',
-  category: '',
-  fasilitas: '',
-  image: '',
-  price: 0,
-  time: '',
-  availability: 0,
-});
-
-onMounted(async () => {
-  console.log('Fetching rooms for ownerId:', ownerId);
+// Fetch product details
+const fetchProductDetails = async () => {
+  console.log('Product ID:', productId)
   try {
-    const token = localStorage.getItem('token');
-    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    console.log('API Response:', response.data);
-    if (response.status === 200 && response.data.data) {
-      rooms.value = response.data.data.map(room => ({
-        ...room,
-        facilities: room.fasilitas.split(','),
-        image: room.image || 'default-image-url',
-      }));
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`)
+    console.log('Product API Response:', response.data) // Print the API response
+    // Assuming the product image is now an array
+    product.value = {
+      ...response.data,
+      images: response.data.images || [response.data.image] // Convert to array if needed
     }
-    isLoading.value = false;
   } catch (error) {
-    console.error('Failed to fetch rooms:', error);
-    isLoading.value = false;
+    console.error('Error fetching product details:', error)
   }
-});
+}
 
-const filteredRooms = computed(() => {
-  return rooms.value.filter(room => {
-    const matchesSearch = room.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesCategory = filterCategory.value ? room.category === filterCategory.value : true;
-    return matchesSearch && matchesCategory;
-  });
-});
-
-const addRoom = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    await axios.post('https://api.nearus.id/api/rooms/create', newRoom.value, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    // Refresh the room list
-    const response = await axios.get(`https://api.nearus.id/api/rooms/${ownerId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    rooms.value = response.data.data.map(room => ({
-      ...room,
-      facilities: room.fasilitas.split(','),
-      image: room.image || 'default-image-url',
-    }));
-    showAddRoomModal.value = false;
-  } catch (error) {
-    console.error('Failed to add room:', error);
+// Fetch room details
+const fetchRoomDetails = async () => {
+  if (product.value && product.value.kostid) {
+    console.log('Kost ID:', product.value.kostid)
+    try {
+      const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${product.value.kostid}`)
+      console.log('Room API Response:', response.data) // Print the API response
+      // Extract the room data from the response
+      room.value = response.data.data[0] || null
+    } catch (error) {
+      console.error('Error fetching room details:', error)
+    }
+  } else {
+    console.error('No kostid found in product data.')
   }
-};
+}
+
+// Format price
+const formatPrice = (price) => {
+  if (price == null) return 'N/A'
+  return `Rp ${price.toLocaleString('id-ID')}`
+}
+
+// Fetch details on mount
+onMounted(() => {
+  fetchProductDetails()
+})
+
+// Watch for product changes and fetch room details
+watch(product, (newProduct) => {
+  if (newProduct) {
+    fetchRoomDetails()
+  }
+})
 </script>
 
-<style scoped>
-input, select {
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
 
-input:focus, select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-}
+<style scoped>
+/* Add your custom styles here */
 </style>

@@ -15,7 +15,7 @@
               {{ facility }}
             </div>
           </div>
-          <p class="text-sm md:text-base text-gray-600 mb-2">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }}</p>
+          <p class="text-sm md:text-base text-gray-600 mb-2">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }} Kamar Tersisa</p>
         </div>
         <div>
           <p class="text-xl md:text-2xl lg:text-3xl text-black mb-4">Rp. {{ formatPrice(room.price) }} / {{ room.time }}</p>

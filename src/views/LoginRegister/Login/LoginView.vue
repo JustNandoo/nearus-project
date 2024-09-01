@@ -31,7 +31,7 @@
                 <i v-else class="fas fa-eye-slash text-lg"></i>
               </button>
             </div>
-            <a href="/reset-password" class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans hover:text-blue-500 hover:underline">Forgot Password</a>
+            <a href="/reset-password" class="left-[412px] top-[550px] absolute text-black text-opacity-70 text-lg font-medium font-sans hover:text-blue-500 hover:underline">Lupa Kata Sandi?</a>
             <div class="w-[202px] h-[54px] left-[369px] top-[617px] absolute">
               <router-link to="/register">
                 <div class="w-[202px] h-[54px] left-0 top-0 absolute rounded-[5px] border-2 border-sky-300 hover:border-sky-400 transition duration-300" style="border-width: 4px;"></div>

@@ -77,7 +77,7 @@ onUnmounted(() => {
 .carousel {
   height: 500px; /* Fixed height for the carousel */
   display: flex;
-  transition: transform 0.3s ease;
+  overflow: hidden; /* Hide overflow to ensure only one slide is visible at a time */
 }
 
 .head {
@@ -92,6 +92,14 @@ onUnmounted(() => {
   left: 42%;
   transform: translate(-50%, -50%);
   z-index: 10;
+}
+
+.slide-item {
+  flex: 0 0 100%; /* Ensure each slide takes the full width */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .slide-item img {
@@ -109,11 +117,16 @@ onUnmounted(() => {
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.slide-enter-from, .slide-leave-to {
-  opacity: 0;
+.slide-enter-active, .slide-leave-active {
+  transition: transform 0.5s ease;
 }
 
-.slide-enter-to, .slide-leave-from {
-  opacity: 1;
+.slide-enter, .slide-leave-to {
+  transform: translateX(100%);
 }
+
+.slide-enter-to, .slide-leave {
+  transform: translateX(0%);
+}
+
 </style>

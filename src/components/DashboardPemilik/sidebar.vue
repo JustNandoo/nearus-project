@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-[350px] w-min-[350px] border-r-[1px] text-white shadow-lg flex flex-col justify-between">
+  <div class="h-screen w-[350px] w-min-[350px] border-r-[1px] text-white shadow-lg flex flex-col justify-between bg-white fixed z-50 ">
     <div>
       <div class="p-4 text-2xl font-bold border-b-[0.5px]">
         <img class="w-[120px] h-auto" :src="logo" alt="">
@@ -68,7 +68,8 @@ import {
   faUser,
   faDatabase,
   faHouseUser,
-  faMessage
+  faMessage,
+  faClipboardUser
 } from '@fortawesome/free-solid-svg-icons';
 import Modal from '@/components/LoginRegister/Modal.vue';
 
@@ -83,9 +84,10 @@ const setActive = (item) => {
 
 const mainMenuItems = [
   { text: 'Dashboard', icon: faHouse, path: '/dashboard' },
-  { text: 'Data', icon: faDatabase, path: '/dashboard-data' },
-  { text: 'KosKu', icon: faHouseUser, path: '/dashboard-kosku' },
-  // { text: 'Chat', icon: faMessage, path: '/dashboard-chat' },
+  { text: 'Data Kost', icon: faDatabase, path: '/dashboard-data' },
+  { text: 'Manage Kostku', icon: faHouseUser, path: '/dashboard-kosku' },
+  { text: 'Pesanan', icon: faClipboardUser, path: '/dashboard-pesanan' },
+  { text: 'Pesan', icon: faMessage, path: '/dashboard-chat' },
 ];
 
 const generalItems = [

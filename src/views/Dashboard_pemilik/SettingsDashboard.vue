@@ -1,66 +1,55 @@
 <template>
-  <div class="flex flex-col min-h-screen bg-gray-100">
-    <!-- Navigation -->
-    <NavFixed />
+  <div class="flex relative">
+    <sidebar/>
+    <div class="ml-[350px] w-full flex items-center justify-center min-h-screen bg-blue-50">
+      <section class="flex flex-col w-[600px] p-8 rounded-lg shadow-2xl bg-white">
+        <!-- Reset Password Section -->
+        <section class="mt-8">
+          <h2 class="font-bold text-3xl mb-4 text-black">Reset Password</h2>
+          <p class="text-sm text-black mb-6">Change your account password</p>
+          <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false" />
 
-    <!-- Main Content -->
-    <main class="flex flex-col items-center px-5 mt-12 flex-1">
-      <section class="mt-16 w-full max-w-5xl">
-        <div class="flex gap-5 md:flex-row flex-col">
-
-          <!-- Main Content -->
-          <section class="flex flex-col w-full bg-blue-50 p-8 rounded-lg shadow-2xl">
-            <!-- Reset Password Section -->
-            <section class="mt-8">
-              <h2 class="font-bold text-3xl mb-4 text-black">Reset Password</h2>
-              <p class="text-sm text-black mb-6">Change your account password</p>
-              <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false" />
-
-              <form class="space-y-6" @submit.prevent="updatePasswordProfile">
-                <div>
-                  <label class="block text-black font-semibold">Current Password</label>
-                  <input
-                      type="password"
-                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
-                      v-model="currentPassword"
-                      required
-                  />
-                </div>
-                <div>
-                  <label class="block text-black font-semibold">New Password</label>
-                  <input
-                      type="password"
-                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
-                      v-model="newPassword"
-                      required
-                  />
-                </div>
-                <div>
-                  <label class="block text-black font-semibold">Confirm New Password</label>
-                  <input
-                      type="password"
-                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
-                      v-model="confirmPassword"
-                      required
-                  />
-                </div>
-                <button
-                    type="submit"
-                    class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg mt-6 font-semibold transition-colors duration-300 hover:bg-blue-700"
-                >
-                  Reset Password
-                </button>
-              </form>
-            </section>
-          </section>
-        </div>
+          <form class="space-y-6" @submit.prevent="updatePasswordProfile">
+            <div>
+              <label class="block text-black font-semibold">Current Password</label>
+              <input
+                  type="password"
+                  class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                  v-model="currentPassword"
+                  required
+              />
+            </div>
+            <div>
+              <label class="block text-black font-semibold">New Password</label>
+              <input
+                  type="password"
+                  class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                  v-model="newPassword"
+                  required
+              />
+            </div>
+            <div>
+              <label class="block text-black font-semibold">Confirm New Password</label>
+              <input
+                  type="password"
+                  class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                  v-model="confirmPassword"
+                  required
+              />
+            </div>
+            <button
+                type="submit"
+                class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg mt-6 font-semibold transition-colors duration-300 hover:bg-blue-700"
+            >
+              Reset Password
+            </button>
+          </form>
+        </section>
       </section>
-    </main>
-
-    <!-- Footer -->
-    <Footer />
+    </div>
   </div>
 </template>
+
 
 <script>
 import {onMounted, ref} from 'vue';
@@ -69,9 +58,10 @@ import NavFixed from '@/components/Pages/NavFixed.vue';
 import Footer from '@/components/Pages/Footer.vue';
 import PasswordAlert from '@/components/Profile/PasswordAlert.vue';
 import axios from 'axios';
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 
 export default {
-  components: {NavFixed, Footer, PasswordAlert},
+  components: {Sidebar, NavFixed, Footer, PasswordAlert},
   setup() {
     const user = ref({email: ''});
     const store = useStore();

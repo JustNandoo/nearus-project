@@ -25,7 +25,7 @@
           <h1 class="font-bold text-lg md:text-xl lg:text-2xl">Rp.{{ product.price }} / {{ product.duration }}</h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
-          <button class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
+          <button @click="goToChatUser" class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
             <font-awesome-icon class="text-light-black w-6 h-6" :icon="faMessage" />
           </button>
           <button @click="scrollToRoomList" class="bg-blue-primary w-full h-12 rounded-lg shadow-lg flex items-center justify-center">
@@ -98,21 +98,19 @@
   import { faMedal, faPerson, faMessage } from "@fortawesome/free-solid-svg-icons";
   import NavFixed from "@/components/Pages/NavFixed.vue";
   import { onBeforeUnmount, onMounted, ref, computed } from "vue";
-  import { useRoute } from "vue-router";
+  import {useRoute, useRouter} from "vue-router";
   import ProfileCard from "@/components/Profile/ProfileCard.vue";
   import Gallery from "@/components/Detail/Gallery.vue";
   import axios from "axios";
   import LeafletMap from "@/components/Detail/LeafletMap.vue";
   import Footer from "@/components/Pages/Footer.vue";
   import L from "leaflet";
-
-
-  // Import icon images
   import education from "@/assets/icons/education.png";
   import mosque from "@/assets/icons/mosque.png";
   import restaurant from "@/assets/icons/restaurant.png";
   import shop from "@/assets/icons/shop.png";
   import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
 
   // Define custom icons for Leaflet
   const schoolIcon = L.icon({
@@ -142,6 +140,11 @@
     iconAnchor: [16, 32],
     popupAnchor: [0, -32],
   });
+
+  const router = useRouter();
+  const goToChatUser = () => {
+    router.push('/chat-user');
+  };
 
   // Function to assign icons based on place names
   const getIconForPlace = (placeName) => {

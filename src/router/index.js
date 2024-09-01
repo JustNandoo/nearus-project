@@ -153,7 +153,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/dashboard-kosku-detail/:ownerId',
+      path: '/dashboard-kosku-detail/:id',
       name: 'DashboardDetailKosku',
       component: () => import('../views/Dashboard_pemilik/DetailKoskuDashboard.vue')
     },
@@ -171,6 +171,16 @@ const router = createRouter({
       path: '/search-page',
       name: 'search-page',
       component: () => import('../views/HomeView/SearchPage.vue')
+    },
+    {
+      path: '/dashboard-pesanan',
+      name: 'DashboardPesanan',
+      component: () => import('../views/Dashboard_pemilik/PesananDashboard.vue')
+    },
+    {
+      path: '/dashboard-chat-auth',
+      name: 'DashboardChatAuth',
+      component: () => import('../components/Chat/AuthPage/ChatAuth.vue')
     },
     {
       path: '/',
