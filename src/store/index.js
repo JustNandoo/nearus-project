@@ -5,7 +5,13 @@ const API_URL = 'https://api.nearus.id/api';
 
 export default createStore({
   state: {
-    user: JSON.parse(localStorage.getItem('local')) || {},
+    user: {
+      name: '',
+      email: '',
+      phonenumber: '',
+      jenis_kelamin: '',
+      photoprofile: 'profile-pic.png', // Default profile picture
+    },
     token: localStorage.getItem('token') || null,
     role: localStorage.getItem('role') || null,
   },
@@ -14,11 +20,11 @@ export default createStore({
       if (user && typeof user === 'object') {
         state.user = {
           ...state.user,
-          name: user.name || state.user?.name || '',
-          email: user.email || state.user?.email || '',
-          phonenumber: user.phonenumber || state.user?.phonenumber || '',
-          jenis_kelamin: user.jenis_kelamin || state.user?.jenis_kelamin || '',
-          photoprofile: user.photoprofile || state.user?.photoprofile || '',
+          name: user.name || '',
+          email: user.email || '',
+          phonenumber: user.phonenumber || '',
+          jenis_kelamin: user.jenis_kelamin || '',
+          photoprofile: user.photoprofile || 'profile-pic.png', // Use default if not provided
         };
         localStorage.setItem('local', JSON.stringify(state.user));
       } else {
@@ -38,18 +44,26 @@ export default createStore({
       localStorage.removeItem('token');
     },
     clearUser(state) {
-      const preservedUserData = {
-        photoprofile: state.user?.photoprofile || '',
-        jenis_kelamin: state.user?.jenis_kelamin || '',
+      state.user = {
+        name: '',
+        email: '',
+        phonenumber: '',
+        jenis_kelamin: '',
+        photoprofile: 'profile-pic.png', // Reset to default
       };
-      state.user = preservedUserData;
       localStorage.setItem('local', JSON.stringify(state.user));
     },
     loadUserFromStorage(state) {
       const user = localStorage.getItem('local');
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
-      state.user = user ? JSON.parse(user) : {};
+      state.user = user ? JSON.parse(user) : {
+        name: '',
+        email: '',
+        phonenumber: '',
+        jenis_kelamin: '',
+        photoprofile: 'profile-pic.png', // Default profile picture
+      };
       state.token = token || null;
       state.role = role || null;
     },
@@ -175,8 +189,7 @@ export default createStore({
         console.error('Failed to update profile picture:', error.response ? error.response.data : error.message);
         throw error;
       }
-    }
-    ,
+    },
     async updateUserContactInfo({ commit, state }, contactInfo) {
       if (!state.token) {
         throw new Error('No token found');
@@ -203,8 +216,7 @@ export default createStore({
         console.error('Failed to update contact info:', error.response ? error.response.data : error.message);
         throw error;
       }
-    }
-    ,
+    },
     logout({ commit }) {
       commit('clearToken');
       commit('clearUser');

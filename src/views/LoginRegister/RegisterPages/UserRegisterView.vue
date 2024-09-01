@@ -50,10 +50,10 @@
             <div class="w-[571px] h-[90px] left-[0px] top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
-                Sandi (Password dibutuhkan setidaknya 8 huruf, Karakter spesial "#" "!", dan Angka)</label>
+                Sandi</label>
               <input id="passwordInput" ref="passwordInput" type="password"
                 class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
-                placeholder="Masukkan Kata Sandi Anda" />
+                placeholder="Minimal 8 Huruf dan pakai karakter spesial seperti ( # - _ ! )" />
               <button @click="togglePasswordVisibility"
                 class="absolute right-0 top-[50%] transform -translate-y-1/2 mr-2">
                 <i v-if="passwordVisible" class="fas fa-eye text-lg" style="margin-top: 40px;"></i>
