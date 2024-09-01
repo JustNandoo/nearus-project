@@ -63,7 +63,6 @@ export default createStore({
         const response = await axios.post(`${API_URL}/masuk`, { email, password });
         const user = response.data;
 
-        // Set user data, token, and role
         commit('setUser', user.data);
         commit('setToken', user.token);
         commit('setRole', user.data.websiterole);

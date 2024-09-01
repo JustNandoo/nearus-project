@@ -1,30 +1,27 @@
-<template>
-  <div class="flex flex-col pb-14 bg-white min-h-screen">
-    <NavFixed />
-    <main class="flex flex-col items-center px-5 mt-12 w-full">
-      <section class="mt-16 w-full max-w-5xl">
-        <div class="flex gap-5 max-md:flex-col max-md:gap-5">
-          <!-- Sidebar -->
-          <div class="w-full md:w-[344px]">
-            <div class="bg-white p-4 rounded-lg shadow-md mb-4">
-              <h2 class="font-bold text-lg mb-2">Account Settings</h2>
-              <router-link to="/profile" class="sidebar-option">Change Profile</router-link>
+  <template>
+    <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
+      <NavFixed />
+      <main class="flex flex-col items-center px-5 mt-12 w-full">
+        <section class="mt-16 w-full max-w-5xl">
+          <div class="flex gap-5 max-md:flex-col max-md:gap-5">
+            <!-- Sidebar -->
+            <div class="w-full md:w-[344px]">
+              <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+                <h2 class="font-bold text-lg mb-2">Account Settings</h2>
+                <router-link to="/profile" class="sidebar-option">Change Profile</router-link>
+              </div>
+              <div class="bg-white p-4 rounded-lg shadow-md">
+                <h2 class="font-bold text-lg mb-2">Password & Security</h2>
+                <router-link to="/passworddata/:id" class="sidebar-option">Change Password</router-link>
+              </div>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md">
-              <h2 class="font-bold text-lg mb-2">Password & Security</h2>
-              <router-link to="" class="sidebar-option">Change Password</router-link>
-            </div>
-            <div class="bg-white p-4 rounded-lg shadow-md mt-4">
-              <router-link to="/login" class="sidebar-option">Logout</router-link>
-            </div>
-          </div>
-          <!-- Main Content -->
-          <section class="flex flex-col w-full bg-white p-6 rounded-lg shadow-md">
-            <!-- Reset Password Section -->
-            <section class="mt-12">
-              <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
-              <p class="text-sm text-gray-600">Change your account password</p>
-              <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
+            <!-- Main Content -->
+            <section class="flex flex-col w-full bg-white p-8 rounded-lg shadow-lg">
+              <!-- Reset Password Section -->
+              <section class="mt-4">
+                <h2 class="font-bold text-3xl mb-4">Reset Password</h2>
+                <p class="text-md text-gray-600 mb-8">Change your account password to enhance security.</p>
+                <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
 
               <form class="space-y-4" @submit.prevent="resetPassword">
                 <div>

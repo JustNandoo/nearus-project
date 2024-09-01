@@ -52,6 +52,11 @@
     </div>
     <NotifBerhasilLogin v-if="berhasilLogin" />
     <NotifGagalLogin v-if="gagalLogin" />
+
+    <!-- Loading Spinner -->
+    <div v-if="isLoading" class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+    </div>
   </div>
 </template>
 
@@ -75,6 +80,7 @@ export default {
       passwordVisible: false,
       berhasilLogin: false,
       gagalLogin: false,
+      isLoading: false, // add this
       logo,
       background
     };
@@ -92,6 +98,9 @@ export default {
         }, 5000);
         return;
       }
+
+      this.isLoading = true; // add this
+
       try {
         await this.login({
           email: this.email,
@@ -99,14 +108,13 @@ export default {
           remember: this.rememberMe,
         });
 
-        // Retrieve the user role from Vuex
         const role = this.$store.getters.getRole;
 
         this.berhasilLogin = true;
         setTimeout(() => {
           this.berhasilLogin = false;
+          this.isLoading = false; // add this
 
-          // Redirect based on the role
           if (role === 'Owner') {
             this.$router.push('/dashboard');
           } else {
@@ -116,6 +124,7 @@ export default {
       } catch (error) {
         console.error('Login failed:', error.response ? error.response.data : error.message);
         this.gagalLogin = true;
+        this.isLoading = false; // add this
         setTimeout(() => {
           this.gagalLogin = false;
         }, 5000);
@@ -137,5 +146,19 @@ export default {
   height: 100%;
   z-index: -1;
   background: url('@/assets/images/bg-loginPage.png') center/cover no-repeat;
+}
+
+.loader {
+  border-top-color: #3498db;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

@@ -67,7 +67,7 @@
           <div class="flex flex-col sm:flex-row items-center mb-6">
             <img
                 class="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover shadow-lg"
-                :src="owner.image || imageProfileDefault"
+                :src="owner.photoprofile || imageProfileDefault"
                 alt="Owner Profile"
             />
             <div class="ml-0 sm:ml-4 mt-4 sm:mt-0 text-center sm:text-left">
@@ -120,17 +120,28 @@
 
     <!-- Footer -->
     <Footer />
+    <ProfileCard v-if="showProfileCard" />
+    <ConfirmationModal
+      :visible="showConfirmationModal"
+      title="Pemberitahuan"
+      message="Anda Telah melakukan pembatalan pembayaran, jika ingin lanjut anda harus melakukan proses pembayaran lagi"
+      @confirm="handleConfirmClose"
+  />
+
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import {ref, onMounted, computed, onBeforeUnmount} from 'vue';
 import axios from 'axios';
 import NavFixed from "@/components/Pages/NavFixed.vue";
 import imageProfileDefault from '@/assets/images/profile-pic.png';
 import Footer from "@/components/Pages/Footer.vue";
 import { useRoute } from 'vue-router';
 import Alert from '@/components/NearusFinance/Alert.vue';
+import ConfirmationModal from "@/components/Payment/CancelProcess.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
+
 
 const isLoading = ref(true);
 const transaction = ref(null);
@@ -140,6 +151,9 @@ const route = useRoute();
 const produk = ref(JSON.parse(localStorage.getItem('produk')));
 const alertPopup = ref(null);
 const showConfirmation = ref(false);
+const showProfileCard = ref(false);
+const showConfirmationModal = ref(false);
+
 
 // Fetch owner details
 const fetchOwnerDetail = async (ownerId) => {
@@ -159,6 +173,17 @@ const fetchOwnerDetail = async (ownerId) => {
     console.error('Error fetching owner details:', error);
   }
 };
+const toggleProfileCard = () => {
+  showProfileCard.value = !showProfileCard.value;
+};
+
+onMounted(() => {
+  window.addEventListener('toggle-profile-card', toggleProfileCard);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('toggle-profile-card', toggleProfileCard);
+});
 
 // Fetch transaction details
 const fetchTransactionDetail = async () => {
@@ -197,6 +222,13 @@ const formattedEndDate = computed(() => {
   });
 });
 
+const handleConfirmClose = () => {
+  showConfirmationModal.value = false;
+  if (window.snap && window.snap.close) {
+    window.snap.close(); // Close the Midtrans popup
+  }
+};
+
 // Show confirmation modal
 const confirmExtendRental = () => {
   showConfirmation.value = true;
@@ -204,7 +236,7 @@ const confirmExtendRental = () => {
 
 // Extend rental
 const extendRental = async () => {
-  showConfirmation.value = false; // Close confirmation modal
+  showConfirmation.value = false; // Close confirmation modal immediately
 
   const detailfinanceId = localStorage.getItem('detailfinance');
 
@@ -233,7 +265,7 @@ const extendRental = async () => {
           alert("Pembayaran gagal!"); // Handle error logic here
         },
         onClose: function () {
-          alert("Anda menutup tanpa menyelesaikan pembayaran!"); // Handle close logic here
+          showConfirmationModal.value = true; // Show the modal when payment popup is closed
         },
       });
     } else {

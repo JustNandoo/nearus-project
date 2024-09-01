@@ -11,6 +11,7 @@
         <router-link to="/home">Sewa</router-link>
         <router-link to="/NearusFinance">NearusFinance</router-link>
         <router-link to="/AboutUS">About Us</router-link>
+
       </div>
       <div class="flex items-center gap-4 relative">
         <router-link v-if="!isLoggedIn" to="/login" class="text-xl font-medium">

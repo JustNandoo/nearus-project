@@ -14,6 +14,12 @@ const router = createRouter({
       component: () => import('../views/HomeView/HomeView.vue'),
     },
     {
+      path: '/Kos',
+      name: 'Kos',
+      component: () => import('../views/HomeView/FullViewKos.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginRegister/Login/LoginView.vue'),
@@ -160,6 +166,11 @@ const router = createRouter({
       path: '/chat-user',
       name: 'ChatUser',
       component: () => import('../views/HomeView/ChatUser.vue')
+    },
+    {
+      path: '/search-page',
+      name: 'search-page',
+      component: () => import('../views/HomeView/SearchPage.vue')
     },
     {
       path: '/',

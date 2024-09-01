@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-appear">
-    <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[670px] px-5 z-[10000]">
+    <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[670px] px-4 z-[10000]">
       <div class="flex items-start justify-between border-b-[1px] border-black pb-4">
         <div class="mt-8 ml-8px text-left">
           <h1 class="mb-4 font-bold text-[23px]" id="nama">{{ user.name }}</h1>
@@ -12,7 +12,7 @@
         <router-link to="/NearusFinance">
         <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
           <font-awesome-icon class="text-black w-8 h-8" :icon="faHouseUser" />
-          <p class="text-[22px] font-medium">Kosku</p>
+          <p class="text-[22px] font-medium">Nearus Finance</p>
         </div>
         </router-link>
         <router-link to="/profile">
@@ -82,7 +82,7 @@ setTimeout(() => {
 .profile-card {
   position: fixed;
   top: 6rem;
-  right: 15rem;
+  right: 0.8rem;
   z-index: 1100;
 }
 

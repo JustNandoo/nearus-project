@@ -1,13 +1,22 @@
 <template>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center px-4 sm:px-6 md:px-8 lg:px-16">
+    <!-- About Us Components -->
     <AboutUsCard />
     <CardProductAboutUs />
     <AboutUsText />
-    <CariKosSeakrang/>
+    <CariKosSeakrang />
     <AboutUsDokumentasi />
-    <ProfileCard v-if="showProfileCard" class="profile-card"/>
-    <div class="w-[1777px] text-sky-600 text-4xl font-bold font-['Montserrat'] mt-40">"NeaRuS: Temukan Kost Terbaik, Nyaman, dan Terjangkau untuk Kehidupan yang Lebih Baik!"</div>
-    <Footer /> 
+
+    <!-- Profile Card -->
+    <ProfileCard v-if="showProfileCard" class="profile-card mt-8 md:mt-12"/>
+
+    <!-- Hero Text -->
+    <div class="text-sky-600 text-2xl md:text-3xl lg:text-4xl font-bold font-['Montserrat'] mt-12 md:mt-20 lg:mt-40 text-center max-w-6xl">
+      "NeaRuS: Temukan Kost Terbaik, Nyaman, dan Terjangkau untuk Kehidupan yang Lebih Baik!"
+    </div>
+
+    <!-- Footer -->
+    <Footer class="mt-12 md:mt-16 lg:mt-24"/>
   </div>
 </template>
 
@@ -21,7 +30,6 @@ import AboutUsDokumentasi from "@/components/AboutUs/AboutUsDokumentasi.vue";
 import Footer from "@/components/Pages/Footer.vue";
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
-
 export default {
   components: {
     ProfileCard,
@@ -29,7 +37,7 @@ export default {
     CardProductAboutUs,
     AboutUsText,
     CariKosSeakrang,
-    AboutUsDokumentasi, 
+    AboutUsDokumentasi,
     Footer
   },
   setup() {

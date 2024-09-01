@@ -1,71 +1,115 @@
 <template>
-  <div class="flex justify-between items-center">
-    <div class="flex flex-col my-10">
-      <LMap :zoom="zoom" :center="center" class="w-[980px] h-[50px] rounded-lg shadow-lg" :style="{ height: '240px', width: '980px' }">
+  <div class="flex flex-col items-center my-12">
+    <div class="relative w-full max-w-screen-lg">
+      <LMap :zoom="zoom" :center="center" class="rounded-lg shadow-lg" :style="{ height: '290px', width: '100%' }">
         <LTileLayer :url="tileLayerUrl" :attribution="attribution" />
-        <LMarker :lat-lng="markerPosition">
-          <LPopup>A pretty CSS popup.<br> Easily customizable.</LPopup>
+
+        <!-- Penanda untuk tempat utama -->
+        <LMarker :lat-lng="center">
+          <LPopup>{{ address }}</LPopup>
+        </LMarker>
+
+        <!-- Penanda untuk tempat penting lainnya -->
+        <LMarker v-for="(place, index) in placesWithIcons" :key="index" :lat-lng="[place.lat, place.lng]" :icon="place.icon">
+          <LPopup>{{ place.name }}</LPopup>
         </LMarker>
       </LMap>
-      <div class="bg-[#A7E0FF] rounded-lg shadow-lg z-50 px-2 py-4 w-full">
-        <h1 class="ml-2">Jl. Bae-Besito No.82, Besito Kulon, Besito, Kec. Gebog, Kabupaten Kudus, Jawa Tengah 59333</h1>
+
+      <!-- Address Text Below Map -->
+      <div class="bg-[#A7E0FF] rounded-lg shadow-lg z-50 px-4 py-2 mt-4 text-center">
+        <h1 class="text-lg font-medium">{{ address }}</h1>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { LMap, LTileLayer, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import {ref, watch, computed} from 'vue';
+import {LMap, LTileLayer, LMarker, LPopup} from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import axios from "axios";
-import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
-import iconUrl from 'leaflet/dist/images/marker-icon.png';
-import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+import education from "@/assets/icons/education.png";
+import mosque from "@/assets/icons/mosque.png";
+import restaurant from "@/assets/icons/restaurant.png";
+import shop from "@/assets/icons/shop.png";
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
+const props = defineProps({
+  lat: {
+    required: true,
+  },
+  lng: {
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  places: {
+    type: Array,
+    required: true,
+  },
 });
 
-const zoom = ref(20);
-const center = ref([-6.753497631360662, 110.84273609891292]);
-const markerPosition = ref([-6.753497631360662, 110.84273609891292]);
+// Function to assign icons based on place names
+const getIconForPlace = (placeName) => {
+  switch (placeName) {
+    case "SMK Raden Umar Said":
+      return schoolIcon;
+    case "Indomaret Besito 2":
+      return shopIcon;
+    case "Masjid Hidayatul Abidin":
+      return mosqueIcon;
+    case "Warmindo Anggrek Muria":
+      return foodIcon;
+    default:
+      return schoolIcon; // Default icon
+  }
+};
+
+// Define custom icons for Leaflet
+const schoolIcon = L.icon({
+  iconUrl: education,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const shopIcon = L.icon({
+  iconUrl: shop,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const mosqueIcon = L.icon({
+  iconUrl: mosque,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const foodIcon = L.icon({
+  iconUrl: restaurant,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+// Computed property to add icons to places
+const placesWithIcons = computed(() => {
+  return props.places.map(place => ({
+    ...place,
+    icon: getIconForPlace(place.name)
+  }));
+});
+
+const zoom = ref(15);
+const center = ref([props.lat, props.lng]);
 const tileLayerUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
-const product = ref({});
-
-onMounted(async () => {
-  try {
-    const response = await axios.get('https://api.nearus.id/api/product');
-    console.log('API Response:', response);
-    const data = response.data.data;
-
-    if (data && data.length > 0 && data[0].linklocation) {
-      product.value = {
-        linklocation: data[10].linklocation,
-      };
-      const [lat, lng] = product.value.linklocation.split(',').map(Number);
-      console.log(lat);
-      console.log(lng);
-      if (!isNaN(lat) && !isNaN(lng)) {
-        center.value = [lat, lng];
-        markerPosition.value = [lat, lng];
-      } else {
-        console.error('Invalid coordinates:', product.value.linklocation);
-      }
-    } else {
-      console.error('Error fetching product data: no data response or missing linklocation');
-    }
-  } catch (error) {
-    console.error('Error fetching product data:', error);
-  }
+// Update map center when lat/lng props change
+watch([() => props.lat, () => props.lng], ([newLat, newLng]) => {
+  center.value = [newLat, newLng];
 });
 </script>
-
-<style scoped>
-</style>
