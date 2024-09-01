@@ -1,9 +1,12 @@
 <template>
-  <div class="flex flex-col pb-14 bg-gray-100 min-h-screen">
+  <div class="flex flex-col min-h-screen bg-gray-100">
+    <!-- Navigation -->
     <NavFixed />
-    <main class="flex flex-col items-center px-5 mt-12 w-full">
+
+    <!-- Main Content -->
+    <main class="flex flex-col items-center px-5 mt-12 flex-1">
       <section class="mt-16 w-full max-w-5xl">
-        <div class="flex gap-5 max-md:flex-col max-md:gap-5">
+        <div class="flex gap-5 md:flex-row flex-col">
           <!-- Sidebar -->
           <div class="w-full md:w-[344px]">
             <div class="bg-white p-4 rounded-lg shadow-md mb-4">
@@ -14,120 +17,166 @@
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
               <router-link to="" class="sidebar-option">Change Password</router-link>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md mt-4">
-              <router-link to="/login" class="sidebar-option">Logout</router-link>
-            </div>
           </div>
+
           <!-- Main Content -->
-          <section class="flex flex-col w-full bg-white p-6 rounded-lg shadow-md">
+          <section class="flex flex-col w-full bg-blue-50 p-8 rounded-lg shadow-2xl">
             <!-- Reset Password Section -->
-            <section class="mt-12">
-              <h2 class="font-bold text-2xl mb-4">Reset Password</h2>
-              <p class="text-sm text-gray-600">Change your account password</p>
-              <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false"/>
-              <form class="space-y-4" @submit.prevent="resetPassword">
+            <section class="mt-8">
+              <h2 class="font-bold text-3xl mb-4 text-black">Reset Password</h2>
+              <p class="text-sm text-black mb-6">Change your account password</p>
+              <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false" />
+
+              <form class="space-y-6" @submit.prevent="updatePasswordProfile">
                 <div>
-                  <label class="block text-gray-700">Email</label>
-                  <input type="email" class="w-full border-gray-300 rounded-lg mt-1 input-field" v-model="email">
-                  <p v-if="emailError" class="text-red-500 text-sm">{{ emailError }}</p>
+                  <label class="block text-black font-semibold">Current Password</label>
+                  <input
+                      type="password"
+                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                      v-model="currentPassword"
+                      required
+                  />
                 </div>
-                <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded-lg mt-6 button">Reset Password</button>
+                <div>
+                  <label class="block text-black font-semibold">New Password</label>
+                  <input
+                      type="password"
+                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                      v-model="newPassword"
+                      required
+                  />
+                </div>
+                <div>
+                  <label class="block text-black font-semibold">Confirm New Password</label>
+                  <input
+                      type="password"
+                      class="w-full border-black rounded-lg mt-1 p-3 border focus:border-blue-500 focus:ring-blue-500 transition ease-in-out duration-150"
+                      v-model="confirmPassword"
+                      required
+                  />
+                </div>
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg mt-6 font-semibold transition-colors duration-300 hover:bg-blue-700"
+                >
+                  Reset Password
+                </button>
               </form>
             </section>
           </section>
         </div>
       </section>
     </main>
+
+    <!-- Footer -->
+    <Footer />
+    <!-- ProfileCard Component -->
+    <ProfileCard v-if="showProfileCard" />
   </div>
-  <Footer />
 </template>
 
 <script>
-import { ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
 import Footer from '@/components/Pages/Footer.vue';
-import PasswordAlert from '@/components/Profile/PasswordAlert.vue'; // Import PasswordAlert component
+import PasswordAlert from '@/components/Profile/PasswordAlert.vue';
 import axios from 'axios';
-import { API_URL } from '@/constants';
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 export default {
-  components: {
-    NavFixed,
-    Footer,
-    PasswordAlert, // Register PasswordAlert component
-  },
+  components: { ProfileCard, NavFixed, Footer, PasswordAlert },
   setup() {
+    const user = ref({ email: '' });
     const store = useStore();
     const currentPassword = ref('');
     const newPassword = ref('');
     const confirmPassword = ref('');
-    const email = ref('');
-    const emailError = ref('');
+    const passwordError = ref('');
+    const showProfileCard = ref(false);
     const showAlert = ref(false);
     const alertMessage = ref('');
     const alertType = ref('');
+    const loading = ref(false);
 
-    const changePassword = async () => {
-      if (newPassword.value !== confirmPassword.value) {
-        showAlert.value = true;
-        alertMessage.value = 'Kata sandi baru dan konfirmasi kata sandi tidak cocok.';
-        alertType.value = 'error';
-        return;
-      }
-
+    onMounted(async () => {
       try {
-        const response = await fetch(`${API_URL}/profile/reset-password`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${store.state.token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            currentPassword: currentPassword.value,
-            newPassword: newPassword.value,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error('Gagal mengubah kata sandi');
+        await store.dispatch('fetchUserData');
+        const userData = store.getters.getUser;
+        if (userData) {
+          user.value.email = userData.email || '';
         }
-
-        showAlert.value = true;
-        alertMessage.value = 'Kata sandi berhasil diubah';
-        alertType.value = 'success';
       } catch (error) {
-        console.error('Error changing password:', error);
-        showAlert.value = true;
-        alertMessage.value = 'Terjadi kesalahan saat mengubah kata sandi';
-        alertType.value = 'error';
+        console.error('Failed to Fetch User Data');
       }
+
+      // Adding event listener to toggle profile card
+      window.addEventListener('toggle-profile-card', toggleProfileCard);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('toggle-profile-card', toggleProfileCard);
+    });
+
+    const toggleProfileCard = () => {
+      showProfileCard.value = !showProfileCard.value;
     };
 
-    const resetPassword = async () => {
-      if (!email.value) {
-        emailError.value = 'Email harus diisi'; 
-        return;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      
-      if (!emailRegex.test(email.value)) {
-        emailError.value = 'Format email tidak valid'; 
-        return;
-      }
-      
-      emailError.value = '';
+    const updatePasswordProfile = async () => {
+      loading.value = true;
 
       try {
-        const response = await axios.post(`${API_URL}/reset-password`, { email: email.value });
-        showAlert.value = true;
-        alertMessage.value = response.data.message;
-        alertType.value = 'success';
+        if (newPassword.value !== confirmPassword.value) {
+          passwordError.value = 'New password and confirmation do not match.';
+          showAlert.value = true;
+          alertMessage.value = passwordError.value;
+          alertType.value = 'error';
+          loading.value = false;
+          return;
+        }
+
+        passwordError.value = ''; // Reset any previous error
+
+        const token = store.state.token; // Get the user's token from the store
+
+        const response = await axios.post('https://api.nearus.id/api/profile/reset-password', {
+          email: user.value.email || '',
+          current_password: currentPassword.value || '',
+          new_password: newPassword.value || ''
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.status === 200) {
+          showAlert.value = true;
+          alertMessage.value = 'Password changed successfully';
+          alertType.value = 'success';
+        }
+
       } catch (error) {
-        showAlert.value = true;
-        alertMessage.value = error.response.data.message || 'Terjadi kesalahan saat mereset kata sandi';
-        alertType.value = 'error';
+        console.error('Failed to Update Password', error);
+
+        if (error.response) {
+          if (error.response.status === 404) {
+            alertMessage.value = 'Email not found';
+          } else if (error.response.status === 403) {
+            alertMessage.value = 'Current password is incorrect';
+          } else if (error.response.status === 400) {
+            alertMessage.value = 'New password cannot be the same as the current password';
+          } else {
+            alertMessage.value = 'An error occurred while changing the password';
+          }
+          alertType.value = 'error';
+          showAlert.value = true;
+        } else {
+          alertMessage.value = 'Failed to connect to the server. Please try again later.';
+          alertType.value = 'error';
+          showAlert.value = true;
+        }
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -135,42 +184,17 @@ export default {
       currentPassword,
       newPassword,
       confirmPassword,
-      email,
-      emailError,
-      changePassword,
-      resetPassword,
+      passwordError,
+      updatePasswordProfile,
       showAlert,
       alertMessage,
+      showProfileCard,
       alertType,
     };
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
-.label-field {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.input-field {
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.375rem;
-}
-
-.button {
-  background-color: #008DDA;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.button:hover {
-  background-color: #0072b1;
-}
+/* Add any additional styling if needed */
 </style>

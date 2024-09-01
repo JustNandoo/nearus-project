@@ -1,19 +1,19 @@
 <template>
-  <div class="flex items-center mt-4 pl-8 p-4 bg-white rounded-[50px] shadow-lg w-[1350px]">
-    <div class="flex items-center space-x-8">
-      <div v-for="(input, index) in inputs" :key="index" class="flex items-center space-x-2 text-[18px]">
+  <div class="flex flex-col sm:flex-row items-center mt-4 sm:pl-8 p-4 bg-white rounded-[50px] shadow-lg w-full sm:max-w-[1350px]">
+    <div class="flex flex-wrap sm:flex-nowrap items-center space-x-0 sm:space-x-8">
+      <div v-for="(input, index) in inputs" :key="index" class="flex items-center space-x-2 text-[18px] mb-4 sm:mb-0">
         <span v-if="input.icon" :class="input.icon"></span>
         <span>{{ input.label }}</span>
-        <div v-if="input.type === 'text'" class="flex items-center px-3 py-2 rounded-md bg-white mr-20">
+        <div v-if="input.type === 'text'" class="flex items-center px-3 py-2 rounded-md bg-white w-full sm:w-auto">
           <input
               :id="input.id"
               type="text"
               v-model="input.value"
-              class="bg-transparent focus:outline-none"
+              class="bg-transparent focus:outline-none w-full"
               :placeholder="input.placeholder"
           />
         </div>
-        <div v-else-if="input.type === 'select'" class="relative flex items-center px-3 py-2 rounded-md bg-white mr-20">
+        <div v-else-if="input.type === 'select'" class="relative flex items-center px-3 py-2 rounded-md bg-white w-full sm:w-auto">
           <select
               :id="input.id"
               v-model="input.value"
@@ -24,11 +24,11 @@
               {{ option }}
             </option>
           </select>
-          <i class="fa-solid fa-chevron-down text-gray-400 absolute left-[130px]"></i>
+          <i class="fa-solid fa-chevron-down text-gray-400 absolute right-4 left-[130px]"></i>
         </div>
       </div>
     </div>
-    <button @click="handleSearch" class="ml-auto px-6 py-1 h-[52px] bg-blue-primary text-white rounded-[40px] font-bold">
+    <button @click="handleSearch" class="w-full sm:w-auto mt-4 sm:mt-0 sm:ml-auto px-6 py-2 h-[52px] bg-blue-primary text-white rounded-[40px] font-bold">
       <i class="fa-solid fa-magnifying-glass mr-2"></i>
       Cari Kost-Kostan
     </button>

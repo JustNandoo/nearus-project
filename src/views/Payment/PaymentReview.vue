@@ -63,7 +63,7 @@
           {{ user.name }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[81px] absolute text-black text-[13px] font-normal font-montserrat leading-7">
-          {{ user.phone }}
+          {{ user.phonenumber }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[108px] absolute text-black text-[13px] font-normal font-montserrat underline leading-7">
           {{ user.email }}
@@ -78,17 +78,16 @@
     <Footer />
     <ClosePopUp
         :visible="showClosePopUp"
-        title="Confirm Close"
-        message="Are you sure you want to go back? All unsaved changes will be lost."
+        title="Konfirmasi"
+        message="Apakah Anda yakin ingin membatalkan proses pembayaran ?"
         @confirm="handleConfirmGoBack"
         @cancel="handleCancelGoBack"
     />
     <ConfirmationModal
         :visible="showConfirmationModal"
-        title="Confirm Close"
-        message="Are you sure you want to close the payment popup? All unsaved changes will be lost."
+        title="Pemberitahuan"
+        message="Anda Telah melakukan pembatalan pembayaran, jika ingin lanjut anda harus melakukan proses pembayaran lagi"
         @confirm="handleConfirmClose"
-        @cancel="handleCancelClose"
     />
   </div>
 </template>
@@ -146,7 +145,6 @@ const handleConfirmClose = () => {
   if (window.snap && window.snap.close) {
     window.snap.close(); // Close the Midtrans popup
   }
-  router.go(-1);
 };
 
 const handleCancelClose = () => {

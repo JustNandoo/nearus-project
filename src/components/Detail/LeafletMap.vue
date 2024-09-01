@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-between items-center">
-    <div class="flex flex-col my-10">
-      <LMap :zoom="zoom" :center="center" class="w-[980px] h-[50px] rounded-lg shadow-lg" :style="{ height: '240px', width: '980px' }">
+  <div class="flex flex-col items-center my-12">
+    <div class="relative w-full max-w-screen-lg">
+      <LMap :zoom="zoom" :center="center" class="rounded-lg shadow-lg" :style="{ height: '290px', width: '100%' }">
         <LTileLayer :url="tileLayerUrl" :attribution="attribution" />
 
         <!-- Penanda untuk tempat utama -->
@@ -14,16 +14,18 @@
           <LPopup>{{ place.name }}</LPopup>
         </LMarker>
       </LMap>
-      <div class="bg-[#A7E0FF] rounded-lg shadow-lg z-50 px-2 py-4 w-full">
-        <h1 class="ml-2">{{ address }}</h1>
+
+      <!-- Address Text Below Map -->
+      <div class="bg-[#A7E0FF] rounded-lg shadow-lg z-50 px-4 py-2 mt-4 text-center">
+        <h1 class="text-lg font-medium">{{ address }}</h1>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue';
-import { LMap, LTileLayer, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import {ref, watch, computed} from 'vue';
+import {LMap, LTileLayer, LMarker, LPopup} from "@vue-leaflet/vue-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import education from "@/assets/icons/education.png";
@@ -101,7 +103,7 @@ const placesWithIcons = computed(() => {
   }));
 });
 
-const zoom = ref(20);
+const zoom = ref(15);
 const center = ref([props.lat, props.lng]);
 const tileLayerUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const attribution = "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors";

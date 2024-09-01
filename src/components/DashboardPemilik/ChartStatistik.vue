@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-screen mx-auto mt-10">
     <div class="text-black font-bold mb-2 text-[20px]">
-      Statistik Jumlah Penyewa Kost
+      Statistik Jumlah Penyewa Kost pertahun
     </div>
     <div id="chart" class="bg-white p-6 border border-gray-300 shadow-lg">
       <apexchart :type="chartType" :width="chartWidth" :height="chartHeight" :options="chartOptions" :series="series"></apexchart>

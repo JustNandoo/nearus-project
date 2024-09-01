@@ -1,149 +1,95 @@
 <template>
-  <div class="flex flex-col min-h-screen font-montserrat">
+  <div class="flex flex-col min-h-screen font-montserrat bg-gray-100">
     <Nav />
-    <div class="pt-[72px] flex-grow">
-      <div class="relative w-full h-[286px] bg-[#008dda] shadow-lg flex items-center">
-        <div class="absolute left-4 sm:left-20 text-white font-bold">
-          <div class="text-2xl sm:text-4xl mb-2">NeaRuS Finance</div>
-          <div class="text-sm sm:text-lg font-medium w-full sm:w-[563px]">
-            Atur management pembayaran serta mengatur kos yang telah di sewa
-            dengan mudah hanya dengan NeaRuS Finance.
+    <main class="pt-[72px] flex-grow">
+      <section class="relative w-full h-[286px] bg-[#008dda] shadow-lg flex items-center justify-center">
+        <div class="absolute inset-0 flex flex-col sm:flex-row items-center sm:justify-between px-4 sm:px-20 text-white">
+          <div class="text-center sm:text-left">
+            <div class="text-2xl sm:text-4xl font-bold mb-2">NeaRuS Finance</div>
+            <p class="text-sm sm:text-lg font-medium max-w-[563px]">
+              Atur management pembayaran serta mengatur kos yang telah di sewa
+              dengan mudah hanya dengan NeaRuS Finance.
+            </p>
+          </div>
+          <div class="absolute flex space-x-4 bottom-5 right-4 sm:bottom-10 sm:right-10">
+            <img class="w-24 h-24 sm:w-36 sm:h-36 object-cover" :src="finance1" alt="Finance 1" />
+            <img class="w-24 h-24 sm:w-36 sm:h-36 object-cover" :src="finance2" alt="Finance 2" />
+            <img class="w-24 h-24 sm:w-36 sm:h-36 object-cover" :src="finance3" alt="Finance 3" />
           </div>
         </div>
-        <div class="absolute flex space-x-2 sm:space-x-4 bottom-5 sm:bottom-10 right-4 sm:right-[90px]">
-          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance1" alt="Finance 1" />
-          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance2" alt="Finance 2" />
-          <img class="w-[100px] h-[100px] sm:w-[150px] sm:h-[150px]" :src="finance3" alt="Finance 3" />
-        </div>
-      </div>
+      </section>
 
-      <div class="mt-12 px-4">
-        <div class="flex flex-col sm:flex-row items-center justify-between">
-          <div class="text-black text-2xl sm:text-[32px] font-bold ml-4">
-            Kos yang disewa
-          </div>
-          <div class="relative flex items-center mr-7 mt-4 sm:mt-0">
+      <section class="mt-12 px-4">
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-4">
+          <h2 class="text-black text-2xl sm:text-3xl font-bold">Kos yang disewa</h2>
+          <div class="relative flex items-center w-full sm:w-auto">
             <i class="fas fa-search absolute left-3 text-gray-400"></i>
             <input
                 v-model="searchQuery"
                 type="text"
-                class="pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto"
+                class="pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
                 placeholder="Search transactions..."
             />
           </div>
         </div>
-        <hr class="border-t-2 border-black mt-2 mx-4" />
+        <hr class="border-t-2 border-black mb-6" />
 
         <!-- Loading Animation -->
         <div v-if="isLoading" class="flex justify-center items-center mt-8">
-          <div
-              class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"
-          ></div>
+          <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
         </div>
 
         <!-- Transactions Content -->
         <div v-else>
-          <div class="flex justify-between mt-2 px-4">
-            <div class="text-black text-base font-medium ml-4 mt-5">
-              Showing all results
-            </div>
-          </div>
-          <div
-              v-if="filteredTransactions.length > 0"
-              class="flex flex-col items-center mt-4"
-          >
-            <div
-                v-for="transaction in filteredTransactions"
-                :key="transaction.id"
-                class="relative w-full max-w-[1255px] h-auto sm:h-[270px] bg-white rounded-[15px] border border-[#8692a6]/60 mb-4 p-4 sm:p-0"
-            >
-              <div class="absolute top-4 sm:top-7 right-4 sm:right-7 flex items-center space-x-2">
-                <img
-                    class="w-5 h-5 sm:w-6 sm:h-6"
-                    :src="transaction.status === 'Paid' ? checkmark : ''"
-                    alt="Checkmark"
-                />
-                <div class="text-black text-sm sm:text-[15px] font-bold leading-7">
-                  {{ transaction.status }}
-                </div>
-              </div>
+          <div v-if="filteredTransactions.length > 0">
+            <!-- Grid Layout for larger screens, List Layout for smaller screens -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div v-for="transaction in filteredTransactions" :key="transaction.id" class="relative bg-white rounded-lg border border-gray-300 shadow-md p-4">
 
-              <div
-                  class="mt-6 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[22px] text-black text-sm font-bold w-full sm:w-[400px] h-auto sm:h-[23px]"
-              >
-                {{ transaction.detail }}
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[87px] flex items-center space-x-2"
-              >
-                <img
-                    class="w-5 h-5 sm:w-7 sm:h-7"
-                    :src="bathroomImage"
-                    alt="Kamar Mandi Dalam"
-                />
-                <div class="text-black text-sm font-normal leading-7">
-                  Kamar Mandi Dalam
-                </div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[87px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="acImage" alt="AC" />
-                <div class="text-black text-sm font-normal leading-7">AC</div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[141px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="deskImage" alt="Meja" />
-                <div class="text-black text-sm font-normal leading-7">Meja</div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[141px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="toiletImage" alt="Kloset Duduk" />
-                <div class="text-black text-sm font-normal leading-7">
-                  Kloset Duduk
-                </div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[63px] border border-[#8692a6]/60 w-full sm:w-[699px] h-0"
-              ></div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[932px] sm:top-[61px] border border-[#8692a6]/60 w-[129px] h-0 rotate-90 origin-top-left"
-              ></div>
-              <router-link
-                  :to="{ name: 'NearusFinance2', params: { id: transaction.id } }"
-              >
-                <button
-                    class="mt-6 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[203px] bg-[#008dda] rounded-[10px] shadow w-full sm:w-[678px] pt-4 sm:pt-[15px] pb-4 flex justify-center items-center"
-                >
-                  <div class="text-center text-white text-base font-semibold">
-                    Manage
+                <!-- Rental Name and Payment Status Section -->
+                <div class="flex flex-col sm:flex-row justify-between items-start mb-4">
+                  <div class="text-black text-lg font-bold mb-2 sm:mb-0">{{ transaction.detail }}</div>
+                  <div class="flex items-center space-x-2">
+                    <img class="w-5 h-5 sm:w-6 sm:h-6" :src="transaction.status === 'Paid' ? checkmark : ''" alt="Checkmark" />
+                    <div class="text-black text-sm font-bold">{{ transaction.status }}</div>
                   </div>
-                </button>
-              </router-link>
-              <img
-                  class="w-full sm:absolute sm:left-0 sm:w-[510px] h-auto sm:h-[270px] rounded-lg object-cover mt-4 sm:mt-0"
-                  :src="transaction.image"
-              />
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[931px] sm:top-[109px] text-center text-[#2171e3] text-xl sm:text-2xl font-semibold w-full sm:w-[305px] h-auto sm:h-[41px]"
-              >
-                Rp. {{ formatPrice(transaction.price) }}
+                </div>
+
+                <!-- Image Section -->
+                <img class="w-full h-[280px] object-cover rounded-lg mb-4" :src="transaction.image" />
+
+                <!-- Facilities Section -->
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                  <div
+                      v-for="(facility, index) in transaction.fasilitas.split(',')"
+                      :key="index"
+                      class="bg-white border border-gray-300 rounded-lg px-2 py-1 text-center text-gray-700 font-medium"
+                  >
+                    {{ facility }}
+                  </div>
+                </div>
+                <hr class="border-gray-500 mb-3" />
+
+                <!-- Price and Manage Button -->
+                <div class="text-center text-[#2171e3] text-xl font-semibold mb-4">
+                  Rp. {{ formatPrice(transaction.price) }}
+                </div>
+                <router-link :to="{ name: 'NearusFinance2', params: { id: transaction.id } }">
+                  <button class="bg-[#008dda] rounded-lg shadow-lg w-full py-2 flex justify-center items-center text-white font-semibold">
+                    Manage
+                  </button>
+                </router-link>
               </div>
             </div>
           </div>
-          <div v-else>
-            <NoData />
-          </div>
+          <NoData v-else />
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
     <Footer />
     <ProfileCard v-if="showProfileCard" />
   </div>
 </template>
-
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue';
@@ -152,10 +98,6 @@ import Nav from '@/components/Pages/Nav.vue';
 import Footer from '@/components/Pages/Footer.vue';
 import NoData from '@/components/NearusFinance/NoData.vue';
 import checkmark from '@/assets/images2/lets-icons_check-fill.png';
-import acImage from '@/assets/images2/streamline_hotel-air-conditioner.png';
-import deskImage from '@/assets/images2/material-symbols-light_table-restaurant-outline.png';
-import bathroomImage from '@/assets/images2/ph_shower-thin.png';
-import toiletImage from '@/assets/images2/ph_toilet-thin.png';
 import finance1 from '@/assets/images/finance1.png';
 import finance2 from '@/assets/images/finance2.png';
 import finance3 from '@/assets/images/finance3.png';
@@ -214,5 +156,5 @@ const filteredTransactions = computed(() => {
 </script>
 
 <style scoped>
-/* Add any custom styles here */
+/* Custom styles if needed */
 </style>

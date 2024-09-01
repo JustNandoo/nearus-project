@@ -67,16 +67,18 @@
     </div>
 
     <FooterComponent />
+    <ProfileCard v-if="showProfileCard" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import {ref, computed, onMounted, watch, onBeforeUnmount} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ProductCard from "@/components/Home/ProductCard.vue";
 import axios from 'axios';
 import NavSearch from "@/components/Home/NavSearch.vue";
 import FooterComponent from "@/components/Pages/Footer.vue";
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -91,6 +93,7 @@ const isLoading = ref(true);
 const isSorting = ref(false);
 const sortOption = ref('name-asc');
 const currentPage = ref(1);
+const showProfileCard = ref(false);
 const itemsPerPage = 8;
 
 const displayCategory = computed(() => {
@@ -102,6 +105,18 @@ onMounted(() => {
   searchParams.value.name = name || '';
   searchParams.value.category = category || '';
   fetchProducts();
+});
+
+const toggleProfileCard = () => {
+  showProfileCard.value = !showProfileCard.value;
+};
+
+onMounted(() => {
+  window.addEventListener('toggle-profile-card', toggleProfileCard);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 
 watch(() => route.query, () => {
