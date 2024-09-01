@@ -4,18 +4,18 @@
       <NavSearch :defaultValues="searchParams" @search="handleSearch" />
     </div>
 
-    <div class="search-info ml-8 flex justify-between items-center">
-      <h2 class="text-3xl font-semibold flex-grow">
+    <div class="search-info ml-4 sm:ml-8 flex flex-wrap justify-between items-center px-4 sm:px-0">
+      <h2 class="text-lg sm:text-3xl font-semibold flex-grow mb-4 sm:mb-0">
         Menunjukkan Hasil Pencarian
         <span v-if="searchParams.name">dari "{{ searchParams.name }}"</span>
         <span v-if="searchParams.name && displayCategory"></span>
         <span v-if="displayCategory"> Kategori "{{ displayCategory }}"</span>
       </h2>
 
-      <div class="flex items-center gap-4 mr-16">
+      <div class="flex flex-wrap items-center gap-4">
         <button
             @click="resetSearch"
-            class="bg-blue-primary text-white font-medium px-5 py-2 rounded hover:bg-blue-600"
+            class="bg-blue-primary text-white font-medium px-3 py-2 rounded hover:bg-blue-600"
         >
           Reset Search
         </button>
@@ -31,7 +31,6 @@
         </select>
       </div>
     </div>
-
 
     <div v-if="filteredProducts.length" class="product-grid mt-4 flex-grow">
       <ProductCard
@@ -55,7 +54,7 @@
         >
           Sebelumnya
         </button>
-        <span class="mx-4 font-medium text-[20px] mt-[6px]">
+        <span class="mx-4 font-medium text-lg sm:text-[20px] mt-1">
           Halaman {{ currentPage }} Dari {{ totalPages }}
         </span>
         <button
@@ -228,7 +227,7 @@ const scrollToTop = () => {
 <style scoped>
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjusted for responsiveness */
   gap: 20px;
   padding: 20px;
 }
