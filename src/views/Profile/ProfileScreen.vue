@@ -52,6 +52,7 @@
                 <div>
                   <label class="block text-gray-700">Gender</label>
                   <select class="input-field" v-model="user.jenis_kelamin">
+                    <option value="" disabled>Isi gender kalian</option>
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
                   </select>
@@ -127,8 +128,11 @@ export default {
             email: userData.email || '',
             phonenumber: userData.phonenumber || '',
             jenis_kelamin: userData.jenis_kelamin || '',
-            photoprofile: userData.photoprofile || '',
+            photoprofile: userData.photoprofile || 'profile-pic.png',
           };
+        } else {
+          user.value.jenis_kelamin = '';
+          user.value.photoprofile = 'profile-pic.png';
         }
       } catch (error) {
         console.error('Error fetching user data:', error);

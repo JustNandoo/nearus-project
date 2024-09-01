@@ -25,6 +25,7 @@
             <section class="mt-8">
               <h2 class="font-bold text-3xl mb-4 text-black">Reset Password</h2>
               <p class="text-sm text-black mb-6">Change your account password</p>
+              <p class="text-sm text-black mb-6">Password dibutuhkan setidaknya 8 huruf, Karakter spesial "#" "!", dan Angka</p>
               <PasswordAlert v-if="showAlert" :message="alertMessage" :type="alertType" @close="showAlert = false" />
 
               <form class="space-y-6" @submit.prevent="updatePasswordProfile">
@@ -55,12 +56,23 @@
                       required
                   />
                 </div>
-                <button
-                    type="submit"
-                    class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg mt-6 font-semibold transition-colors duration-300 hover:bg-blue-700"
-                >
-                  Reset Password
-                </button>
+                <div class="relative">
+                  <button
+                      type="submit"
+                      class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg mt-6 font-semibold transition-colors duration-300 hover:bg-blue-700 disabled:bg-blue-400"
+                      :disabled="loading"
+                  >
+                    <span v-if="!loading">Reset Password</span>
+                    <span v-else class="flex justify-center items-center">
+                      <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 0114.657-5.657L19.657 6.343A8 8 0 004 12z"></path>
+                      </svg>
+                      <span class="ml-2">Loading...</span>
+                    </span>
+                  </button>
+                  <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 rounded-lg"></div>
+                </div>
               </form>
             </section>
           </section>
@@ -75,6 +87,7 @@
   </div>
 </template>
 
+
 <script>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
@@ -84,10 +97,16 @@ import PasswordAlert from '@/components/Profile/PasswordAlert.vue';
 import axios from 'axios';
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
+
 export default {
-  components: { ProfileCard, NavFixed, Footer, PasswordAlert },
+  computed: {
+    loadingModal() {
+      return loadingModal
+    }
+  },
+  components: {ProfileCard, NavFixed, Footer, PasswordAlert},
   setup() {
-    const user = ref({ email: '' });
+    const user = ref({email: ''});
     const store = useStore();
     const currentPassword = ref('');
     const newPassword = ref('');
@@ -153,6 +172,10 @@ export default {
           showAlert.value = true;
           alertMessage.value = 'Password changed successfully';
           alertType.value = 'success';
+
+          currentPassword.value = '';
+          newPassword.value = '';
+          confirmPassword.value = '';
         }
 
       } catch (error) {
@@ -196,5 +219,16 @@ export default {
 </script>
 
 <style scoped>
-/* Add any additional styling if needed */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(360deg);}
+}
+
+.relative {
+  position: relative;
+}
 </style>

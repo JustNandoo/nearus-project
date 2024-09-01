@@ -63,7 +63,7 @@
           {{ user.name }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[81px] absolute text-black text-[13px] font-normal font-montserrat leading-7">
-          {{ user.phone }}
+          {{ user.phonenumber }}
         </div>
         <div class="w-[185px] h-[23px] left-0 top-[108px] absolute text-black text-[13px] font-normal font-montserrat underline leading-7">
           {{ user.email }}

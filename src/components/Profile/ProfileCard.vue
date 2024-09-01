@@ -10,10 +10,10 @@
       </div>
       <div>
         <router-link to="/NearusFinance">
-        <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
-          <font-awesome-icon class="text-black w-8 h-8" :icon="faHouseUser" />
-          <p class="text-[22px] font-medium">Nearus Finance</p>
-        </div>
+          <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
+            <font-awesome-icon class="text-black w-8 h-8" :icon="faHouseUser" />
+            <p class="text-[22px] font-medium">Nearus Finance</p>
+          </div>
         </router-link>
         <router-link to="/profile">
           <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black mb-7">
@@ -26,24 +26,37 @@
           <h1 class="font-bold text-[22px]">Pusat Bantuan</h1>
         </div>
         <router-link to="/chat-user">
-        <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
-          <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />
-          <p class="text-[22px] font-medium">Chat</p>
-        </div>
+          <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
+            <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />
+            <p class="text-[22px] font-medium">Chat</p>
+          </div>
         </router-link>
         <router-link to="/PrivacyPolicy">
-        <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
-          <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />
-          <p class="text-[22px] font-medium">Syarat dan Ketentuan</p>
-        </div>
-      </router-link>
-        <button @click="logout" class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-full rounded-lg mt-7 text-white text-[22px] font-medium">
-          <font-awesome-icon :icon="faRightFromBracket" class="text-white w-8 h-8"/>
+          <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
+            <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />
+            <p class="text-[22px] font-medium">Syarat dan Ketentuan</p>
+          </div>
+        </router-link>
+        <button
+            @click="showLogoutConfirmation = true"
+            class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-full rounded-lg mt-7 text-white text-[22px] font-medium"
+        >
+          <font-awesome-icon :icon="faRightFromBracket" class="text-white w-8 h-8" />
           Keluar
         </button>
       </div>
     </div>
   </transition>
+
+  <!-- Logout Confirmation Modal -->
+  <ConfirmationModal
+      v-if="showLogoutConfirmation"
+      :visible="showLogoutConfirmation"
+      title="Confirm Logout"
+      message="Are you sure you want to logout?"
+      @confirm="logout"
+      @close="showLogoutConfirmation = false"
+  />
 </template>
 
 <script setup>
@@ -52,7 +65,6 @@ import { useRouter } from "vue-router";
 import {
   faHouseUser,
   faGear,
-  faHeadset,
   faCircleQuestion,
   faRightFromBracket,
   faComments
@@ -60,8 +72,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { useStore } from 'vuex';
 import imageProfileDefault from '@/assets/images/profile-pic.png';
+import ConfirmationModal from './ConfirmationModal.vue';  // Import the confirmation modal component
 
 const isVisible = ref(false);
+const showLogoutConfirmation = ref(false);  // Track the visibility of the confirmation modal
 const router = useRouter();
 const store = useStore();
 
@@ -71,12 +85,15 @@ const profilePicture = computed(() => store.getters.getUser?.photoprofile || ima
 const logout = () => {
   store.dispatch('logout');
   router.push('/login');
+  showLogoutConfirmation.value = false;  // Close the confirmation modal
 };
 
 setTimeout(() => {
   isVisible.value = true;
 }, 100);
 </script>
+
+
 
 <style scoped>
 .profile-card {

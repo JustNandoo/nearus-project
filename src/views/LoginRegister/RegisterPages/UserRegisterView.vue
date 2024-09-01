@@ -50,7 +50,7 @@
             <div class="w-[571px] h-[90px] left-[0px] top-[610px] absolute" id="PasswordInput">
               <label for="passwordInput"
                 class="left-0 top-0 absolute text-neutral-500 text-xl font-medium font-sans leading-normal">Kata
-                Sandi</label>
+                Sandi (Password dibutuhkan setidaknya 8 huruf, Karakter spesial "#" "!", dan Angka)</label>
               <input id="passwordInput" ref="passwordInput" type="password"
                 class="left-[1px] top-[60px] absolute text-black text-opacity-80 text-lg font-semibold font-sans leading-tight outline-none border-b border-black w-[570px]"
                 placeholder="Masukkan Kata Sandi Anda" />
