@@ -70,7 +70,7 @@ export default createStore({
         // Fetch user profile after setting the token
         await dispatch('fetchUserProfileByID');
       } catch (error) {
-        console.error('Login failed:', error);
+        console.error('Login failed:', error.response ? error.response.data : error.message);
         throw error;
       }
     },
@@ -87,11 +87,9 @@ export default createStore({
           },
         });
 
-        // Handle the response structure
         if (response.data && response.data.success && response.data.data) {
           commit('setUser', response.data.data);
         } else if (response.data && response.data.user) {
-          // Handle case where response contains a `user` object directly
           commit('setUser', response.data.user);
         } else {
           console.error('Failed to fetch user profile: Unexpected response format', response.data);
@@ -100,7 +98,7 @@ export default createStore({
         if (error.response && error.response.status === 401) {
           console.error('Authorization failed: Invalid token');
         } else {
-          console.error('Failed to fetch user profile:', error);
+          console.error('Failed to fetch user profile:', error.response ? error.response.data : error.message);
         }
       }
     },
@@ -114,7 +112,6 @@ export default createStore({
             Authorization: `Bearer ${state.token}`,
           },
         });
-        // Handle different response structures
         if (response.data && response.data.data) {
           commit('setUser', response.data.data);
         } else if (response.data && response.data.user) {
@@ -123,7 +120,7 @@ export default createStore({
           console.error('Failed to fetch user data: Unexpected response format', response.data);
         }
       } catch (error) {
-        console.error('Failed to fetch user data:', error);
+        console.error('Failed to fetch user data:', error.response ? error.response.data : error.message);
         throw error;
       }
     },
@@ -147,7 +144,7 @@ export default createStore({
           console.error('Failed to update profile:', response.data);
         }
       } catch (error) {
-        console.error('Failed to update profile:', error);
+        console.error('Failed to update profile:', error.response ? error.response.data : error.message);
         throw error;
       }
     },
@@ -166,16 +163,20 @@ export default createStore({
               },
             }
         );
-        if (response.data && response.data.data) {
-          commit('setUser', response.data.data);
+
+        if (response.data && response.data.message === 'Profile photo updated successfully') {
+          // Directly use the 'user' data returned from the response to update the state
+          commit('setUser', response.data.user);
+          console.log('Profile picture updated successfully');
         } else {
-          console.error('Failed to update profile picture:', response.data);
+          console.error('Unexpected response while updating profile picture:', response.data);
         }
       } catch (error) {
-        console.error('Failed to update profile picture:', error);
+        console.error('Failed to update profile picture:', error.response ? error.response.data : error.message);
         throw error;
       }
-    },
+    }
+    ,
     async updateUserContactInfo({ commit, state }, contactInfo) {
       if (!state.token) {
         throw new Error('No token found');
@@ -190,16 +191,20 @@ export default createStore({
               },
             }
         );
-        if (response.data && response.data.data) {
-          commit('setUser', response.data.data);
+
+        if (response.data && response.data.message === 'Profile updated successfully') {
+          // Directly use the 'user' data returned from the response to update the state
+          commit('setUser', response.data.user);
+          console.log('Contact info updated successfully');
         } else {
-          console.error('Failed to update contact info:', response.data);
+          console.error('Unexpected response while updating contact info:', response.data);
         }
       } catch (error) {
-        console.error('Failed to update contact info:', error);
+        console.error('Failed to update contact info:', error.response ? error.response.data : error.message);
         throw error;
       }
-    },
+    }
+    ,
     logout({ commit }) {
       commit('clearToken');
       commit('clearUser');

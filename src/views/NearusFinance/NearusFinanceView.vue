@@ -76,41 +76,21 @@
               <div
                   class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[87px] flex items-center space-x-2"
               >
-                <img
-                    class="w-5 h-5 sm:w-7 sm:h-7"
-                    :src="bathroomImage"
-                    alt="Kamar Mandi Dalam"
-                />
-                <div class="text-black text-sm font-normal leading-7">
-                  Kamar Mandi Dalam
-                </div>
+
               </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[87px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="acImage" alt="AC" />
-                <div class="text-black text-sm font-normal leading-7">AC</div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[540px] sm:top-[141px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="deskImage" alt="Meja" />
-                <div class="text-black text-sm font-normal leading-7">Meja</div>
-              </div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[745px] sm:top-[141px] flex items-center space-x-2"
-              >
-                <img class="w-5 h-5 sm:w-7 sm:h-7" :src="toiletImage" alt="Kloset Duduk" />
-                <div class="text-black text-sm font-normal leading-7">
-                  Kloset Duduk
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div
+                    v-for="facility in transaction.fasilitas.split(',')"
+                    :key="facility"
+                    class="bg-white border border-gray-300 rounded-lg p-2 text-center text-gray-700 text-sm font-medium"
+                >
+                  {{ facility }}
                 </div>
               </div>
               <div
                   class="mt-4 sm:mt-0 sm:absolute sm:left-[537px] sm:top-[63px] border border-[#8692a6]/60 w-full sm:w-[699px] h-0"
               ></div>
-              <div
-                  class="mt-4 sm:mt-0 sm:absolute sm:left-[932px] sm:top-[61px] border border-[#8692a6]/60 w-[129px] h-0 rotate-90 origin-top-left"
-              ></div>
+
               <router-link
                   :to="{ name: 'NearusFinance2', params: { id: transaction.id } }"
               >
