@@ -14,9 +14,6 @@
               <h2 class="font-bold text-lg mb-2">Password & Security</h2>
               <router-link to="/passworddata/:id" class="sidebar-option">Change Password</router-link>
             </div>
-            <div class="bg-white p-4 rounded-lg shadow-md mt-4">
-              <router-link to="/login" class="sidebar-option">Logout</router-link>
-            </div>
           </div>
           <!-- Main Content -->
           <section class="flex flex-col w-full">
@@ -66,6 +63,7 @@
         </div>
       </section>
     </main>
+
     <!-- Custom Alert Modal -->
     <LogoutConfirmation
         :show="showLogoutConfirmation"
@@ -80,25 +78,28 @@
         <button @click="closeAlert" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg">OK</button>
       </div>
     </div>
+
     <!-- Loading Indicator -->
     <div v-if="loading" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <p>Loading...</p>
-      </div>
+      <div class="w-16 h-16 border-4 border-white border-t-transparent border-solid rounded-full animate-spin"></div>
     </div>
+    <Footer />
+    <ProfileCard v-if="showProfileCard" />
   </div>
-<Footer />
 </template>
 
+
+
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 import NavFixed from '@/components/Pages/NavFixed.vue';
 import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
 import Footer from '@/components/Pages/Footer.vue';
+import ProfileCard from "@/components/Profile/ProfileCard.vue";
 
 export default {
-  components: { NavFixed, Footer, LogoutConfirmation },
+  components: { ProfileCard, NavFixed, Footer, LogoutConfirmation },
   setup() {
     const store = useStore();
     const user = ref({
@@ -114,6 +115,7 @@ export default {
     const alertMessage = ref('');
     const loading = ref(false);
     const showLogoutConfirmation = ref(false);
+    const showProfileCard = ref(false);  // Declare showProfileCard
 
     onMounted(async () => {
       try {
@@ -131,6 +133,18 @@ export default {
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
+    });
+
+    const toggleProfileCard = () => {
+      showProfileCard.value = !showProfileCard.value;
+    };
+
+    onMounted(() => {
+      window.addEventListener('toggle-profile-card', toggleProfileCard);
+    });
+
+    onBeforeUnmount(() => {
+      window.removeEventListener('toggle-profile-card', toggleProfileCard);
     });
 
     const updateUserData = async () => {
@@ -192,6 +206,7 @@ export default {
       alertMessage,
       loading,
       showLogoutConfirmation,
+      showProfileCard,  // Expose showProfileCard
       updateUserData,
       handleFileChange,
       closeAlert,
@@ -200,6 +215,7 @@ export default {
   },
 };
 </script>
+
 
 
 
