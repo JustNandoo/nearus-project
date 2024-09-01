@@ -3,11 +3,16 @@
     <div class="flex-grow mb-60">
       <NavSearch :defaultValues="searchParams" @search="handleSearch" />
     </div>
+
     <div class="search-info ml-8 flex justify-between items-center">
       <h2 class="text-3xl font-semibold flex-grow">
-        Menunjukkan Hasil Pencarian dari "{{ searchParams.name }}, Kategori {{ displayCategory }}"
+        Menunjukkan Hasil Pencarian
+        <span v-if="searchParams.name">dari "{{ searchParams.name }}"</span>
+        <span v-if="searchParams.name && displayCategory"></span>
+        <span v-if="displayCategory"> Kategori "{{ displayCategory }}"</span>
       </h2>
-      <div class="flex flex-col mt-2 gap-4 items-center mr-16">
+
+      <div class="flex items-center gap-4 mr-16">
         <button
             @click="resetSearch"
             class="bg-blue-primary text-white font-medium px-5 py-2 rounded hover:bg-blue-600"
@@ -17,7 +22,7 @@
         <select
             v-model="sortOption"
             @change="sortProducts"
-            class="bg-gray-200 text-gray-700 mr- px-4 py-2 rounded border border-gray-300"
+            class="bg-gray-200 text-gray-700 px-4 py-2 rounded border border-gray-300"
         >
           <option value="name-asc">Nama (A-Z)</option>
           <option value="name-desc">Nama (Z-A)</option>
@@ -26,10 +31,12 @@
         </select>
       </div>
     </div>
+
+
     <div v-if="filteredProducts.length" class="product-grid mt-4 flex-grow">
       <ProductCard
           class="mx-auto"
-          v-for="product in paginatedProducts"
+          v-for="product in sortedPaginatedProducts"
           :key="product.id"
           :product="product"
           :isLoading="isLoading"
@@ -40,25 +47,25 @@
     </div>
 
     <div class="mt-16">
-    <div class="pagination mt-4 flex justify-center ">
-      <button
-          @click="previousPage"
-          :disabled="currentPage === 1"
-          class="bg-blue-primary text-white font-medium px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Sebelumnya
-      </button>
-      <span class="mx-4 font-medium text-[20px] mt-[6px]">
-        Halaman {{ currentPage }} Dari {{ totalPages }}
-      </span>
-      <button
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-          class="bg-blue-primary text-white font-medium px-4 py-2 rounded hover:bg-blue-600"
-      >
-        Selanjutnya
-      </button>
-    </div>
+      <div class="pagination mt-4 flex justify-center">
+        <button
+            @click="previousPage"
+            :disabled="currentPage === 1"
+            class="bg-blue-primary text-white font-medium px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Sebelumnya
+        </button>
+        <span class="mx-4 font-medium text-[20px] mt-[6px]">
+          Halaman {{ currentPage }} Dari {{ totalPages }}
+        </span>
+        <button
+            @click="nextPage"
+            :disabled="currentPage === totalPages"
+            class="bg-blue-primary text-white font-medium px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Selanjutnya
+        </button>
+      </div>
     </div>
 
     <FooterComponent />
@@ -83,6 +90,7 @@ const searchParams = ref({
 
 const products = ref([]);
 const isLoading = ref(true);
+const isSorting = ref(false); // New state for sorting
 const sortOption = ref('name-asc');
 const currentPage = ref(1);
 const itemsPerPage = 8;
@@ -180,10 +188,17 @@ const handleSearch = (newSearchParams) => {
   fetchProducts();
 };
 
-// Handle sort option change
-const sortProducts = () => {
+// Handle sort option change with loading animation
+const sortProducts = async () => {
+  isSorting.value = true;
+
+  // Simulate loading time
+  await new Promise(resolve => setTimeout(resolve, 500)); // Adjust delay as needed
+
   // Trigger reactivity in sortedPaginatedProducts to reapply sorting
   sortedPaginatedProducts.value;
+
+  isSorting.value = false;
 };
 
 // Pagination controls
@@ -243,4 +258,3 @@ select {
   transition: border-color 0.3s;
 }
 </style>
-
