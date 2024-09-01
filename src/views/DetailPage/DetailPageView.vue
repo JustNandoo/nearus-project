@@ -54,18 +54,17 @@
         <h1 class="font-bold text-[28px] mb-4">Lokasi dan Jarak</h1>
         <div class="flex gap-8 justify-between">
           <div v-if="product.lat && product.lng">
-            <LeafletMap :lat="product.lat" :lng="product.lng" :address="product.location" />
-
+            <!-- Pass places array with custom icons to LeafletMap component -->
+            <LeafletMap :lat="product.lat" :lng="product.lng" :address="product.location" :places="placesWithIcons" />
           </div>
           <div class="w-1/2 container mx-auto py-8">
-            <div v-for="place in places" :key="place.name" class="flex items-center justify-between py-5">
+            <div v-for="place in placesWithIcons" :key="place.name" class="flex items-center justify-between py-5">
               <div class="flex items-center gap-5">
-
                 <div class="flex-1">
                   <h2 class="text-[18px] text-black">{{ place.name }}</h2>
                 </div>
               </div>
-              <div class="flex-shrink-0">
+              <div class="flex-shrink-0 py-2">
                 <p class="text-[18px] text-black">{{ calculateDistance(product.lat, product.lng, place.lat, place.lng) }} KM </p>
               </div>
             </div>
@@ -104,7 +103,62 @@ import Gallery from "@/components/Detail/Gallery.vue";
 import axios from "axios";
 import LeafletMap from "@/components/Detail/LeafletMap.vue";
 import Footer from "@/components/Pages/Footer.vue";
+import L from "leaflet";
 
+
+// Import icon images
+import education from "@/assets/icons/education.png";
+import mosque from "@/assets/icons/mosque.png";
+import restaurant from "@/assets/icons/restaurant.png";
+import shop from "@/assets/icons/shop.png";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+
+// Define custom icons for Leaflet
+const schoolIcon = L.icon({
+  iconUrl: education,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const shopIcon = L.icon({
+  iconUrl: shop,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const mosqueIcon = L.icon({
+  iconUrl: mosque,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+const foodIcon = L.icon({
+  iconUrl: restaurant,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -32],
+});
+
+// Function to assign icons based on place names
+const getIconForPlace = (placeName) => {
+  switch (placeName) {
+    case "SMK Raden Umar Said":
+      return schoolIcon;
+    case "Indomaret Besito 2":
+      return shopIcon;
+    case "Masjid Hidayatul Abidin":
+      return mosqueIcon;
+    case "Warmindo Anggrek Muria":
+      return foodIcon;
+    default:
+      return schoolIcon; // Default icon
+  }
+};
+
+// Route and product data references
 const route = useRoute();
 const productId = route.params.id;
 const showProfileCard = ref(false);
@@ -114,13 +168,6 @@ const rooms = ref([]);
 const ownerId = ref(null);
 const roomImages = ref([]);
 
-import icon1 from "@/assets/images/school.png";
-import icon2 from "@/assets/images/tempatmakan.png";
-import icon3 from "@/assets/images/tokokelontong.png";
-import icon4 from "@/assets/images/laundry.png";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-
-// Coordinates for places
 const places = ref([
   { name: "SMK Raden Umar Said", lat: -6.753778505127288, lng: 110.84282136045294 },
   { name: "Indomaret Besito 2", lat: -6.752888056320824, lng: 110.84273815739694 },
@@ -128,12 +175,12 @@ const places = ref([
   { name: "Warmindo Anggrek Muria", lat: -6.7525253658953845 , lng: 110.84283996650778 },
 ]);
 
-const items = ref([
-  { id: 1, icon: icon1, title: "SMK RADEN UMAR SAID KUDUS", text: "0.85 KM" },
-  { id: 2, icon: icon2, title: "Tempat Makan MakRU", text: "0.70 KM" },
-  { id: 3, icon: icon3, title: "Toko Lima", text: "1.25 KM" },
-  { id: 4, icon: icon4, title: "Laundry Reftalia", text: "0.25 KM" },
-]);
+const placesWithIcons = computed(() => {
+  return places.value.map(place => ({
+    ...place,
+    icon: getIconForPlace(place.name)
+  }));
+});
 
 const roomListSection = ref(null);
 
@@ -143,9 +190,7 @@ const toggleProfileCard = () => {
 
 const fetchProductData = async () => {
   try {
-    const response = await axios.get(
-        `https://api.nearus.id/api/product/get/${productId}`
-    );
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`);
     const selectedProduct = response.data;
 
     if (selectedProduct) {
@@ -157,15 +202,12 @@ const fetchProductData = async () => {
           })
       );
       product.value = selectedProduct;
-      const [lat, lng] = selectedProduct.linklocation
-          .split(",")
-          .map((coord) => parseFloat(coord.trim()));
+      const [lat, lng] = selectedProduct.linklocation.split(",").map(coord => parseFloat(coord.trim()));
       product.value.lat = lat;
       product.value.lng = lng;
 
-      // Parse image data correctly
       roomImages.value = selectedProduct.image
-          ? selectedProduct.image.split(",").filter((img) => img)
+          ? selectedProduct.image.split(",").filter(img => img)
           : [];
 
       facilities.value = selectedProduct.fasilitas;
@@ -181,9 +223,7 @@ const fetchProductData = async () => {
 
 const fetchRooms = async () => {
   try {
-    const response = await axios.get(
-        `https://api.nearus.id/api/rooms/get/kost/${productId}`
-    );
+    const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${productId}`);
     if (response.status === 200 && response.data.data.length > 0) {
       rooms.value = response.data.data;
     } else {
@@ -196,7 +236,7 @@ const fetchRooms = async () => {
 
 // Computed property to format facilities
 const formattedFacilities = computed(() => {
-  return facilities.value.split(",").map((facility) => facility.trim());
+  return facilities.value.split(",").map(facility => facility.trim());
 });
 
 // Calculate distance using Haversine formula
@@ -239,6 +279,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("toggle-profile-card", toggleProfileCard);
 });
 </script>
+
 
 <style>
 .font-montserrat {
