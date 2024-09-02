@@ -11,6 +11,8 @@
         <router-link to="/home">Sewa</router-link>
         <router-link to="/NearusFinance">NearusFinance</router-link>
         <router-link to="/AboutUS">About Us</router-link>
+        <!-- Conditional Dashboard Link -->
+        <router-link v-if="isOwner" to="/dashboard">Dashboard</router-link>
       </div>
       <div class="flex items-center gap-4 relative">
         <router-link v-if="!isLoggedIn" to="/login" class="text-xl font-medium">
@@ -40,7 +42,8 @@ import imageProfileDefault from '@/assets/images/profile-pic.png';
 const store = useStore();
 const isLoggedIn = computed(() => store.getters.isLoggedIn);
 const user = computed(() => store.getters.getUser);
-const scrolled = ref(false)
+const role = computed(() => store.state.role);
+const scrolled = ref(false);
 
 const handleScroll = () => {
   scrolled.value = window.scrollY > 0;
@@ -50,6 +53,9 @@ const toggleProfileCard = () => {
   const event = new Event('toggle-profile-card');
   window.dispatchEvent(event);
 };
+
+// Check if the user is an Owner
+const isOwner = computed(() => role.value === 'Owner');
 
 const profilePicture = computed(() => user.value.photoprofile || imageProfileDefault);
 const userName = computed(() => user.value.name || 'Guest');
@@ -63,6 +69,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
 });
 </script>
+
 
 <style scoped>
 .header {
