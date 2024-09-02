@@ -255,7 +255,7 @@ const extendRental = async () => {
       // Call Midtrans Snap to show the payment popup
       window.snap.pay(response.data.snapToken, {
         onSuccess: function (result) {
-          alert("Pembayaran berhasil!"); // Handle success logic here
+          console.log("Pembayaran berhasil!"); // Handle success logic here
           location.reload(); // Reload the page to update the rental duration
         },
         onPending: function (result) {

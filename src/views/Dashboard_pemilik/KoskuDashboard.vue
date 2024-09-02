@@ -57,29 +57,15 @@
 
                 <!-- Three-dot menu -->
                 <div class="absolute top-3 right-5">
-                  <button
-                      @click="toggleDropdown(product.id)"
-                      class="focus:outline-none"
-                  >
-                    <font-awesome-icon :icon="faEllipsisV" class="text-black" />
-                  </button>
+
                   <!-- Dropdown menu -->
-                  <div v-if="dropdownVisible(product.id)" class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
-                    <button
-                        @click="confirmDeleteProduct(product.id)"
-                        class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
-                    >
-                      <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
-                      Delete
-                    </button>
-                    <button
-                        @click="openEditModal(product.id)"
-                        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 flex items-center"
-                    >
-                      <font-awesome-icon :icon="faPencil" class="mr-2 text-blue-500" />
-                      Edit
-                    </button>
-                  </div>
+                  <button
+                      @click="confirmDeleteProduct(product.id)"
+                      class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
+                  >
+                    <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>

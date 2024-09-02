@@ -233,7 +233,7 @@ export default {
 }
 .button {
   width: 100%;
-  background-color: #38b2ac;
+  background-color: dodgerblue;
   color: #fff;
   padding: 0.75rem 1rem;
   border-radius: 0.375rem;
@@ -247,6 +247,6 @@ export default {
   cursor: not-allowed;
 }
 .button:hover:not(:disabled) {
-  background-color: #319795;
+  background-color: dodgerblue;
 }
 </style>
