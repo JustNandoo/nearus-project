@@ -72,13 +72,13 @@
                       <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
                       Delete
                     </button>
-                    <button
-                        @click="openEditModal(product.id)"
-                        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 flex items-center"
-                    >
-                      <font-awesome-icon :icon="faPencil" class="mr-2 text-blue-500" />
-                      Edit
-                    </button>
+<!--                    <button-->
+<!--                        @click="openEditModal(product.id)"-->
+<!--                        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 flex items-center"-->
+<!--                    >-->
+<!--                      <font-awesome-icon :icon="faPencil" class="mr-2 text-blue-500" />-->
+<!--                      Edit-->
+<!--                    </button>-->
                   </div>
                 </div>
               </div>
@@ -95,12 +95,12 @@
     >
       Tambah data kost
     </button>
-    <button
-        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"
-        @click="openAddFasilitasModal"
-    >
-      Add Data Fasilitas
-    </button>
+<!--    <button-->
+<!--        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"-->
+<!--        @click="openAddFasilitasModal"-->
+<!--    >-->
+<!--      Add Data Fasilitas-->
+<!--    </button>-->
   </div>
   <div class="fixed bottom-4 right-4">
     <div class="relative">
@@ -443,6 +443,7 @@ const getCurrentLocation = () => {
       const { latitude, longitude } = position.coords;
       newProduct.value.linklocation = `${latitude},${longitude}`;
     });
+    toast.success('Koordinat lokasi berhasil didapatkan!');
   } else {
     alert('Geolocation is not supported by this browser.');
   }
