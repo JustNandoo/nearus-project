@@ -1,10 +1,10 @@
 <template>
   <div class="flex">
     <!-- Set the width of the sidebar to 350px -->
-    <sidebar class="w-[350px] bg-gray-800 text-white min-h-screen flex-shrink-0">
+    <sidebar class="w-[350px] text-white min-h-screen flex-shrink-0">
     </sidebar>
 
-    <div class="ml-[350px] flex-1 p-8 bg-gray-100 min-h-screen overflow-auto">
+    <div class="ml-[350px] flex-1 p-8  min-h-screen overflow-auto">
       <div class="max-w-full">
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
@@ -266,9 +266,10 @@ import {faPlus, faTimes, faEllipsisV, faTrash, faLocationDot, faPencil} from '@f
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import placeholderImage from '@/assets/images/bg-loginPage.png'; // Adjust the path as needed
+import { useToast } from 'vue-toastification';
 
 const router = useRouter()
-
+const toast = useToast();
 const showAddModal = ref(false)
 const isLoading = ref(false)
 const searchQuery = ref('')
@@ -429,8 +430,10 @@ const deleteProduct = async (productId) => {
       headers: { Authorization: `Bearer ${token}` }
     })
     products.value = products.value.filter(product => product.id !== productId)
+    toast.success('Product deleted successfully!');
   } catch (error) {
     console.error('Error deleting product:', error)
+    toast.error('Failed to delete product.');
   }
 }
 
@@ -536,7 +539,7 @@ const addProduct = async () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-
+    toast.success('Product added successfully!');
     newProduct.value = {
       productname: '',
       location: '',
@@ -555,6 +558,7 @@ const addProduct = async () => {
     fetchData(); // Refresh data
   } catch (error) {
     console.error('Error adding product:', error.response.data);
+    toast.error('Failed to add product.');
   }
 };
 
