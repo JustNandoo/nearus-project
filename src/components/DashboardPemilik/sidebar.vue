@@ -87,7 +87,7 @@ const mainMenuItems = [
   { text: 'Data Kost', icon: faDatabase, path: '/dashboard-data' },
   { text: 'Manage Kostku', icon: faHouseUser, path: '/dashboard-kosku' },
   { text: 'Pesanan', icon: faClipboardUser, path: '/dashboard-pesanan' },
-  { text: 'Pesan', icon: faMessage, path: '/dashboard-chat' },
+  // { text: 'Pesan', icon: faMessage, path: '/dashboard-chat' },
 ];
 
 const generalItems = [

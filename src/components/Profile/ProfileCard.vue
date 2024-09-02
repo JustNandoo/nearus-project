@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-appear">
-    <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[670px] px-4 z-[10000]">
+    <div v-if="isVisible" class="profile-card bg-white rounded-lg shadow-lg w-[450px] h-[600px] px-4 z-[10000]">
       <div class="flex items-start justify-between border-b-[1px] border-black pb-4">
         <div class="mt-8 ml-8px text-left">
           <h1 class="mb-4 font-bold text-[23px]" id="nama">{{ user.name }}</h1>
@@ -25,12 +25,12 @@
         <div class="mt-5 ml-2">
           <h1 class="font-bold text-[22px]">Pusat Bantuan</h1>
         </div>
-        <router-link to="/chat-user">
-          <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
-            <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />
-            <p class="text-[22px] font-medium">Chat</p>
-          </div>
-        </router-link>
+<!--        <router-link to="/chat-user">-->
+<!--          <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">-->
+<!--            <font-awesome-icon class="text-black w-8 h-8" :icon="faComments" />-->
+<!--            <p class="text-[22px] font-medium">Chat</p>-->
+<!--          </div>-->
+<!--        </router-link>-->
         <router-link to="/PrivacyPolicy">
           <div class="flex gap-7 py-6 items-center px-10 border-b-[1px] border-black">
             <font-awesome-icon class="text-black w-8 h-8" :icon="faCircleQuestion" />
