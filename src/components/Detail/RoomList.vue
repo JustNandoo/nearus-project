@@ -15,7 +15,11 @@
               {{ facility }}
             </div>
           </div>
-          <p class="text-sm md:text-base text-gray-600 mb-2">Ketersediaan: {{ room.availability > 0 ? room.availability : 0 }} Kamar Tersisa</p>
+          <!-- Display total rooms -->
+          <p class="text-sm md:text-base text-gray-600 mb-2">
+            Kamar Tersisa: {{ room.availability > 0 ? room.availability : 0 }} / {{ room.totalkamar }} Kamar
+          </p>
+
         </div>
         <div>
           <p class="text-xl md:text-2xl lg:text-3xl text-black mb-4">Rp. {{ formatPrice(room.price) }} / {{ room.time }}</p>
@@ -36,8 +40,6 @@
     <div class="text-white text-xl">Loading...</div>
   </div>
 </template>
-
-
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
@@ -82,8 +84,6 @@ const handleCheckout = async (room) => {
   try {
     const userData = store.getters.getUser;
 
-    console.log("User Data from Store:", userData);
-
     const requestBody = {
       name: userData.name,
       phonenumber: userData.phonenumber,
@@ -94,9 +94,6 @@ const handleCheckout = async (room) => {
       image: room.image,
     };
 
-    // Logging request body
-    console.log("Request Body for Checkout:", requestBody);
-
     const response = await axios.post('https://api.nearus.id/api/checkout', requestBody, {
       headers: {
         'Authorization': `Bearer ${store.state.token}`,
@@ -104,7 +101,6 @@ const handleCheckout = async (room) => {
     });
 
     if (response.data.success) {
-      console.log('Checkout berhasil:', response.data.message);
       localStorage.setItem('roomData', JSON.stringify({
         roomName: room.name,
         price: room.price,
