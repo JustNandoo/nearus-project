@@ -99,6 +99,14 @@
           <div class="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 class="text-lg font-semibold text-gray-700 mb-4">Konfirmasi Perpanjangan Sewa</h2>
             <p class="text-gray-600 mb-6">Apakah Anda yakin ingin mengajukan perpanjangan sewa?</p>
+            <label for="quantity" class="block text-gray-600 mb-2">Jumlah bulan perpanjangan:</label>
+            <input
+                id="quantity"
+                v-model="quantity"
+                type="number"
+                min="1"
+                class="w-full p-2 mb-4 border rounded-lg"
+            />
             <div class="flex justify-end space-x-4">
               <button
                   @click="showConfirmation = false"
@@ -122,17 +130,16 @@
     <Footer />
     <ProfileCard v-if="showProfileCard" />
     <ConfirmationModal
-      :visible="showConfirmationModal"
-      title="Pemberitahuan"
-      message="Anda Telah melakukan pembatalan pembayaran, jika ingin lanjut anda harus melakukan proses pembayaran lagi"
-      @confirm="handleConfirmClose"
-  />
-
+        :visible="showConfirmationModal"
+        title="Pemberitahuan"
+        message="Anda Telah melakukan pembatalan pembayaran, jika ingin lanjut anda harus melakukan proses pembayaran lagi"
+        @confirm="handleConfirmClose"
+    />
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted, computed, onBeforeUnmount} from 'vue';
+import { ref, onMounted, computed, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 import NavFixed from "@/components/Pages/NavFixed.vue";
 import imageProfileDefault from '@/assets/images/profile-pic.png';
@@ -141,7 +148,6 @@ import { useRoute } from 'vue-router';
 import Alert from '@/components/NearusFinance/Alert.vue';
 import ConfirmationModal from "@/components/Payment/CancelProcess.vue";
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
-
 
 const isLoading = ref(true);
 const transaction = ref(null);
@@ -153,7 +159,7 @@ const alertPopup = ref(null);
 const showConfirmation = ref(false);
 const showProfileCard = ref(false);
 const showConfirmationModal = ref(false);
-
+const quantity = ref(1); // Default quantity is set to 1
 
 // Fetch owner details
 const fetchOwnerDetail = async (ownerId) => {
@@ -173,12 +179,14 @@ const fetchOwnerDetail = async (ownerId) => {
     console.error('Error fetching owner details:', error);
   }
 };
+
 const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
 
 onMounted(() => {
   window.addEventListener('toggle-profile-card', toggleProfileCard);
+  fetchTransactionDetail();
 });
 
 onBeforeUnmount(() => {
@@ -243,7 +251,7 @@ const extendRental = async () => {
   try {
     const response = await axios.post(
         `https://api.nearus.id/api/orders/extend/${detailfinanceId}`,
-        {},
+        { quantity: quantity.value }, // Send the quantity with the request
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -255,7 +263,7 @@ const extendRental = async () => {
       // Call Midtrans Snap to show the payment popup
       window.snap.pay(response.data.snapToken, {
         onSuccess: function (result) {
-          console.log("Pembayaran berhasil!"); // Handle success logic here
+          alert("Pembayaran berhasil!"); // Handle success logic here
           location.reload(); // Reload the page to update the rental duration
         },
         onPending: function (result) {
@@ -281,10 +289,6 @@ const extendRental = async () => {
 const sendMessageToOwner = () => {
   // Implement message sending functionality here
 };
-
-onMounted(() => {
-  fetchTransactionDetail();
-});
 </script>
 
 <style scoped>
