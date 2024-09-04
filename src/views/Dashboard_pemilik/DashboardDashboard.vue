@@ -64,15 +64,38 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal Pengajuan Card -->
     <div v-if="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-white rounded-lg p-8 w-[400px]">
         <h2 class="text-xl font-bold mb-4">Penarikan Dana</h2>
         <p class="text-lg mb-4">Total Saldo: {{ formattedBalance }}</p>
-        <input type="number" v-model="withdrawAmount" placeholder="Masukkan jumlah penarikan" class="w-full p-2 mb-4 border rounded-lg"/>
-        <div class="flex justify-end gap-2">
-          <button @click="closeModal" class="bg-gray-300 text-black font-semibold py-2 px-4 rounded-lg">Batal</button>
-          <button @click="submitWithdrawal" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg">Tarik</button>
+
+        <!-- Step 1: Choose Payment Method -->
+        <div v-if="!selectedMethod">
+          <button @click="selectMethod('ewallet')" class="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg mb-4">E-Wallet</button>
+          <button @click="selectMethod('bank')" class="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-lg">Bank</button>
+        </div>
+
+        <!-- Step 2: E-Wallet Form -->
+        <div v-if="selectedMethod === 'ewallet'">
+          <input type="text" v-model="targetTransfer" placeholder="Masukkan Nama E-Wallet" class="w-full p-2 mb-4 border rounded-lg"/>
+          <input type="text" v-model="norekening" placeholder="Masukkan Nomor E-Wallet" class="w-full p-2 mb-4 border rounded-lg"/>
+          <input type="number" v-model="withdrawAmount" placeholder="Masukkan jumlah penarikan" class="w-full p-2 mb-4 border rounded-lg"/>
+          <div class="flex justify-end gap-2">
+            <button @click="closeModal" class="bg-gray-300 text-black font-semibold py-2 px-4 rounded-lg">Batal</button>
+            <button @click="submitWithdrawalEwallet" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg">Tarik</button>
+          </div>
+        </div>
+
+        <!-- Step 2: Bank Form -->
+        <div v-if="selectedMethod === 'bank'">
+          <input type="text" v-model="targetTransfer" placeholder="Masukkan Nama Bank" class="w-full p-2 mb-4 border rounded-lg"/>
+          <input type="text" v-model="norekening" placeholder="Masukkan No Rekening" class="w-full p-2 mb-4 border rounded-lg"/>
+          <input type="number" v-model="withdrawAmount" placeholder="Masukkan jumlah penarikan" class="w-full p-2 mb-4 border rounded-lg"/>
+          <div class="flex justify-end gap-2">
+            <button @click="closeModal" class="bg-gray-300 text-black font-semibold py-2 px-4 rounded-lg">Batal</button>
+            <button @click="submitWithdrawalBank" class="bg-red-500 text-white font-semibold py-2 px-4 rounded-lg">Tarik</button>
+          </div>
         </div>
       </div>
     </div>
@@ -81,7 +104,7 @@
 
 <script setup>
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faArrowDown, faMoneyBill, faDoorClosed, faUser } from '@fortawesome/free-solid-svg-icons';
 import { onMounted, computed, ref } from "vue";
 import ChartStatistik from "@/components/DashboardPemilik/ChartStatistik.vue";
@@ -95,12 +118,15 @@ const store = useStore();
 const router = useRouter();
 const profilePicture = computed(() => store.state.user?.photoprofile || '/path/to/default-image.png');
 const userName = computed(() => store.state.user?.name || 'Guest');
-const phoneNumber = computed(() => store.state.user?.phonenumber || '');
+const phoneNumber = ref(store.state.user?.phonenumber || '');
 const balance = ref(0);
 const totalProducts = ref(0);
 const totalTenants = ref(0);
-const isModalOpen = ref(false); // For controlling the modal visibility
-const withdrawAmount = ref(0); // For storing the inputted withdrawal amount
+const isModalOpen = ref(false);
+const withdrawAmount = ref(0);
+const selectedMethod = ref(''); // For tracking selected payment method
+const targetTransfer = ref(''); // For storing the e-wallet or bank name
+const norekening = ref(''); // For storing the bank account number
 
 const formattedBalance = computed(() => {
   return new Intl.NumberFormat('id-ID', {
@@ -121,9 +147,12 @@ const fetchBalance = async () => {
     const data = response.data;
     if (data.success) {
       balance.value = data['Balance Count'];
+    } else {
+      toast.error('Failed to fetch balance');
     }
   } catch (error) {
     console.error('Error fetching balance:', error);
+    toast.error('Error fetching balance');
   }
 };
 
@@ -136,10 +165,13 @@ const fetchTotalProducts = async () => {
     });
     const data = response.data;
     if (data.message === "success get all product by owner Id") {
-      totalProducts.value = data.data.length;  // Accessing the correct array to get the length
+      totalProducts.value = data.data.length;
+    } else {
+      toast.error('Failed to fetch total products');
     }
   } catch (error) {
     console.error('Error fetching total products:', error);
+    toast.error('Error fetching total products');
   }
 };
 
@@ -152,15 +184,26 @@ const fetchTotalTenants = async () => {
     });
     const data = response.data;
     if (data.success) {
-      totalTenants.value = data.orders.length;  // Adjust this based on the actual structure of the response
+      totalTenants.value = data.orders.length;
+    } else {
+      toast.error('Failed to fetch total tenants');
     }
   } catch (error) {
     console.error('Error fetching total tenants:', error);
+    toast.error('Error fetching total tenants');
   }
+};
+
+const selectMethod = (method) => {
+  selectedMethod.value = method;
 };
 
 const openModal = () => {
   isModalOpen.value = true;
+  selectedMethod.value = ''; // Reset the selected method
+  withdrawAmount.value = 0; // Reset withdrawal amount
+  targetTransfer.value = ''; // Reset e-wallet or bank name
+  norekening.value = ''; // Reset bank account number
 };
 
 const closeModal = () => {
@@ -168,14 +211,19 @@ const closeModal = () => {
 };
 
 const submitWithdrawal = async () => {
+  const endpoint = 'https://api.nearus.id/api/orders/request-disbursement';
+  const data = {
+    id: store.state.user.id,
+    ownerId: store.state.user.id,
+    name: userName.value,
+    phonenumber: phoneNumber.value,
+    amount: withdrawAmount.value,
+    norekening: norekening.value,
+    targettransfer: targetTransfer.value,
+  };
+
   try {
-    const response = await axios.post('https://api.nearus.id/api/orders/request-disbursement', {
-      name: userName.value,
-      ownerId: store.state.user.id,
-      amount: withdrawAmount.value,
-      phonenumber: phoneNumber.value,
-      id: store.state.user.id,
-    }, {
+    const response = await axios.post(endpoint, data, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -184,6 +232,7 @@ const submitWithdrawal = async () => {
     if (response.data.success) {
       toast.success(`Penarikan dana berhasil: ${response.data.message}`);
       closeModal();
+      location.reload();
     } else {
       toast.error(`Penarikan dana gagal: ${response.data.message}`);
     }
@@ -191,6 +240,14 @@ const submitWithdrawal = async () => {
     console.error('Error submitting withdrawal:', error);
     toast.error('Terjadi kesalahan saat memproses penarikan dana.');
   }
+};
+
+const submitWithdrawalEwallet = () => {
+  submitWithdrawal();
+};
+
+const submitWithdrawalBank = () => {
+  submitWithdrawal();
 };
 
 onMounted(() => {

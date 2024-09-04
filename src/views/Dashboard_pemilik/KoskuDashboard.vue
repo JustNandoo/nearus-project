@@ -9,7 +9,7 @@
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
           <div class="flex-col gap-3">
-            <h1 class="font-medium text-2xl mb-4 text-left">List Product</h1>
+            <h1 class="font-medium text-2xl mb-4 text-left">List Kamar</h1>
             <div class="flex-col gap-3 space-y-6">
               <div
                   v-for="product in products"
