@@ -12,19 +12,24 @@
             v-for="(item, index) in items"
             :key="index"
             v-show="currentIndex === index"
-            class="w-screen h-full bg-gray-300 flex items-center justify-center slide-item absolute inset-0"
+            class="w-screen h-full flex items-center justify-center slide-item absolute inset-0"
         >
-          <img
-              :src="item.image"
-              :alt="item.alt"
-              class="h-full w-full object-cover object-center mx-auto"
-              @error="handleImageError(index)"
-          />
+          <!-- Darkened Image -->
+          <div class="relative w-full h-full">
+            <img
+                :src="item.image"
+                :alt="item.alt"
+                class="h-full w-full object-cover object  -center mx-auto darkened-image"
+                @error="handleImageError(index)"
+            />
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+          </div>
         </div>
       </transition-group>
       <div class="herotxt absolute inset-0 flex flex-col items-start justify-center px-6">
         <HeroText />
-        <div class="mt-4 w-full">
+        <div class="mt-4 px-3 w-full">
           <SearchBar />
         </div>
       </div>
@@ -54,18 +59,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import {ref, onMounted, onUnmounted} from 'vue';
 import HeroText from '@/components/Home/HeroText.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import Nav from '@/components/Pages/Nav.vue';
 
 const currentIndex = ref(0);
 const items = ref([
-  { image: new URL('@/assets/images1/berong.jpeg', import.meta.url).href, alt: 'Image 1', text: 'Berong Kost 2' },
-  { image: new URL('@/assets/images1/tirts.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Tirta Kost' },
-  { image: new URL('@/assets/images1/reftalia.jpeg', import.meta.url).href, alt: 'Image 3', text: 'Berong Kost 2' },
-  { image: new URL('@/assets/images1/wina.jpeg', import.meta.url).href, alt: 'Image 4', text: 'Pride Of Wina'},
-  { image: new URL('@/assets/images1/wina luar.jpeg', import.meta.url).href, alt: 'Image 5', text: 'Pride Of Wina' },
+  {image: new URL('@/assets/images1/berong.jpeg', import.meta.url).href, alt: 'Image 1', text: 'Berong Kost 2'},
+  {image: new URL('@/assets/images1/tirts.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Tirta Kost'},
+  {image: new URL('@/assets/images1/reftalia.jpeg', import.meta.url).href, alt: 'Image 3', text: 'Berong Kost 2'},
+  {image: new URL('@/assets/images1/wina.jpeg', import.meta.url).href, alt: 'Image 4', text: 'Pride Of Wina'},
+  {image: new URL('@/assets/images1/wina luar.jpeg', import.meta.url).href, alt: 'Image 5', text: 'Pride Of Wina'},
 ]);
 
 const text = ref(items.value[currentIndex.value].text);
@@ -103,7 +108,7 @@ onUnmounted(() => {
 .head {
   border-bottom-left-radius: 80px;
   border-bottom-right-radius: 80px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
 .herotxt {
@@ -121,6 +126,10 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+.darkened-image {
+  filter: brightness(1); /* Darken the image */
 }
 
 .slide-enter-active,
