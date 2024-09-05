@@ -15,7 +15,7 @@
         <div class="text-black text-sm font-semibold font-montserrat absolute left-[1px] top-[183px]">
           Kamar kamu
         </div>
-        <div class="text-black text-sm font-normal font-montserrat absolute left-[1px] top-[228px]">
+        <div class="text-black text-sm font-normal font-montserrat absolute left-[1px] top-[228px] w-[350px]">
           {{ roomData.roomName }} - {{ produk.name }}
         </div>
 
@@ -41,13 +41,13 @@
           <span class="text-black text-xs font-normal font-montserrat leading-7">Tersedia</span>
         </div>
         <div class="text-slate-400/opacity-60 text-sm font-semibold font-montserrat absolute left-0 top-[350px]">
-          Total (Quantity: {{ quantity }})
+          Total ( Menyewa selama : {{ quantity }} bulan )
         </div>
         <div class="absolute left-[263px] top-[380px] w-[260px] h-[55px] bg-sky-600 rounded-[10px] shadow justify-center items-center inline-flex cursor-pointer" @click="processPayment">
           <div class="text-white text-lg font-semibold font-montserrat text-center">Bayar</div>
         </div>
         <div class="absolute left-0 top-[380px] text-black text-xl font-semibold font-montserrat">
-          Rp. {{ formattedPrice }}
+          {{ formattedPrice }}
         </div>
         <img
             class="absolute left-[350px] top-[183px] w-[192px] h-[101px] rounded-lg object-cover shadow-lg"
