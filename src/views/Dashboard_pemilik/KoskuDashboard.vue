@@ -60,7 +60,7 @@
 
                   <!-- Dropdown menu -->
                   <button
-                      @click="confirmDeleteProduct(product.id)"
+                      @click="openDeleteModal(product.id)"
                       class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
                   >
                     <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
@@ -241,6 +241,13 @@
     </div>
   </div>
   </div>
+  <ConfirmationProductModal
+      :visible="isModalVisible"
+      title="Confirm Deletion"
+      message="Are you sure you want to delete this product?"
+      @confirm="confirmDeleteProduct"
+      @close="isModalVisible = false"
+  />
   </div>
 </template>
 
@@ -253,9 +260,12 @@ import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import placeholderImage from '@/assets/images/bg-loginPage.png'; // Adjust the path as needed
 import { useToast } from 'vue-toastification';
+import ConfirmationProductModal from '@/components/DashboardPemilik/ConfirmationProductModal.vue';
 
 const router = useRouter()
 const toast = useToast();
+const isModalVisible = ref(false)
+const productToDelete = ref(null)
 const showAddModal = ref(false)
 const isLoading = ref(false)
 const searchQuery = ref('')
@@ -310,6 +320,11 @@ const openEditModal = async (productId) => {
     console.error('Error fetching product data:', error);
   }
 };
+
+const openDeleteModal = (productId) => {
+  productToDelete.value = productId;
+  isModalVisible.value = true;
+}
 
 const closeEditModal = () => {
   showEditModal.value = false;
@@ -395,12 +410,13 @@ const dropdownVisible = (productId) => {
 }
 const confirmDeleteProduct = (productId) => {
   if (confirm('Are you sure you want to delete this product?')) {
-    deleteProduct(productId)
+    deleteProduct(productId);
+    isDeleteModalVisible.value = true;
   }
 }
 
-const deleteProduct = async (productId) => {
-  if (!productId) {
+const deleteProduct = async () => {
+  if (!productToDelete.value) {
     console.error('Product ID is undefined')
     return
   }
@@ -412,11 +428,14 @@ const deleteProduct = async (productId) => {
   }
 
   try {
-    await axios.delete(`https://api.nearus.id/api/product/delete/${productId}`, {
+    await axios.delete(`https://api.nearus.id/api/product/delete/${productToDelete.value}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    products.value = products.value.filter(product => product.id !== productId)
+    products.value = products.value.filter(product => product.id !== productToDelete.value)
     toast.success('Product deleted successfully!');
+
+    isModalVisible.value = false;
+    productToDelete.value = null;
   } catch (error) {
     console.error('Error deleting product:', error)
     toast.error('Failed to delete product.');
