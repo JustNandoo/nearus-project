@@ -72,7 +72,6 @@
             <p class="text-black text-[18px]">Masa Sewa Kamar: {{ room.time }}</p>
             <p class="text-black text-[18px]">Ketersediaan: {{ room.availability === -1 ? 'Tidak Tersedia' : 'Tersedia' }}, {{room.availability}} Kamar Tersedia</p>
           </div>
-          <!-- Delete Button -->
           <button
               @click="confirmDelete(room.id)"
               class="absolute bottom-4 right-4 bg-red-600 text-white font-bold py-1 px-2 text-[20px] rounded-md"
