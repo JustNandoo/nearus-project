@@ -1,7 +1,12 @@
 <template>
   <div class="flex">
     <sidebar />
-    <div class="ml-[350px] flex flex-col mt-10">
+    <div class="ml-[350px] mx-auto flex flex-col mt-10">
+      <div class="ml-[50px] mb-4">
+        <h1 class="font-medium text-[20px]">
+          Tabel Data
+        </h1>
+      </div>
       <div class="relative ml-12 mb-3">
         <button @click="toggleDropdown" class="text-black bg-white shadow-lg border-[1px] border-blue-300 px-4 py-1 rounded-lg text-[18px] font-bold flex items-center space-x-1">
           <div>{{ dropdownText }}</div>
@@ -88,7 +93,7 @@
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.productname }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.category }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.location }}</td>
-              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price}` : 'N/A' }}</td>
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price.toLocaleString('id-ID')}` : 'N/A' }}</td>
 
               <!-- Data Penyewa Columns -->
               <td v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b">{{ item.name }}</td>

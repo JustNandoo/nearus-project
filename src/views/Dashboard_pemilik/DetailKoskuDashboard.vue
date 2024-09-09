@@ -70,9 +70,7 @@
             <p class="text-black text-[18px]">Tipe Kamar: {{ room.category }}</p>
             <p class="text-black text-[18px]">Harga Sewa Kamar: {{ formatPrice(room.price) }}</p>
             <p class="text-black text-[18px]">Masa Sewa Kamar: {{ room.time }}</p>
-            <p class="text-black text-[18px]">Ketersediaan: {{ room.availability === -1 ? 'Tidak Tersedia' : 'Tersedia' }}, {{ room.availability }} Kamar Tersedia</p>
-            <!-- Display Total Kamar -->
-            <p class="text-black text-[18px]">Total Kamar: {{ room.totalkamar }}</p>
+            <p class="text-black text-[18px]">Ketersediaan: {{ room.availability === -1 ? 'Tidak Tersedia' : 'Tersedia' }}, {{room.availability}} Kamar Tersedia</p>
           </div>
           <!-- Delete Button -->
           <button
@@ -87,143 +85,299 @@
         </button>
       </div>
     </div>
-    <div v-if="showAddRoomModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
-      <div class="bg-white rounded-lg p-8 w-1/2">
-        <h2 class="text-xl font-bold mb-4">Tambah Kamar</h2>
-        <form @submit.prevent="addRoom">
-          <div class="mb-4">
-            <label class="block text-gray-700">Nama Kamar:</label>
-            <input v-model="newRoom.name" placeholder="Masukan Judul Kamar" type="text" class="w-full p-2 border rounded" required />
+    <div v-if="showAddRoomModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto relative">
+        <button
+            class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+            @click="closeAddRoomModal"
+        >
+          <font-awesome-icon :icon="faTimes" class="w-6 h-6"/>
+        </button>
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Kamar</h2>
+        <form @submit.prevent="addRoom" class="space-y-6">
+          <!-- Room Name -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Nama Kamar</label>
+            <input
+                required
+                type="text"
+                v-model="newRoom.name"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Nama Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Tipe Kamar:</label>
-            <select v-model="newRoom.category" class="w-full p-2 border rounded" required>
-              <option value="">Select Category</option>
+
+          <!-- Room Category -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Tipe Kamar</label>
+            <select
+                required
+                v-model="newRoom.category"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Pilih Tipe Kamar</option>
               <option value="Pria">Pria</option>
               <option value="Campuran">Campuran</option>
               <option value="Wanita">Wanita</option>
             </select>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Fasilitas:</label>
-            <input v-model="newRoom.fasilitas" type="text" placeholder="Masukan Fasilitas Kamar (data dipisahkan dari tanda koma" class="w-full p-2 border rounded" />
+
+          <!-- Facilities -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
+            <div class="flex flex-col space-y-2">
+              <div v-for="facility in allFacilities" :key="facility" class="flex items-center space-x-2">
+                <input
+                    type="checkbox"
+                    :value="facility"
+                    v-model="newRoom.fasilitas"
+                    class="form-checkbox text-blue-500"
+                />
+                <label class="text-gray-700">{{ facility }}</label>
+              </div>
+            </div>
+            <!-- Manual Input for Facilities -->
+            <div class="mt-4">
+              <input
+                  type="text"
+                  v-model="newFacility"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Tambah fasilitas baru"
+              />
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Gambar Kamar:</label>
-            <input type="file" @change="handleFileUpload" class="w-full p-2 border rounded" multiple />
+
+          <!-- Image Upload -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Gambar Kamar</label>
+            <input
+                type="file"
+                @change="handleFileUpload"
+                class="file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-lg file:text-white file:bg-blue-500 file:cursor-pointer file:hover:bg-blue-600 transition"
+                multiple
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Harga Sewa Kamar:</label>
-            <input v-model="newRoom.price" placeholder="Masukan Harga Sewa Kamar" type="number" class="w-full p-2 border rounded" required />
+
+          <!-- Price -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Harga Sewa Kamar</label>
+            <input
+                required
+                type="number"
+                v-model="newRoom.price"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Harga Sewa Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Masa Sewa Kamar:</label>
-            <input v-model="newRoom.time" placeholder="Masukan Masa Sewa Kamar" type="text" class="w-full p-2 border rounded" required />
+
+          <!-- Duration -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Masa Sewa Kamar</label>
+            <input
+                required
+                type="text"
+                v-model="newRoom.time"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Masa Sewa Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Ketersediaan Kamar:</label>
-            <input v-model="newRoom.availability" placeholder="Masukan Ketersediaan Jumlah Kamar" type="number" class="w-full p-2 border rounded" required />
+
+          <!-- Availability -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Ketersediaan Kamar</label>
+            <input
+                required
+                type="number"
+                v-model="newRoom.availability"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Ketersediaan Jumlah Kamar"
+            />
           </div>
-          <div class="flex justify-end">
-            <button type="button" @click="closeAddRoomModal" class="bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">Cancel</button>
-            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded">Tambah</button>
+
+          <!-- Buttons -->
+          <div class="flex justify-end gap-5">
+            <button
+                type="button"
+                @click="closeAddRoomModal"
+                class="bg-gray-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition"
+            >
+              Add Room
+            </button>
           </div>
         </form>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 
-<script>
-import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { faVenusMars, faMoneyBills, faHandHoldingHeart, faClock, faInfoCircle, faMap, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
-import { useRoute, useRouter } from 'vue-router';
+<script setup>
+import { ref, onMounted, watch } from 'vue'
+import axios from 'axios'
+import { useRoute } from 'vue-router'
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { faVenusMars, faArrowLeft, faMoneyBills, faHandHoldingHeart, faClock, faInfoCircle, faMap } from "@fortawesome/free-solid-svg-icons"
+import Sidebar from "@/components/DashboardPemilik/sidebar.vue"
+import { useToast } from 'vue-toastification';
+const allFacilities = ref([
+  'WiFi', 'AC', 'Meja Belajar', 'Kamar Mandi Dalam', 'Dapur Bersama'
+])
+const toast = useToast();
+const route = useRoute()
+const productId = route.params.id
+const product = ref(null)
+const rooms = ref([]) // Reactive variable for storing the list of rooms
+const showAddRoomModal = ref(false)
+const newRoom = ref({
+  name: '',
+  category: '',
+  fasilitas: [], // Ensure this is an array
+  image: [], // Ensure this is an array
+  price: 0,
+  time: '',
+  availability: 0,
+})
 
-export default {
-  components: { Sidebar },
-  setup() {
-    const product = ref(null);
-    const rooms = ref([]);
-    const showAddRoomModal = ref(false);
-    const newRoom = ref({});
-    const route = useRoute();
-    const router = useRouter();
-    const faVenusMars = faVenusMars;
-    const faMoneyBills = faMoneyBills;
-    const faHandHoldingHeart = faHandHoldingHeart;
-    const faClock = faClock;
-    const faInfoCircle = faInfoCircle;
-    const faMap = faMap;
-    const faArrowLeft = faArrowLeft;
 
-    onMounted(async () => {
-      const productId = route.params.id;
-      const response = await axios.get(`https://api.nearus.id/api/product/${productId}`);
-      product.value = response.data.data;
+// Fetch product details
+const fetchProductDetails = async () => {
+  try {
+    const response = await axios.get(`https://api.nearus.id/api/product/get/${productId}`)
+    product.value = {
+      ...response.data,
+      images: response.data.images || [response.data.image]
+    }
+  } catch (error) {
+    console.error('Error fetching product details:', error)
+  }
+}
 
-      if (product.value) {
-        console.log("Product Data:", product.value);
+// Open Add Room Modal
+const openAddRoomModal = () => {
+  showAddRoomModal.value = true
+}
 
-        const roomResponse = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${product.value.kostid}`);
-        rooms.value = roomResponse.data.data;
+const fetchRoomDetails = async () => {
+  if (product.value && product.value.kostid) {
+    try {
+      const response = await axios.get(`https://api.nearus.id/api/rooms/get/kost/${product.value.kostid}`)
+      console.log('Fetch room details response:', response.data);
+      rooms.value = response.data.data || [] // Update to use `rooms` instead of `room`
+    } catch (error) {
+      console.error('Error fetching room details:', error)
+    }
+  } else {
+    console.error('No kostid found in product data.')
+  }
+}
 
-        console.log("Room Data:", rooms.value); // Menampilkan data kamar untuk debugging
+
+// Format price
+const formatPrice = (price) => {
+  if (price == null) return 'N/A'
+  return `Rp ${price.toLocaleString('id-ID')}`
+}
+
+// Confirm and Delete Room
+const confirmDelete = async (id) => {
+  if (confirm('Are you sure you want to delete this room?')) {
+    try {
+      const response = await axios.delete(`https://api.nearus.id/api/rooms/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      console.log('Delete room response:', response.data); // Log the response data for debugging
+      toast.success('Room deleted successfully!');
+      fetchRoomDetails(); // Refresh room list
+    } catch (error) {
+      // Log detailed error information
+      console.error('Error deleting room:', error);
+
+      // Show an error message to the user
+      toast.error(`Error deleting room: ${error.response?.data?.message || error.message}`);
+    }
+  }
+}
+
+const closeAddRoomModal = () => {
+  showAddRoomModal.value = false
+}
+
+const handleFileUpload = (event) => {
+  const files = event.target.files
+  if (files.length > 0) {
+    newRoom.value.image = Array.from(files) // Store File objects directly
+  }
+}
+
+
+const addRoom = async () => {
+  try {
+    const formData = new FormData()
+
+    // Append room details
+    formData.append('roomid', 0) // Assuming this is managed server-side
+    formData.append('ownerId', product.value.ownerId)
+    formData.append('kostid', product.value.kostid)
+    formData.append('name', newRoom.value.name)
+    formData.append('category', newRoom.value.category)
+    formData.append('price', newRoom.value.price)
+    formData.append('time', newRoom.value.time)
+    formData.append('availability', newRoom.value.availability)
+
+    // Convert fasilitas to an array if it's a string
+    const fasilitasArray = typeof newRoom.value.fasilitas === 'string'
+        ? newRoom.value.fasilitas.split(',').map(facility => facility.trim())
+        : newRoom.value.fasilitas
+
+    // Append facilities as an array
+    fasilitasArray.forEach((facility, index) => {
+      formData.append(`fasilitas[${index}]`, facility)
+    })
+
+    // Append images
+    newRoom.value.image.forEach((file, index) => {
+      formData.append(`image[${index}]`, file)
+    })
+
+    // Send form data
+    const response = await axios.post('https://api.nearus.id/api/rooms/create', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       }
-    });
+    })
 
-    const formatPrice = (value) => {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value);
-    };
+    toast.success('Data Kamar berhasil ditambahkan!');
+    fetchRoomDetails() // Refresh room list
+    closeAddRoomModal()
+  } catch (error) {
+    console.error('Error adding room:', error)
+    alert('Error adding room: ' + error.response?.data?.message || error.message)
+  }
+}
 
-    const openAddRoomModal = () => {
-      showAddRoomModal.value = true;
-    };
 
-    const closeAddRoomModal = () => {
-      showAddRoomModal.value = false;
-      newRoom.value = {};
-    };
+// Fetch details on mount
+onMounted(() => {
+  fetchProductDetails()
+})
 
-    const addRoom = async () => {
-      // Lakukan validasi dan logika pengiriman data di sini
-      closeAddRoomModal();
-    };
-
-    const confirmDelete = async (roomId) => {
-      if (confirm("Apakah Anda yakin ingin menghapus kamar ini?")) {
-        try {
-          await axios.delete(`https://api.nearus.id/api/rooms/${roomId}`);
-          rooms.value = rooms.value.filter(room => room.id !== roomId);
-        } catch (error) {
-          console.error("Failed to delete room:", error);
-        }
-      }
-    };
-
-    return {
-      product,
-      rooms,
-      showAddRoomModal,
-      newRoom,
-      formatPrice,
-      openAddRoomModal,
-      closeAddRoomModal,
-      addRoom,
-      confirmDelete,
-      faVenusMars,
-      faMoneyBills,
-      faHandHoldingHeart,
-      faClock,
-      faInfoCircle,
-      faMap,
-      faArrowLeft,
-    };
-  },
-};
+// Watch for product changes and fetch room details
+watch(product, (newProduct) => {
+  if (newProduct) {
+    fetchRoomDetails()
+  }
+})
 </script>
 
 <style scoped>
-/* Add your styles here */
+/* Add your custom styles here */
 </style>

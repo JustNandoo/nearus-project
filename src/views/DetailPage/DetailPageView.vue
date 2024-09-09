@@ -22,7 +22,7 @@
       <div class="flex flex-col gap-3 w-full lg:w-96 text-end">
         <div class="flex flex-col gap-2">
           <h1 class="font-bold text-lg md:text-xl lg:text-2xl">Mulai Dari</h1>
-          <h1 class="font-bold text-lg md:text-xl lg:text-2xl">Rp.{{ product.price }} / {{ product.duration }}</h1>
+          <h1 class="font-bold text-lg md:text-xl lg:text-2xl">Rp.{{ formattedPrice }} / {{ product.duration }}</h1>
         </div>
         <div class="flex gap-2 items-center w-full justify-between">
           <button @click="goToChatUser" class="rounded-lg border-black border-2 w-20 h-12 flex items-center justify-center">
@@ -111,6 +111,11 @@
   import shop from "@/assets/icons/shop.png";
   import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 
+  const formattedPrice = computed(() => {
+    return product.value.price
+        ? product.value.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        : "0";
+  });
 
   // Define custom icons for Leaflet
   const schoolIcon = L.icon({
