@@ -9,7 +9,7 @@
         <div v-if="isLoading" class="text-gray-500">Loading...</div>
         <div v-else>
           <div class="flex-col gap-3">
-            <h1 class="font-medium text-2xl mb-4 text-left">List Product</h1>
+            <h1 class="font-medium text-2xl mb-4 text-left">List Kost</h1>
             <div class="flex-col gap-3 space-y-6">
               <div
                   v-for="product in products"
@@ -57,29 +57,15 @@
 
                 <!-- Three-dot menu -->
                 <div class="absolute top-3 right-5">
-                  <button
-                      @click="toggleDropdown(product.id)"
-                      class="focus:outline-none"
-                  >
-                    <font-awesome-icon :icon="faEllipsisV" class="text-black" />
-                  </button>
+
                   <!-- Dropdown menu -->
-                  <div v-if="dropdownVisible(product.id)" class="dropdown-menu absolute right-0 mt-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
-                    <button
-                        @click="confirmDeleteProduct(product.id)"
-                        class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
-                    >
-                      <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
-                      Delete
-                    </button>
-<!--                    <button-->
-<!--                        @click="openEditModal(product.id)"-->
-<!--                        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100 flex items-center"-->
-<!--                    >-->
-<!--                      <font-awesome-icon :icon="faPencil" class="mr-2 text-blue-500" />-->
-<!--                      Edit-->
-<!--                    </button>-->
-                  </div>
+                  <button
+                      @click="openDeleteModal(product.id)"
+                      class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 flex items-center"
+                  >
+                    <font-awesome-icon :icon="faTrash" class="mr-2 text-red-500" />
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
@@ -95,12 +81,6 @@
     >
       Tambah data kost
     </button>
-<!--    <button-->
-<!--        class="block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100"-->
-<!--        @click="openAddFasilitasModal"-->
-<!--    >-->
-<!--      Add Data Fasilitas-->
-<!--    </button>-->
   </div>
   <div class="fixed bottom-4 right-4">
     <div class="relative">
@@ -110,68 +90,161 @@
       >
         <font-awesome-icon :icon="faPlus" class="w-8 h-8"/>
       </button>
-  <div v-if="showAddKamarModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-screen overflow-y-auto relative">
-      <button
-          class="absolute top-2 right-2 text-gray-500"
-          @click="closeAddModal"
-      >
-       <font-awesome-icon :icon="faTimes" class="w-6 h-6"/>
-      </button>
-      <h2 class="text-2xl font-bold mb-4">Tambahkan Data Kost Baru</h2>
-      <form class="" @submit.prevent="addProduct">
-        <div class="mb-5">
-          <label class="block text-gray-700">Nama Kost</label>
-          <input required type="text" v-model="newProduct.productname" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan Nama Product">
+      <div v-if="showAddKamarModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto relative">
+          <button
+              class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+              @click="closeAddModal"
+          >
+            <font-awesome-icon :icon="faTimes" class="w-6 h-6"/>
+          </button>
+          <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambahkan Data Kost Baru</h2>
+          <form @submit.prevent="addProduct" class="space-y-6">
+            <div class="flex flex-col space-y-4">
+              <!-- Product Name -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Nama Kost</label>
+                <input
+                    required
+                    type="text"
+                    v-model="newProduct.productname"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan Nama Kost"
+                />
+              </div>
+
+              <!-- Location -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Lokasi</label>
+                <input
+                    required
+                    type="text"
+                    v-model="newProduct.location"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan Alamat Kost"
+                />
+              </div>
+
+              <!-- Category -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Tipe Kost</label>
+                <select
+                    required
+                    v-model="newProduct.category"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Pilih Tipe Kost</option>
+                  <option value="pria">Pria</option>
+                  <option value="wanita">Wanita</option>
+                  <option value="campuran">Campuran</option>
+                </select>
+              </div>
+
+              <!-- Location Coordinates -->
+              <div class="flex items-center space-x-2">
+                <div class="flex-1">
+                  <label class="block text-gray-700 font-semibold mb-2">Lokasi Koordinat</label>
+                  <input
+                      required
+                      type="text"
+                      v-model="newProduct.linklocation"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Tekan Tombol Disamping untuk mendapatkan koordinat lokasi anda"
+                  />
+                </div>
+                <button
+                    type="button"
+                    class="bg-blue-500 text-white px-4 py-3 rounded-lg flex items-center space-x-2 hover:bg-blue-600 transition mt-8"
+                    @click="getCurrentLocation"
+                >
+                  <font-awesome-icon :icon="faLocationDot" class="w-5 h-5"/>
+                  <span>Get Location</span>
+                </button>
+              </div>
+
+              <!-- Price -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Harga Kost</label>
+                <input
+                    required
+                    type="number"
+                    v-model="newProduct.price"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan Harga Kost"
+                />
+              </div>
+
+              <!-- Duration -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Durasi Bayar</label>
+                <input
+                    required
+                    type="text"
+                    v-model="newProduct.duration"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan durasi bayar contoh (1 bulan, 3 bulan, 6 bulan)"
+                />
+              </div>
+
+              <!-- Facilities -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
+                <div class="flex flex-col space-y-2">
+                  <div v-for="option in predefinedFasilitas" :key="option" class="flex items-center space-x-2">
+                    <input
+                        type="checkbox"
+                        :value="option"
+                        v-model="selectedFasilitas"
+                        class="form-checkbox text-blue-500"
+                    />
+                    <label class="text-gray-700">{{ option }}</label>
+                  </div>
+                  <input
+                      type="text"
+                      v-model="customFasilitas"
+                      class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Masukkan Fasilitas Kustom, pisahkan dengan koma"
+                  />
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
+                <textarea
+                    required
+                    v-model="newProduct.about"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Masukkan deskripsi singkat mengenai kost"
+                    rows="4"
+                ></textarea>
+              </div>
+
+              <!-- Image Upload -->
+              <div>
+                <label class="block text-gray-700 font-semibold mb-2">Gambar</label>
+                <input
+                    required
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    @change="handleImageUpload"
+                    class="file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-lg file:text-white file:bg-blue-500 file:cursor-pointer file:hover:bg-blue-600 transition"
+                />
+              </div>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                  type="submit"
+                  class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition"
+              >
+                Tambahkan Produk
+              </button>
+            </div>
+          </form>
         </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Lokasi</label>
-          <input required type="text" v-model="newProduct.location" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan Alamat Kost">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Tipe Kost</label>
-          <select required v-model="newProduct.category" class="w-full p-2 border border-gray-300 rounded mt-1">
-            <option value="">Tipe Kost</option>
-            <option value="pria">Pria</option>
-            <option value="wanita">Wanita</option>
-            <option value="campuran">Campuran</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Lokasi Koordinat</label>
-          <div class="flex">
-            <input required type="text" v-model="newProduct.linklocation" class="w-full p-2 border border-gray-300 rounded mt-1 mr-2" placeholder="Tekan Tombol Disamping untuk mendaptkan koordinat lokasi anda">
-            <button type="button" class="bg-blue-primary rounded px-3 py-1" @click="getCurrentLocation">
-              <font-awesome-icon :icon="faLocationDot" class="w-5h-5 text-white"/>
-            </button>
-          </div>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Harga Kost</label>
-          <input required type="number" v-model="newProduct.price" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan Harga Kost">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Durasi Bayar</label>
-          <input required type="text" v-model="newProduct.duration" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan durasi bayar contoh ( 1 bulan,3 bulan,6 bulan)">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Fasilitas</label>
-          <input required type="text" v-model="newProduct.fasilitas" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan Fasilitas, setiap fasiliats dibagi dengan koma">
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Deskripsi</label>
-          <textarea required v-model="newProduct.about" class="w-full p-2 border border-gray-300 rounded mt-1" placeholder="Masukan deskripsi singkat mengenai kost"></textarea>
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Image</label>
-          <input required type="file" multiple accept="image/*" @change="handleImageUpload" class="w-full p-2 border border-gray-300 rounded mt-1">
-        </div>
-        <div class="flex justify-end">
-          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Tambahkan Produk</button>
-        </div>
-      </form>
-    </div>
-  </div>
+      </div>
   <div v-if="showEditModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-xl max-h-screen overflow-y-auto relative">
       <button class="absolute top-2 right-2 text-gray-500" @click="closeEditModal">
@@ -255,6 +328,13 @@
     </div>
   </div>
   </div>
+  <ConfirmationProductModal
+      :visible="isModalVisible"
+      title="Confirm Deletion"
+      message="Are you sure you want to delete this product?"
+      @confirm="confirmDeleteProduct"
+      @close="isModalVisible = false"
+  />
   </div>
 </template>
 
@@ -267,14 +347,20 @@ import Sidebar from "@/components/DashboardPemilik/sidebar.vue";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import placeholderImage from '@/assets/images/bg-loginPage.png'; // Adjust the path as needed
 import { useToast } from 'vue-toastification';
+import ConfirmationProductModal from '@/components/DashboardPemilik/ConfirmationProductModal.vue';
 
 const router = useRouter()
 const toast = useToast();
+const isModalVisible = ref(false)
+const productToDelete = ref(null)
 const showAddModal = ref(false)
 const isLoading = ref(false)
 const searchQuery = ref('')
 const sortOption = ref('name')
 const products = ref([])
+const predefinedFasilitas = ['Kipas', 'AC', 'Kamar mandi dalam', 'Kamar mandi luar', 'Meja', 'Dapur bersama', 'Dipan Kasur', 'Kursi', 'Dispenser', 'Parkiran Motor', 'Parkiran Mobil', 'Laundry', 'Catering']
+const selectedFasilitas = ref([])
+const customFasilitas = ref('')
 const newProduct = ref({
   productname: '',
   location: '',
@@ -324,6 +410,11 @@ const openEditModal = async (productId) => {
     console.error('Error fetching product data:', error);
   }
 };
+
+const openDeleteModal = (productId) => {
+  productToDelete.value = productId;
+  isModalVisible.value = true;
+}
 
 const closeEditModal = () => {
   showEditModal.value = false;
@@ -409,12 +500,13 @@ const dropdownVisible = (productId) => {
 }
 const confirmDeleteProduct = (productId) => {
   if (confirm('Are you sure you want to delete this product?')) {
-    deleteProduct(productId)
+    deleteProduct(productId);
+    isDeleteModalVisible.value = true;
   }
 }
 
-const deleteProduct = async (productId) => {
-  if (!productId) {
+const deleteProduct = async () => {
+  if (!productToDelete.value) {
     console.error('Product ID is undefined')
     return
   }
@@ -426,11 +518,14 @@ const deleteProduct = async (productId) => {
   }
 
   try {
-    await axios.delete(`https://api.nearus.id/api/product/delete/${productId}`, {
+    await axios.delete(`https://api.nearus.id/api/product/delete/${productToDelete.value}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
-    products.value = products.value.filter(product => product.id !== productId)
+    products.value = products.value.filter(product => product.id !== productToDelete.value)
     toast.success('Product deleted successfully!');
+
+    isModalVisible.value = false;
+    productToDelete.value = null;
   } catch (error) {
     console.error('Error deleting product:', error)
     toast.error('Failed to delete product.');
@@ -443,7 +538,6 @@ const getCurrentLocation = () => {
       const { latitude, longitude } = position.coords;
       newProduct.value.linklocation = `${latitude},${longitude}`;
     });
-    toast.success('Koordinat lokasi berhasil didapatkan!');
   } else {
     alert('Geolocation is not supported by this browser.');
   }
@@ -452,6 +546,8 @@ const getCurrentLocation = () => {
 
 const closeAddModal = () => {
   showAddKamarModal.value = false
+    selectedFasilitas.value = []
+    customFasilitas.value = ''
 }
 
 const showAddOptions = ref(false);
@@ -512,7 +608,8 @@ const addProduct = async () => {
       console.error('No token found in localStorage');
       return;
     }
-
+    const allFasilitas = [...selectedFasilitas.value, ...customFasilitas.value.split(',').map(item => item.trim())];
+    newProduct.value.fasilitas = allFasilitas;
     const formData = new FormData();
     for (const key in newProduct.value) {
       const value = newProduct.value[key];

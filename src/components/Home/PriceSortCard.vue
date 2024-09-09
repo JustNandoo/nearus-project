@@ -31,14 +31,6 @@
         />
       </div>
       <div v-if="filteredProducts.length > displayedProducts.length" class="flex justify-center mt-10 mb-20">
-        <button
-            class="bg-blue-primary flex items-center px-2 py-3 justify-center gap-5 w-[250px] rounded-lg text-white text-[22px] font-medium shadow-lg relative"
-            @click="loadMoreProducts"
-            :disabled="isLoadingMore"
-        >
-          <span v-if="isLoadingMore" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          <span v-else>Lihat Lebih Banyak</span>
-        </button>
       </div>
     </div>
   </div>

@@ -72,6 +72,7 @@
             <p class="text-black text-[18px]">Masa Sewa Kamar: {{ room.time }}</p>
             <p class="text-black text-[18px]">Ketersediaan: {{ room.availability === -1 ? 'Tidak Tersedia' : 'Tersedia' }}, {{room.availability}} Kamar Tersedia</p>
           </div>
+          <!-- Delete Button -->
           <button
               @click="confirmDelete(room.id)"
               class="absolute bottom-4 right-4 bg-red-600 text-white font-bold py-1 px-2 text-[20px] rounded-md"
@@ -84,51 +85,135 @@
         </button>
       </div>
     </div>
-    <div v-if="showAddRoomModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center">
-      <div class="bg-white rounded-lg p-8 w-1/2">
-        <h2 class="text-xl font-bold mb-4">Tambah Kamar</h2>
-        <form @submit.prevent="addRoom">
-          <div class="mb-4">
-            <label class="block text-gray-700">Nama Kamar:</label>
-            <input v-model="newRoom.name" placeholder="Masukan Judul Kamar" type="text" class="w-full p-2 border rounded" required />
+    <div v-if="showAddRoomModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-3xl max-h-screen overflow-y-auto relative">
+        <button
+            class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition"
+            @click="closeAddRoomModal"
+        >
+          <font-awesome-icon :icon="faTimes" class="w-6 h-6"/>
+        </button>
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Tambah Kamar</h2>
+        <form @submit.prevent="addRoom" class="space-y-6">
+          <!-- Room Name -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Nama Kamar</label>
+            <input
+                required
+                type="text"
+                v-model="newRoom.name"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Nama Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Tipe Kamar:</label>
-            <select v-model="newRoom.category" class="w-full p-2 border rounded" required>
-              <option value="">Select Category</option>
+
+          <!-- Room Category -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Tipe Kamar</label>
+            <select
+                required
+                v-model="newRoom.category"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Pilih Tipe Kamar</option>
               <option value="Pria">Pria</option>
               <option value="Campuran">Campuran</option>
               <option value="Wanita">Wanita</option>
             </select>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Fasilitas:</label>
-            <input v-model="newRoom.fasilitas" type="text" placeholder="Masukan Fasilitas Kamar (data dipisahkan dari tanda koma" class="w-full p-2 border rounded" />
+
+          <!-- Facilities -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Fasilitas</label>
+            <div class="flex flex-col space-y-2">
+              <div v-for="facility in allFacilities" :key="facility" class="flex items-center space-x-2">
+                <input
+                    type="checkbox"
+                    :value="facility"
+                    v-model="newRoom.fasilitas"
+                    class="form-checkbox text-blue-500"
+                />
+                <label class="text-gray-700">{{ facility }}</label>
+              </div>
+            </div>
+            <!-- Manual Input for Facilities -->
+            <div class="mt-4">
+              <input
+                  type="text"
+                  v-model="newFacility"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Tambah fasilitas baru"
+              />
+            </div>
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Gambar Kamar:</label>
-            <input type="file" @change="handleFileUpload" class="w-full p-2 border rounded" multiple />
+
+          <!-- Image Upload -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Gambar Kamar</label>
+            <input
+                type="file"
+                @change="handleFileUpload"
+                class="file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-lg file:text-white file:bg-blue-500 file:cursor-pointer file:hover:bg-blue-600 transition"
+                multiple
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Harga Sewa Kamar:</label>
-            <input v-model="newRoom.price" placeholder="Masukan Harga Sewa Kamar" type="number" class="w-full p-2 border rounded" required />
+
+          <!-- Price -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Harga Sewa Kamar</label>
+            <input
+                required
+                type="number"
+                v-model="newRoom.price"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Harga Sewa Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Masa Sewa Kamar:</label>
-            <input v-model="newRoom.time" placeholder="Masukan Masa Sewa Kamar" type="text" class="w-full p-2 border rounded" required />
+
+          <!-- Duration -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Masa Sewa Kamar</label>
+            <input
+                required
+                type="text"
+                v-model="newRoom.time"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Masa Sewa Kamar"
+            />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Ketersediaan Kamar:</label>
-            <input v-model="newRoom.availability" placeholder="Masukan Ketersediaan Jumlah Kamar" type="number" class="w-full p-2 border rounded" required />
+
+          <!-- Availability -->
+          <div>
+            <label class="block text-gray-700 font-semibold mb-2">Ketersediaan Kamar</label>
+            <input
+                required
+                type="number"
+                v-model="newRoom.availability"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Masukkan Ketersediaan Jumlah Kamar"
+            />
           </div>
-          <div class="flex justify-end">
-            <button type="button" @click="closeAddRoomModal" class="bg-gray-600 text-white font-bold py-2 px-4 rounded mr-2">Cancel</button>
-            <button type="submit" class="bg-blue-600 text-white font-bold py-2 px-4 rounded">Add Room</button>
+
+          <!-- Buttons -->
+          <div class="flex justify-end gap-5">
+            <button
+                type="button"
+                @click="closeAddRoomModal"
+                class="bg-gray-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-gray-700 transition"
+            >
+              Cancel
+            </button>
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-600 transition"
+            >
+              Add Room
+            </button>
           </div>
         </form>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 
 <script setup>
@@ -139,7 +224,9 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 import { faVenusMars, faArrowLeft, faMoneyBills, faHandHoldingHeart, faClock, faInfoCircle, faMap } from "@fortawesome/free-solid-svg-icons"
 import Sidebar from "@/components/DashboardPemilik/sidebar.vue"
 import { useToast } from 'vue-toastification';
-
+const allFacilities = ref([
+  'WiFi', 'AC', 'Meja Belajar', 'Kamar Mandi Dalam', 'Dapur Bersama'
+])
 const toast = useToast();
 const route = useRoute()
 const productId = route.params.id
@@ -175,8 +262,6 @@ const openAddRoomModal = () => {
   showAddRoomModal.value = true
 }
 
-// Fetch room details
-// Fetch room details
 const fetchRoomDetails = async () => {
   if (product.value && product.value.kostid) {
     try {

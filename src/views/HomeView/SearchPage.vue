@@ -9,6 +9,8 @@
         Menunjukkan Hasil Pencarian
         <span v-if="searchParams.name">dari "{{ searchParams.name }}"</span>
         <span v-if="displayCategory"> Kategori "{{ displayCategory }}"</span>
+        <span v-if="searchParams.location"> Lokasi "{{ searchParams.location }}"</span>
+        <span v-if="selectedFacilities.length"> Fasilitas "{{ selectedFacilitiesText }}"</span>
       </h2>
 
       <div class="flex flex-wrap items-center gap-4">
@@ -31,7 +33,6 @@
       </div>
     </div>
 
-
     <div v-if="filteredProducts.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       <ProductCard
           v-for="product in sortedPaginatedProducts"
@@ -43,7 +44,7 @@
     </div>
 
     <div v-else class="text-center mt-10 flex-grow">
-      <p>No results found</p>
+      <p class="font-bold text-[30px]">Tidak ada kost dengan hasil pencarian tersebut</p>
     </div>
 
     <div class="mt-16 flex justify-center">
@@ -72,7 +73,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch, onBeforeUnmount} from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import ProductCard from "@/components/Home/ProductCard.vue";
 import axios from 'axios';
@@ -85,9 +86,12 @@ const router = useRouter();
 
 const searchParams = ref({
   name: '',
+  location: '',
   category: ''
 });
 
+const selectedFacilities = ref([]);
+const allFacilities = ref(['Kipas', 'AC', 'Kamar mandi dalam', 'Kamar mandi luar', 'Meja', 'Dapur bersama', 'Dipan Kasur', 'Kursi', 'Dispenser', 'Parkiran Motor', 'Parkiran Mobil', 'Laundry', 'Catering']); // Replace with actual facilities
 const products = ref([]);
 const isLoading = ref(true);
 const isSorting = ref(false);
@@ -100,28 +104,26 @@ const displayCategory = computed(() => {
   return searchParams.value.category ? searchParams.value.category : 'Semua Tipe';
 });
 
-onMounted(() => {
-  const { name, category } = route.query;
-  searchParams.value.name = name || '';
-  searchParams.value.category = category || '';
-  fetchProducts();
-});
-
 const toggleProfileCard = () => {
   showProfileCard.value = !showProfileCard.value;
 };
-
-onMounted(() => {
-  window.addEventListener('toggle-profile-card', toggleProfileCard);
-});
 
 onBeforeUnmount(() => {
   window.removeEventListener('toggle-profile-card', toggleProfileCard);
 });
 
-watch(() => route.query, () => {
-  const { name, category } = route.query;
+onMounted(() => {
+  const { name, location, category } = route.query;
   searchParams.value.name = name || '';
+  searchParams.value.location = location || '';
+  searchParams.value.category = category || '';
+  fetchProducts();
+});
+
+watch(() => route.query, () => {
+  const { name, location, category } = route.query;
+  searchParams.value.name = name || '';
+  searchParams.value.location = location || '';
   searchParams.value.category = category || '';
   fetchProducts();
 });
@@ -131,7 +133,6 @@ const fetchProducts = async () => {
   try {
     const response = await axios.get('https://api.nearus.id/api/product');
     products.value = response.data.data;
-    currentPage.value = 1;
   } catch (error) {
     console.error(error);
   } finally {
@@ -140,18 +141,19 @@ const fetchProducts = async () => {
 };
 
 const filteredProducts = computed(() => {
-  if (!Array.isArray(products.value)) {
-    return [];
-  }
+  if (!Array.isArray(products.value)) return [];
 
-  let result = products.value.filter(product => {
+  return products.value.filter(product => {
     const matchesName = product.productname?.toLowerCase().includes(searchParams.value.name.toLowerCase());
+    const matchesLocation = product.location?.toLowerCase().includes(searchParams.value.location.toLowerCase());
     const matchesCategory = searchParams.value.category === '' || product.category?.toLowerCase() === searchParams.value.category.toLowerCase();
-
-    return matchesName && matchesCategory;
+    const matchesFacilities = selectedFacilities.value.length === 0 || selectedFacilities.value.every(facility => product.fasilitas?.includes(facility));
+    return matchesName && matchesLocation && matchesCategory && matchesFacilities;
   });
+});
 
-  return result;
+const selectedFacilitiesText = computed(() => {
+  return selectedFacilities.value.length ? selectedFacilities.value.slice(0, 2).join(', ') + (selectedFacilities.value.length > 2 ? ' + ' + (selectedFacilities.value.length - 2) + ' more' : '') : 'Pilih Fasilitas';
 });
 
 const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage));
@@ -182,6 +184,7 @@ const sortedPaginatedProducts = computed(() => {
 const resetSearch = () => {
   searchParams.value.name = '';
   searchParams.value.category = '';
+  selectedFacilities.value = [];
   sortOption.value = 'name-asc';
   currentPage.value = 1;
   router.push({ query: {} });

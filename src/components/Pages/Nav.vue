@@ -125,6 +125,7 @@ onBeforeUnmount(() => {
 
 .register-button:hover {
   border-color: #ffffff;
-  color: #3490dc;
+  color: #ffffff;
+
 }
 </style>

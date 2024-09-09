@@ -19,8 +19,8 @@
           <section class="flex flex-col w-full">
             <div class="flex items-center mb-6">
               <div class="relative">
-                <!-- Display preview image if available, else display the user's profile picture -->
-                <img id="profile-pic" loading="lazy" :src="profilePicPreview || user.photoprofile" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
+                <!-- Display profile picture or fallback to 'profile-pic.png' if not set -->
+                <img id="profile-pic" loading="lazy" :src="profilePicPreview || user.photoprofile || 'profile-pic.png'" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover shadow-md">
                 <label for="upload-profile-pic" class="absolute bottom-2 right-2 bg-sky-600 rounded-full w-8 h-8 cursor-pointer flex items-center justify-center transition duration-300 hover:bg-sky-700 shadow-md">
                   <i class="fas fa-pencil-alt text-white"></i>
                   <input type="file" id="upload-profile-pic" class="hidden" accept="image/*" @change="handleFileChange">
@@ -28,7 +28,7 @@
               </div>
               <div class="ml-4">
                 <h2 class="font-bold text-lg">Upload a New Photo</h2>
-                <p class="text-gray-600">Profile-pic.jpg</p>
+                <p class="text-gray-600">{{ user.photoprofile }}</p>
               </div>
             </div>
             <h2 class="font-bold text-2xl mb-4">Update User Information</h2>
@@ -52,6 +52,7 @@
                 <div>
                   <label class="block text-gray-700">Gender</label>
                   <select class="input-field" v-model="user.jenis_kelamin">
+                    <option value="" disabled>Isi gender kalian</option>
                     <option value="male">Laki-laki</option>
                     <option value="female">Perempuan</option>
                   </select>
@@ -88,8 +89,6 @@
   </div>
 </template>
 
-
-
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
@@ -97,6 +96,7 @@ import NavFixed from '@/components/Pages/NavFixed.vue';
 import LogoutConfirmation from '@/components/Profile/LogoutConfirmation.vue';
 import Footer from '@/components/Pages/Footer.vue';
 import ProfileCard from "@/components/Profile/ProfileCard.vue";
+
 
 export default {
   components: { ProfileCard, NavFixed, Footer, LogoutConfirmation },
@@ -127,8 +127,11 @@ export default {
             email: userData.email || '',
             phonenumber: userData.phonenumber || '',
             jenis_kelamin: userData.jenis_kelamin || '',
-            photoprofile: userData.photoprofile || '',
+            photoprofile: userData.photoprofile || 'profile-pic.png',
           };
+        } else {
+          user.value.jenis_kelamin = '';
+          user.value.photoprofile = 'profile-pic.png';
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -175,18 +178,10 @@ export default {
         showAlert.value = true;
       } catch (error) {
         console.error('Failed to update user data:', error);
-        alertMessage.value = 'Failed to update profile';
+        alertMessage.value = 'Failed to update user data. Please try again.';
         showAlert.value = true;
       } finally {
         loading.value = false;
-      }
-    };
-
-    const handleFileChange = (event) => {
-      const file = event.target.files[0];
-      if (file) {
-        selectedProfilePic.value = file;
-        profilePicPreview.value = URL.createObjectURL(file);
       }
     };
 
@@ -194,89 +189,64 @@ export default {
       showAlert.value = false;
     };
 
+    const handleFileChange = event => {
+      const file = event.target.files[0];
+      if (file) {
+        selectedProfilePic.value = file;
+        profilePicPreview.value = URL.createObjectURL(file);
+      }
+    };
+
     const logout = () => {
-      store.dispatch('logout');
-      showLogoutConfirmation.value = false;
+      // Handle logout logic here
     };
 
     return {
       user,
       profilePicPreview,
+      loading,
       showAlert,
       alertMessage,
-      loading,
       showLogoutConfirmation,
-      showProfileCard,  // Expose showProfileCard
       updateUserData,
       handleFileChange,
       closeAlert,
-      logout,
+      showProfileCard,
     };
   },
 };
 </script>
 
-
-
-
-
 <style scoped>
-#profile-pic {
-  object-fit: cover;
-  border-radius: 50%;
-}
-
+/* Input field styles */
 .input-field {
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 0.5rem;
-  border: 2px solid #d1d5db;
-  border-radius: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
   font-size: 1rem;
-  font-weight: 500;
+  transition: border-color 0.2s ease;
 }
-
 .input-field:focus {
-  border-color: #2563eb;
   outline: none;
+  border-color: #63b3ed;
 }
-
 .button {
   width: 100%;
-  padding: 0.75rem;
-  margin-top: 1rem;
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
+  background-color: dodgerblue;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
   font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button:hover {
-  background-color: #2563eb;
-}
-
-/* Custom Alert Styles */
-.alert-modal {
-  position: fixed;
-  inset: 0;
+  transition: background-color 0.2s ease;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
 }
-
-.alert-modal-content button {
-  background-color: #3b82f6;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.button:hover:not(:disabled) {
+  background-color: dodgerblue;
 }
 </style>

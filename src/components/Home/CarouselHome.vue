@@ -2,19 +2,34 @@
   <Nav />
   <div class="head relative overflow-hidden rounded-b-3xl">
     <div class="carousel w-screen relative">
-      <transition-group name="slide" tag="div" mode="out-in">
-        <div v-for="(item, index) in items" :key="index" v-show="currentIndex === index" class="w-screen h-full bg-gray-300 flex items-center justify-center slide-item">
-          <img
-              :src="item.image"
-              :alt="item.alt"
-              class="h-full w-full object-cover object-center mx-auto"
-              @error="handleImageError(index)"
-          />
+      <transition-group
+          name="slide"
+          tag="div"
+          mode="out-in"
+          class="relative w-full h-full"
+      >
+        <div
+            v-for="(item, index) in items"
+            :key="index"
+            v-show="currentIndex === index"
+            class="w-screen h-full flex items-center justify-center slide-item absolute inset-0"
+        >
+          <!-- Darkened Image -->
+          <div class="relative w-full h-full">
+            <img
+                :src="item.image"
+                :alt="item.alt"
+                class="h-full w-full object-cover object  -center mx-auto darkened-image"
+                @error="handleImageError(index)"
+            />
+            <!-- Dark Overlay -->
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+          </div>
         </div>
       </transition-group>
       <div class="herotxt absolute inset-0 flex flex-col items-start justify-center px-6">
         <HeroText />
-        <div class="mt-4 w-full">
+        <div class="mt-4 px-3 w-full">
           <SearchBar />
         </div>
       </div>
@@ -24,7 +39,17 @@
           v-for="(item, index) in items"
           :key="index"
           @click="goToSlide(index)"
-          :class="['h-5', 'w-5', 'rounded-full', 'border-2', { 'bg-white': currentIndex === index, 'bg-transparent': currentIndex !== index }, 'focus:outline-none']"
+          :class="[
+          'h-5',
+          'w-5',
+          'rounded-full',
+          'border-2',
+          {
+            'bg-white': currentIndex === index,
+            'bg-transparent': currentIndex !== index,
+          },
+          'focus:outline-none',
+        ]"
       ></button>
     </div>
     <div class="absolute bottom-0 left-0 mb-6 ml-16 p-2 bg-black bg-opacity-50 rounded-md">
@@ -34,18 +59,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import {ref, onMounted, onUnmounted} from 'vue';
 import HeroText from '@/components/Home/HeroText.vue';
 import SearchBar from '@/components/Home/SearchBar.vue';
 import Nav from '@/components/Pages/Nav.vue';
 
 const currentIndex = ref(0);
 const items = ref([
-  { image: new URL('@/assets/images/carouselimage1.png', import.meta.url).href, alt: 'Image 1', text: 'Reftalia Kost' },
-  { image: new URL('@/assets/images/carouselimage2.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Rumah kost Malikamila kost' },
-  { image: new URL('@/assets/images/carouselimage3.jpeg', import.meta.url).href, alt: 'Image 3', text: 'Text for Slide 3' },
-  { image: new URL('@/assets/images/carouselimage4.jpeg', import.meta.url).href, alt: 'Image 4', text: 'Text for Slide 4' },
-  { image: new URL('@/assets/images/carouselimage5.jpeg', import.meta.url).href, alt: 'Image 5', text: 'Text for Slide 5' },
+  {image: new URL('@/assets/images1/berong.jpeg', import.meta.url).href, alt: 'Image 1', text: 'Berong Kost 2'},
+  {image: new URL('@/assets/images1/tirts.jpeg', import.meta.url).href, alt: 'Image 2', text: 'Tirta Kost'},
+  {image: new URL('@/assets/images1/reftalia.jpeg', import.meta.url).href, alt: 'Image 3', text: 'Berong Kost 2'},
+  {image: new URL('@/assets/images1/wina.jpeg', import.meta.url).href, alt: 'Image 4', text: 'Pride Of Wina'},
+  {image: new URL('@/assets/images1/wina luar.jpeg', import.meta.url).href, alt: 'Image 5', text: 'Pride Of Wina'},
 ]);
 
 const text = ref(items.value[currentIndex.value].text);
@@ -83,7 +108,7 @@ onUnmounted(() => {
 .head {
   border-bottom-left-radius: 80px;
   border-bottom-right-radius: 80px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
 .herotxt {
@@ -100,33 +125,27 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
-.slide-item img {
-  object-fit: cover; /* Ensure images cover the entire carousel area */
-  object-position: center;
-  height: 100%;
-  width: 100%;
+.darkened-image {
+  filter: brightness(1); /* Darken the image */
 }
 
-.navigation button {
-  background-color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
-.slide-enter-active, .slide-leave-active {
-  transition: transform 0.5s ease;
-}
-
-.slide-enter, .slide-leave-to {
+.slide-enter,
+.slide-leave-to {
   transform: translateX(100%);
+  opacity: 0;
 }
 
-.slide-enter-to, .slide-leave {
+.slide-enter-to,
+.slide-leave {
   transform: translateX(0%);
+  opacity: 1;
 }
-
 </style>

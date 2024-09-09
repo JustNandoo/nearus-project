@@ -93,7 +93,7 @@
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.productname }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.category }}</td>
               <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.location }}</td>
-              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price}` : 'N/A' }}</td>
+              <td v-if="dropdownText === 'Data Kost'" class="py-2 px-4 border-b">{{ item.price ? `Rp.${item.price.toLocaleString('id-ID')}` : 'N/A' }}</td>
 
               <!-- Data Penyewa Columns -->
               <td v-if="dropdownText === 'Data Penyewa'" class="py-2 px-4 border-b">{{ item.name }}</td>
